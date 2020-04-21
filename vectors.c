@@ -68,7 +68,7 @@ t_vector	sub(t_vector v1, t_vector v2)
 	return (v3);
 }
 
-t_vector	mul(t_vector v1, double f)
+t_vector	mult(t_vector v1, double f)
 {
 	t_vector v2;
 
@@ -78,7 +78,7 @@ t_vector	mul(t_vector v1, double f)
 	return (v2);
 }
 
-t_vector	div(t_vector v1, double f)
+t_vector	divi(t_vector v1, double f)
 {
 	t_vector v2;
 
@@ -98,9 +98,9 @@ t_vector	neg(t_vector v1)
 	return (v2);
 }
 
-t_vector	normal(t_vector v1) // length en para?
+t_vector	unit(t_vector v1) // length en para?
 {
-	return (div(v1, length(v1)));
+	return (divi(v1, length(v1)));
 }
 
 double		dot(t_vector v1, t_vector v2)

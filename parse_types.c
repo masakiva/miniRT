@@ -10,18 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "parsing.h"
 #include <stdlib.h>
 
 void	p_resolution(char *line, t_global *data)
 {
 	int8_t	i;
+	int		tmp;
 
 	i = 0;
 	while (i < 2)
 	{
-		data->res[i] = ft_atoi(line);
-		if (data->res[i] < 0) // ou <=
+		tmp = ft_atoi(line);
+		if (tmp >= 0) // ou >
+			data->res[i] = (size_t)tmp;
+		else
 			printf("Resolution must be defined using two positive integers.\n");
 		line = skip_int(line);
 		i++;
@@ -37,6 +40,7 @@ void	p_ambient_lightning(char *line, t_global *data)
 	line = skip_float(line);
 	if (data->amb_light < 0 || data->amb_light > 1)
 		printf("AMBIENT LIGHTNING RATIO NOT IN RANGE [0.0,1.0]\n");
+
 	line = parse_color(line, data->color);
 	if (line == NULL)
 		printf("COLOR ERROR in lightning");
@@ -50,16 +54,20 @@ void	p_camera(char *line, t_global *data)
 	t_camera	*cur_camera;
 
 	cur_camera = (t_camera *)malloc(sizeof(t_camera));
-	line = parse_coord(line, cur_camera->coord);
+
+	line = parse_vector(line, &(cur_camera->origin));
 	if (line == NULL)
 		printf("COORD ERROR\n");
-	line = parse_o_vec(line, cur_camera->o_vec);
+
+	line = parse_vector(line, &(cur_camera->direction));
 	if (line == NULL)
 		printf("o_vec ERROR\n");
+
 	cur_camera->fov = ft_atoi(line);
 	if (cur_camera->fov < 0 || cur_camera->fov > 180)
 		printf("FOV NOT IN RANGE [0,180]\n");
 	line = skip_int(line);
+
 	line = skip_sp_ht(line);
 	if (*line != '\0')
 		printf("CAMERA PARAMETERS NOT VALID\n");
@@ -92,21 +100,23 @@ void	p_sphere(char *line, t_global *data)
 	t_sphere	*cur_sphere;
 
 	cur_sphere = (t_sphere *)malloc(sizeof(t_sphere));
-	cur_sphere->type = SPHERE;
-	line = parse_coord(line, cur_sphere->coord);
+
+	line = parse_vector(line, &(cur_sphere->centre));
 	if (line == NULL)
 		printf("COORD ERROR");
-	cur_sphere->diameter = ft_atof(line);
-	line = skip_float(line);
-	if (cur_sphere->diameter < 0)
+
+	cur_sphere->radius = ft_atof(line) / 2;
+	if (cur_sphere->radius < 0)
 		printf("MUST BE POSITIVE");
+	line = skip_float(line);
+
 	line = parse_color(line, cur_sphere->color);
 	if (line == NULL)
 		printf("COLOR ERROR");
 	line = skip_sp_ht(line);
 	if (*line != '\0')
 		printf("spHERE PARAMETERS NOT VALID\n");
-	add_to_list((void *)cur_sphere, &(data->objects));
+	wrap_object((void *)cur_sphere, &(data->objects), SPHERE);
 }
 
 void	p_plane(char *line, t_global *data)
@@ -114,20 +124,22 @@ void	p_plane(char *line, t_global *data)
 	t_plane		*cur_plane;
 
 	cur_plane = (t_plane *)malloc(sizeof(t_plane));
-	cur_sphere->type = PLANE;
-	line = parse_coord(line, cur_plane->coord);
+
+	line = parse_vector(line, &(cur_plane->position));
 	if (line == NULL)
 		printf("COORD ERROR");
-	line = parse_o_vec(line, cur_plane->o_vec);
+
+	line = parse_vector(line, &(cur_plane->normal));
 	if (line == NULL)
 		printf("o_vec ERROR\n");
+
 	line = parse_color(line, cur_plane->color);
 	if (line == NULL)
 		printf("COLOR ERROR");
 	line = skip_sp_ht(line);
 	if (*line != '\0')
 		printf("spHERE PARAMETERS NOT VALID\n");
-	add_to_list((void *)cur_plane, &(data->objects));
+	wrap_object((void *)cur_plane, &(data->objects), PLANE);
 }
 
 void	p_square(char *line, t_global *data)
@@ -135,7 +147,6 @@ void	p_square(char *line, t_global *data)
 	t_square	*cur_square;
 
 	cur_square = (t_square *)malloc(sizeof(t_square));
-	cur_sphere->type = SQUARE;
 	line = parse_coord(line, cur_square->coord);
 	if (line == NULL)
 		printf("COORD ERROR");
@@ -152,7 +163,7 @@ void	p_square(char *line, t_global *data)
 	line = skip_sp_ht(line);
 	if (*line != '\0')
 		printf("sQu PARAMETERS NOT VALID\n");
-	add_to_list((void *)cur_square, &(data->objects));
+	wrap_object((void *)cur_square, &(data->objects), SQUARE);
 }
 
 void	p_cylinder(char *line, t_global *data)
@@ -160,7 +171,6 @@ void	p_cylinder(char *line, t_global *data)
 	t_cylinder	*cur_cylinder;
 
 	cur_cylinder = (t_cylinder *)malloc(sizeof(t_cylinder));
-	cur_sphere->type = CYLINDER;
 	line = parse_coord(line, cur_cylinder->coord);
 	if (line == NULL)
 		printf("COORD ERROR");
@@ -181,7 +191,7 @@ void	p_cylinder(char *line, t_global *data)
 	line = skip_sp_ht(line);
 	if (*line != '\0')
 		printf("CYLI PARAMETERS NOT VALID\n");
-	add_to_list((void *)cur_cylinder, &(data->objects));
+	wrap_object((void *)cur_cylinder, &(data->objects), CYLINDER);
 }
 
 void	p_triangle(char *line, t_global *data)
@@ -189,7 +199,6 @@ void	p_triangle(char *line, t_global *data)
 	t_triangle	*cur_triangle;
 
 	cur_triangle = (t_triangle *)malloc(sizeof(t_triangle));
-	cur_sphere->type = TRIANGLE;
 	line = parse_coord(line, cur_triangle->coord1);
 	if (line == NULL)
 		printf("COORD ERROR");
@@ -205,5 +214,5 @@ void	p_triangle(char *line, t_global *data)
 	line = skip_sp_ht(line);
 	if (*line != '\0')
 		printf("TRIAngle PARAMETERS NOT VALID\n");
-	add_to_list((void *)cur_triangle, &(data->objects));
+	wrap_object((void *)cur_triangle, &(data->objects), TRIANGLE);
 }

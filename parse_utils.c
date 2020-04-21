@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "parsing.h"
 #include <stdlib.h>
 
 char	*skip_sp_ht(char *str)
@@ -88,7 +88,7 @@ char	*skip_float_comma(char *str)
 	return (str);
 }
 
-char	*parse_coord(char *line, double coord[3])
+char	*parse_coord(char *line, double coord[3]) // temporaire
 {
 	int8_t	i;
 
@@ -99,6 +99,17 @@ char	*parse_coord(char *line, double coord[3])
 		line = skip_float_comma(line);
 		i++;
 	}
+	return (line);
+}
+
+char	*parse_vector(char *line, t_vector *v)
+{
+	v->x = ft_atof(line);
+	line = skip_float_comma(line);
+	v->y = ft_atof(line);
+	line = skip_float_comma(line);
+	v->z = ft_atof(line);
+	line = skip_float_comma(line);
 	return (line);
 }
 
@@ -139,10 +150,21 @@ char	*parse_o_vec(char *line, double o_vec[3])
 	return (line);
 }
 
-void	add_to_list(void *cur_object, t_list **lst)
+void	add_to_list(void *cur_obj, t_list **lst)
 {
 	t_list		*new;
 
-	new = ft_lstnew(cur_object);
+	new = ft_lstnew(cur_obj);
 	ft_lstadd_back(lst, new);
+}
+
+void	wrap_object(void *cur_obj, t_list **lst, int8_t type)
+{
+	t_obj		*wrapper;
+
+	wrapper = (t_obj *)malloc(sizeof(t_obj));
+	//errr
+	wrapper->type = type;
+	wrapper->obj = cur_obj;
+	add_to_list(wrapper, lst);
 }

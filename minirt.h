@@ -126,30 +126,4 @@ double		dot(t_vector v1, t_vector v2);
 t_vector	cross(t_vector v1, t_vector v2);
 void		print(t_vector v);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #endif
