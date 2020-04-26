@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "minirt.h"
 #include <stdlib.h>
 
-void	p_resolution(char *line, t_global *data)
+char	*p_resolution(char *line, t_global *data)
 {
 	int8_t	i;
 	int		tmp;
@@ -22,104 +22,108 @@ void	p_resolution(char *line, t_global *data)
 	while (i < 2)
 	{
 		tmp = ft_atoi(line);
-		if (tmp >= 0) // ou >
+		if (tmp >= 0) // 0 included?
+		{
 			data->res[i] = (size_t)tmp;
+			line = skip_int(line);
+			i++;
+		}
 		else
-			printf("Resolution must be defined using two positive integers.\n");
-		line = skip_int(line);
-		i++;
+		{
+			line = NULL;
+			break ;
+		}
 	}
-	line = skip_sp_ht(line);
-	if (*line != '\0')
-		printf("Resolution must be defined using two positive integers.\n");
+	return (line);
 }
 
-void	p_ambient_lightning(char *line, t_global *data)
+char	*p_ambient_lightning(char *line, t_global *data)
 {
 	data->amb_light = ft_atof(line);
 	line = skip_float(line);
 	if (data->amb_light < 0 || data->amb_light > 1)
-		printf("AMBIENT LIGHTNING RATIO NOT IN RANGE [0.0,1.0]\n");
+		printf("ambient lightning ratio not in range [0.0,1.0]\n");
 
 	line = parse_color(line, data->color);
-	if (line == NULL)
-		printf("COLOR ERROR in lightning");
+	if (line == null)
+		printf("color error in lightning");
 	line = skip_sp_ht(line);
 	if (*line != '\0')
-		printf("AMBIENT LIGHTNING NOT VALID\n");
+		printf("ambient lightning not valid\n");
+	return (line);
 }
 
-void	p_camera(char *line, t_global *data)
+char	*p_camera(char *line, t_global *data)
 {
 	t_camera	*cur_camera;
 
 	cur_camera = (t_camera *)malloc(sizeof(t_camera));
 
 	line = parse_vector(line, &(cur_camera->origin));
-	if (line == NULL)
-		printf("COORD ERROR\n");
+	if (line == null)
+		printf("coord error\n");
 
 	line = parse_vector(line, &(cur_camera->direction));
-	if (line == NULL)
-		printf("o_vec ERROR\n");
+	if (line == null)
+		printf("o_vec error\n");
 
 	cur_camera->fov = ft_atoi(line);
 	if (cur_camera->fov < 0 || cur_camera->fov > 180)
-		printf("FOV NOT IN RANGE [0,180]\n");
+		printf("fov not in range [0,180]\n");
 	line = skip_int(line);
 
 	line = skip_sp_ht(line);
 	if (*line != '\0')
-		printf("CAMERA PARAMETERS NOT VALID\n");
+		printf("camera parameters not valid\n");
 	add_to_list((void *)cur_camera, &(data->cameras));
+	return (line);
 }
 
-void	p_light(char *line, t_global *data)
+char	*p_light(char *line, t_global *data)
 {
 	t_light		*cur_light;
 
 	cur_light = (t_light *)malloc(sizeof(t_light));
 	line = parse_coord(line, cur_light->coord);
-	if (line == NULL)
-		printf("COORD ERROR");
+	if (line == null)
+		printf("coord error");
 	cur_light->brightness = ft_atof(line);
 	line = skip_float(line);
 	if (cur_light->brightness < 0 || cur_light->brightness > 1)
-		printf("AMBIENT LIGHTNING RATIO NOT IN RANGE [0.0,1.0]\n");
+		printf("ambient lightning ratio not in range [0.0,1.0]\n");
 	line = parse_color(line, cur_light->color);
-	if (line == NULL)
-		printf("COLOR ERROR");
+	if (line == null)
+		printf("color error");
 	line = skip_sp_ht(line);
 	if (*line != '\0')
-		printf("CAMERA PARAMETERS NOT VALID\n");
+		printf("camera parameters not valid\n");
 	add_to_list((void *)cur_light, &(data->lights));
+	return (line);
 }
 
-void	p_sphere(char *line, t_global *data)
+char	*p_sphere(char *line, t_global *data)
 {
 	t_sphere	*cur_sphere;
 
 	cur_sphere = (t_sphere *)malloc(sizeof(t_sphere));
-
 	line = parse_vector(line, &(cur_sphere->centre));
-	if (line == NULL)
-		printf("COORD ERROR");
-
-	cur_sphere->radius = ft_atof(line) / 2;
-	if (cur_sphere->radius < 0)
-		printf("MUST BE POSITIVE");
-	line = skip_float(line);
-
-	line = parse_color(line, cur_sphere->color);
-	if (line == NULL)
-		printf("COLOR ERROR");
-	line = skip_sp_ht(line);
-	if (*line != '\0')
-		printf("spHERE PARAMETERS NOT VALID\n");
-	wrap_object((void *)cur_sphere, &(data->objects), SPHERE);
+	if (line != NULL)
+	{
+		cur_sphere->radius = ft_atof(line) / 2;
+		if (cur_sphere->radius >= 0)
+		{
+			line = skip_float(line);
+			line = parse_color(line, cur_sphere->color);
+			if (line != NULL)
+				wrap_object((void *)cur_sphere, &(data->objects), SPHERE);
+		}
+		else
+			line = NULL;
+	}
+	return (line);
 }
 
-void	p_plane(char *line, t_global *data)
+char	*p_plane(char *line, t_global *data)
 {
 	t_plane		*cur_plane;
 
@@ -140,9 +144,10 @@ void	p_plane(char *line, t_global *data)
 	if (*line != '\0')
 		printf("spHERE PARAMETERS NOT VALID\n");
 	wrap_object((void *)cur_plane, &(data->objects), PLANE);
+	return (line);
 }
 
-void	p_square(char *line, t_global *data)
+char	*p_square(char *line, t_global *data)
 {
 	t_square	*cur_square;
 
@@ -164,9 +169,10 @@ void	p_square(char *line, t_global *data)
 	if (*line != '\0')
 		printf("sQu PARAMETERS NOT VALID\n");
 	wrap_object((void *)cur_square, &(data->objects), SQUARE);
+	return (line);
 }
 
-void	p_cylinder(char *line, t_global *data)
+char	*p_cylinder(char *line, t_global *data)
 {
 	t_cylinder	*cur_cylinder;
 
@@ -192,9 +198,10 @@ void	p_cylinder(char *line, t_global *data)
 	if (*line != '\0')
 		printf("CYLI PARAMETERS NOT VALID\n");
 	wrap_object((void *)cur_cylinder, &(data->objects), CYLINDER);
+	return (line);
 }
 
-void	p_triangle(char *line, t_global *data)
+char	*p_triangle(char *line, t_global *data)
 {
 	t_triangle	*cur_triangle;
 
@@ -215,4 +222,5 @@ void	p_triangle(char *line, t_global *data)
 	if (*line != '\0')
 		printf("TRIAngle PARAMETERS NOT VALID\n");
 	wrap_object((void *)cur_triangle, &(data->objects), TRIANGLE);
+	return (line);
 }

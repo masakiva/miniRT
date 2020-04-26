@@ -12,13 +12,14 @@
 
 NAME		= miniRT
 
+SRCS		+= minirt.c
 SRCS		+= parsing.c
 SRCS		+= parse_types.c
 SRCS		+= parse_utils.c
 SRCS		+= vectors.c
 SRCS		+= errors.c
 
-HEADERS		= parsing.h
+HEADERS		= minirt.h
 
 OBJS		= $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 

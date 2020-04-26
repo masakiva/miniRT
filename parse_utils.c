@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "minirt.h"
 #include <stdlib.h>
 
 char	*skip_sp_ht(char *str)
@@ -123,7 +123,7 @@ char	*parse_color(char *line, uint8_t color[4])
 	i = 2;
 	while (i >= 0)
 	{
-		tmp = ft_atoi(line);
+		tmp = ft_atoi(line); // atoi renvoie 0 s'il n'y a pas de nombre...
 		if (tmp >= 0 && tmp <= 255)
 			color[i] = (uint8_t)tmp;
 		else
