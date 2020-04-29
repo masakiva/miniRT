@@ -6,7 +6,10 @@
 void	putstr_stderr(char *str)
 {
 	if (ft_putstr_fd(str, STDERR_FILENO) == ERROR)
+	{
 		perror("Cannot write on STDERR");
+		exit(EXIT_FAILURE);
+	}
 }
 
 void	arg_missing()
@@ -31,36 +34,30 @@ void	alloc_data()
 
 void	gnl_error()
 {
-	perror("Cannot read file or allocate memory");
 	free(data);
+	perror("Cannot read file or allocate memory");
 }
 
 void	errors(void (*err_func)(void))
 {
-	if (ft_putstr_fd("Error\n", STDERR_FILENO) != ERROR)
-		(*err_func)();
-	else
-		stderr_error();
+	putstr_stderr("Error\n") // no free if it fails
+	(*err_func)();
 	exit(EXIT_FAILURE);
 }
 
-void	parsing_errors(size_t line_nb, uint8_t type_index, t_global *data, uint8_t err_code)
+void	parsing_errors(size_t line_nb, uint8_t type_index, t_global *data)
 {
 	/*static*/ char	*err_msg[NB_ELEM + 1] = {E_SPH, E_PLA, E_SQU, E_CYL, E_TRI, E_CAM, E_LIG, E_RES, E_AMB, E_ID};
-	/*static*/ char	*err_details[] = {E_O, E_OO};
 
-if 	putstr_stderr("Error\n") == -1
-	exit(EXIT_FAILURE);
-
-
+	free(data);
+	putstr_stderr("Error\n")
 	putstr_stderr("Line number ");
-	if (ft_putnbr_fd(line_nb, STDERR_FILENO) == -1)
-		stderr_error();
+	if (ft_putnbr_fd(line_nb, STDERR_FILENO) == ERROR)
+	{
+		perror("Cannot write on STDERR");
+		exit(EXIT_FAILURE);
+	}
 	putstr_stderr(": ");
 	putstr_stderr(err_msg[type_index]);
-	putstr_stderr("\n");
-	putstr_stderr(err_details[err_code]);
-	putstr_stderr("\n");
-	free(data);
 	exit(EXIT_FAILURE);
 }

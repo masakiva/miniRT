@@ -51,16 +51,32 @@ enum	e_objects
 # define E_SPH "Sphere parameters not valid. The following must be specified in order:\n"\
 	"· x,y,z coordinates of the sphere center: 0.0,0.0,20.6\n"\
 	"· the sphere diameter: 12.6\n"\
-	"· R,G,B colors in range [0-255]: 10, 0, 255\n"
+	"· R,G,B colors in range [0-255]: 10, 0, 255\n"\
+	"e.g. sp 0.0,0.0,20.6 12.6 10,0,255\n"
 # define E_PLA
 # define E_SQU
 # define E_CYL
 # define E_TRI
-# define E_CAM
-# define E_LIG
-# define E_RES "Resolution must be defined using two positive integers."
-# define E_AMB
-# define E_ID "Line does not begin with a proper element type identifier."
+# define E_CAM "Camera parameters not valid. The following must be specified in order:\n"\
+	"· x,y,z coordinates of the view point: 0.0,0.0,20.6\n"\
+	"· 3d normalized orientation vector. In range [-1,1] for each x,y,z axis: 0.0,0.0,1.0\n"\
+	"· FOV : Horizontal field of view in degrees in range [0,180]\n"\
+	"e.g. c -50.0,0,20 0,0,1 70\n"
+# define E_LIG  "Light parameters not valid. The following must be specified in order:\n"\
+	"· x,y,z coordinates of the light point: 0.0,0.0,20.6\n"\
+	"· the light brightness ratio in range [0.0,1.0]: 0.6\n"\
+	"· R,G,B colors in range [0-255]: 10, 0, 255\n"
+	"e.g. l -40.0,50.0,0.0 0.6 10,0,255\n"
+# define E_RES "Resolution parameters not valid. The following must be specified in order:\n"\
+	"· x render size\n"\
+	"· y render size\n"\
+	"e.g. R 1920 1080\n"
+# define E_AMB "Ambient lightning parameters not valid. The following must be specified in order:\n"\
+	"· ambient lighting ratio in range [0.0,1.0]: 0.2\n"\
+	"· R,G,B colors in range [0-255]: 255, 255, 255\n"\
+	"e.g. A 0.2 255,255,255\n"
+# define E_ID "Line does not begin with a proper element type identifier.\n"\
+	"Possible identifiers: R A c l sp pl sq cy tr\n"
 
 # include <stdint.h>
 # include "libft.h"

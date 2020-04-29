@@ -58,24 +58,20 @@ char	*p_camera(char *line, t_global *data)
 	t_camera	*cur_camera;
 
 	cur_camera = (t_camera *)malloc(sizeof(t_camera));
-
 	line = parse_vector(line, &(cur_camera->origin));
-	if (line == null)
-		printf("coord error\n");
-
-	line = parse_vector(line, &(cur_camera->direction));
-	if (line == null)
-		printf("o_vec error\n");
-
-	cur_camera->fov = ft_atoi(line);
-	if (cur_camera->fov < 0 || cur_camera->fov > 180)
-		printf("fov not in range [0,180]\n");
-	line = skip_int(line);
-
-	line = skip_sp_ht(line);
-	if (*line != '\0')
-		printf("camera parameters not valid\n");
-	add_to_list((void *)cur_camera, &(data->cameras));
+	if (line != NULL)
+	{
+		line = parse_vector(line, &(cur_camera->direction));
+		if (line != NULL)
+		{
+			cur_camera->fov = ft_atoi(line);
+			if (cur_camera->fov >= 0 && cur_camera->fov <= 180)
+			{
+				line = skip_int(line);
+				add_to_list((void *)cur_camera, &(data->cameras));
+			}
+		}
+	}
 	return (line);
 }
 
