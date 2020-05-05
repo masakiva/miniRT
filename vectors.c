@@ -118,7 +118,7 @@ t_vector	cross(t_vector v1, t_vector v2)
 	return (v3);
 }
 
-void		print(t_vector v)
+void		print_vec(t_vector v)
 {
 	printf("(%f, %f, %f)\n", v.x, v.y, v.z);
 }

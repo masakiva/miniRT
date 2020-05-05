@@ -53,10 +53,10 @@ enum	e_objects
 	"· the sphere diameter: 12.6\n"\
 	"· R,G,B colors in range [0-255]: 10, 0, 255\n"\
 	"e.g. sp 0.0,0.0,20.6 12.6 10,0,255\n"
-# define E_PLA
-# define E_SQU
-# define E_CYL
-# define E_TRI
+# define E_PLA ""
+# define E_SQU ""
+# define E_CYL ""
+# define E_TRI ""
 # define E_CAM "Camera parameters not valid. The following must be specified in order:\n"\
 	"· x,y,z coordinates of the view point: 0.0,0.0,20.6\n"\
 	"· 3d normalized orientation vector. In range [-1,1] for each x,y,z axis: 0.0,0.0,1.0\n"\
@@ -65,7 +65,7 @@ enum	e_objects
 # define E_LIG  "Light parameters not valid. The following must be specified in order:\n"\
 	"· x,y,z coordinates of the light point: 0.0,0.0,20.6\n"\
 	"· the light brightness ratio in range [0.0,1.0]: 0.6\n"\
-	"· R,G,B colors in range [0-255]: 10, 0, 255\n"
+	"· R,G,B colors in range [0-255]: 10, 0, 255\n"\
 	"e.g. l -40.0,50.0,0.0 0.6 10,0,255\n"
 # define E_RES "Resolution parameters not valid. The following must be specified in order:\n"\
 	"· x render size\n"\
@@ -206,6 +206,7 @@ t_vector		neg(t_vector v1);
 t_vector		unit(t_vector v1); // length en para?
 double			dot(t_vector v1, t_vector v2);
 t_vector		cross(t_vector v1, t_vector v2);
+void print_vec(t_vector v);
 
 t_global		*parse_rtfile(char *rtfile);
 char			*p_sphere(char *line, t_global *data);
@@ -233,6 +234,7 @@ char			*parse_o_vec(char *line, double o_vec[3]);
 void			add_to_list(void *cur_object, t_list **lst);
 void			wrap_object(void *cur_obj, t_list **lst, int8_t type);
 
+void			parsing_errors(size_t line_nb, uint8_t type_index, t_global *data);
 void			errors(void (*err_func)(void));
 void			arg_missing();
 void			bad_name();

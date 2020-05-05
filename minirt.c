@@ -82,7 +82,7 @@ void	fill_image(t_global *data)
 	size_t	width;
 	size_t	height;
 	t_ray	ray;
-	
+
 	ray.origin = ((t_camera *)data->cameras->content)->origin;
 	ray.direction = ((t_camera *)data->cameras->content)->direction;
 	width = data->res[0];
@@ -128,7 +128,7 @@ t_bool	draw_window(t_global *data)
 int		main(int argc, char **argv)
 {
 	t_global	*data;
-//	t_bool		ret;
+	t_bool		ret;
 
 //	char	*line;
 //	int		fd;
@@ -139,9 +139,9 @@ int		main(int argc, char **argv)
 	data = parse_rtfile(argv[1]);
 	if (data == NULL)
 		return (EXIT_FAILURE);
-//	ret = draw_window(data);
-//	if (ret == FALSE)
-//		return (EXIT_FAILURE);
+	ret = draw_window(data);
+	if (ret == FALSE)
+		return (EXIT_FAILURE);
 
 //	fd = open(argv[1], O_RDONLY);
 //	if (fd == ERROR)

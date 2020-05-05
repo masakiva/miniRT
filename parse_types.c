@@ -45,7 +45,7 @@ char	*p_ambient_lightning(char *line, t_global *data)
 		printf("ambient lightning ratio not in range [0.0,1.0]\n");
 
 	line = parse_color(line, data->color);
-	if (line == null)
+	if (line == NULL)
 		printf("color error in lightning");
 	line = skip_sp_ht(line);
 	if (*line != '\0')
@@ -81,14 +81,14 @@ char	*p_light(char *line, t_global *data)
 
 	cur_light = (t_light *)malloc(sizeof(t_light));
 	line = parse_coord(line, cur_light->coord);
-	if (line == null)
+	if (line == NULL)
 		printf("coord error");
 	cur_light->brightness = ft_atof(line);
 	line = skip_float(line);
 	if (cur_light->brightness < 0 || cur_light->brightness > 1)
 		printf("ambient lightning ratio not in range [0.0,1.0]\n");
 	line = parse_color(line, cur_light->color);
-	if (line == null)
+	if (line == NULL)
 		printf("color error");
 	line = skip_sp_ht(line);
 	if (*line != '\0')

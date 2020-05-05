@@ -32,6 +32,7 @@ CFLAGS		+= -Wextra
 CFLAGS		+= -Werror
 CFLAGS		+= -fsanitize=address
 CFLAGS		+= -Wpadded
+CFLAGS		+= -g3
 
 CPPFLAGS	+= -I ./
 CPPFLAGS	+= -I ../libft/

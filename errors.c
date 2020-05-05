@@ -34,13 +34,13 @@ void	alloc_data()
 
 void	gnl_error()
 {
-	free(data);
+	//free(data);
 	perror("Cannot read file or allocate memory");
 }
 
 void	errors(void (*err_func)(void))
 {
-	putstr_stderr("Error\n") // no free if it fails
+	putstr_stderr("Error\n"); // no free if it fails
 	(*err_func)();
 	exit(EXIT_FAILURE);
 }
@@ -50,7 +50,7 @@ void	parsing_errors(size_t line_nb, uint8_t type_index, t_global *data)
 	/*static*/ char	*err_msg[NB_ELEM + 1] = {E_SPH, E_PLA, E_SQU, E_CYL, E_TRI, E_CAM, E_LIG, E_RES, E_AMB, E_ID};
 
 	free(data);
-	putstr_stderr("Error\n")
+	putstr_stderr("Error\n");
 	putstr_stderr("Line number ");
 	if (ft_putnbr_fd(line_nb, STDERR_FILENO) == ERROR)
 	{

@@ -35,7 +35,7 @@ void	parse_line(char *line, t_global *data)
 			size = i < 5 ? 2 : 1;
 			if (ft_memcmp(line, str_type[i], size) == 0)
 			{
-				line = types[i](line + size, data)
+				line = types[i](line + size, data);
 				if (line == NULL)
 					parsing_errors(line_nb, i, data);
 				break ;
