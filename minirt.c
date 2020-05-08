@@ -14,7 +14,7 @@ void            image_pixel_put(t_image *img, int x, int y, int color)
 
 int		close_win(int keycode, t_global *data)
 {
-	if (keycode == 53)
+	if (keycode == 65307)
 	{
 		mlx_destroy_image(data->mlx_ptr, data->img.ptr);
 		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
@@ -58,20 +58,16 @@ t_bool	intersect(t_ray ray, t_global *data)
 	return (FALSE);
 }
 
-t_ray	calc_dir(t_ray ray, size_t x, size_t y, t_global *data)
+t_ray	calc_dir(t_ray ray, size_t x, size_t y, double halfwidth, double halfheight, size_t width, size_t height)
 {
-	double	halfwidth;
-	double	halfheight;
 	double	x_mod;
 	double	y_mod;
 
-	halfwidth = tan((M_PI * ((t_camera *)data->cameras->content)->fov / 180) / 2);
-	halfheight = halfwidth * (data->res[0] / data->res[1]);
-	x_mod = 2 * x / data->res[0] - 1;
-	y_mod = 2 * y / data->res[1] - 1;
-	ray.direction.x += halfwidth * x_mod; //?
-	ray.direction.y += halfheight * y_mod; //?
-	ray.direction = unit(ray.direction); //?
+	x_mod = 2 * (double)x / (double)width - 1;
+	y_mod = 2 * (double)y / (double)height - 1;
+	ray.direction.x = halfwidth * x_mod; 
+	ray.direction.y = halfheight * y_mod;
+	ray.direction = unit(ray.direction);
 	return (ray);
 }
 
@@ -81,19 +77,23 @@ void	fill_image(t_global *data)
 	size_t	y;
 	size_t	width;
 	size_t	height;
+	double	halfwidth;
+	double	halfheight;
 	t_ray	ray;
 
 	ray.origin = ((t_camera *)data->cameras->content)->origin;
 	ray.direction = ((t_camera *)data->cameras->content)->direction;
 	width = data->res[0];
 	height = data->res[1];
+	halfwidth = tan((M_PI * ((t_camera *)data->cameras->content)->fov / 180) / 2);
+	halfheight = halfwidth * ((double)height / (double)width);
 	x = 0;
 	while (x < width)
 	{
 		y = 0;
 		while (y < height)
 		{
-			if (intersect(calc_dir(ray, x, y, data), data) == TRUE)
+			if (intersect(calc_dir(ray, x, y, halfwidth, halfheight, width, height), data) == TRUE)
 				image_pixel_put(&(data->img), x, y, 0x00FFFFFF);
 			else
 				image_pixel_put(&(data->img), x, y, 0x00000000);

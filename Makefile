@@ -30,29 +30,29 @@ CC			= clang
 CFLAGS		+= -Wall
 CFLAGS		+= -Wextra
 CFLAGS		+= -Werror
-CFLAGS		+= -fsanitize=address
+#CFLAGS		+= -fsanitize=address
 CFLAGS		+= -Wpadded
-CFLAGS		+= -g3
+#CFLAGS		+= -g3
 
 CPPFLAGS	+= -I ./
 CPPFLAGS	+= -I ../libft/
-CPPFLAGS	+= -I ./sources_mlx/minilibx_opengl_20191021/
+CPPFLAGS	+= -I ../minilibx-linux/
 
 LDFLAGS		+= -L ./
 LDFLAGS		+= -L ../libft/
-LDFLAGS		+= -L ./sources_mlx/minilibx_opengl_20191021/
-LDFLAGS		+= -framework OpenGL
-LDFLAGS		+= -framework AppKit
-LDFLAGS		+= -fsanitize=address
+LDFLAGS		+= -L ../minilibx-linux/
+#LDFLAGS		+= -fsanitize=address
 
 LDLIBS		+= -lft
 LDLIBS		+= -lmlx
+LDLIBS		+= -lXext
+LDLIBS		+= -lX11
 LDLIBS		+= -lm
 
 all:			$(NAME)
 
 $(NAME):		$(OBJS)
-				$(CC) $(LDFLAGS) $(LDLIBS) -o $@ $^
+				$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 $(OBJDIR)/%.o:	%.c
 				$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
