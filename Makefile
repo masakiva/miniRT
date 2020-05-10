@@ -30,7 +30,7 @@ CC			= clang
 CFLAGS		+= -Wall
 CFLAGS		+= -Wextra
 CFLAGS		+= -Werror
-#CFLAGS		+= -fsanitize=address
+CFLAGS		+= -fsanitize=address
 CFLAGS		+= -Wpadded
 #CFLAGS		+= -g3
 
@@ -41,7 +41,7 @@ CPPFLAGS	+= -I ../minilibx-linux/
 LDFLAGS		+= -L ./
 LDFLAGS		+= -L ../libft/
 LDFLAGS		+= -L ../minilibx-linux/
-#LDFLAGS		+= -fsanitize=address
+LDFLAGS		+= -fsanitize=address
 
 LDLIBS		+= -lft
 LDLIBS		+= -lmlx

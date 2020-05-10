@@ -33,6 +33,7 @@ t_bool	i_sphere(t_ray ray, void *obj)
 
 	sp = (t_sphere *)obj;
 	ray.origin = sub(ray.origin, sp->centre);
+	ray.direction = sub(ray.direction, ray.origin);
 	a = length_sq(ray.direction);
 	b = 2 * dot(ray.direction, ray.origin);
 	c = length_sq(ray.origin) - sp->radius;
@@ -58,19 +59,6 @@ t_bool	intersect(t_ray ray, t_global *data)
 	return (FALSE);
 }
 
-t_ray	calc_dir(t_ray ray, size_t x, size_t y, double halfwidth, double halfheight, size_t width, size_t height)
-{
-	double	x_mod;
-	double	y_mod;
-
-	x_mod = 2 * (double)x / (double)width - 1;
-	y_mod = 2 * (double)y / (double)height - 1;
-	ray.direction.x = halfwidth * x_mod; 
-	ray.direction.y = halfheight * y_mod;
-	ray.direction = unit(ray.direction);
-	return (ray);
-}
-
 void	fill_image(t_global *data)
 {
 	size_t	x;
@@ -79,6 +67,8 @@ void	fill_image(t_global *data)
 	size_t	height;
 	double	halfwidth;
 	double	halfheight;
+	double	px_w;
+	double	px_h;
 	t_ray	ray;
 
 	ray.origin = ((t_camera *)data->cameras->content)->origin;
@@ -87,20 +77,33 @@ void	fill_image(t_global *data)
 	height = data->res[1];
 	halfwidth = tan((M_PI * ((t_camera *)data->cameras->content)->fov / 180) / 2);
 	halfheight = halfwidth * ((double)height / (double)width);
-	x = 0;
-	while (x < width)
+	px_w = halfwidth * 2 / (double)width;
+	px_h = halfheight * 2 / (double)height;
+	ray.direction.x = -1 * halfwidth + px_w / 2; // a retirer
+	ray.direction.y = 1 * halfheight - px_h / 2;
+	printf("dir.x = %f, dir.y = %f (x = 0, y = 0)\n", ray.direction.x, ray.direction.y);
+	y = 0;
+	while (y < height)
 	{
-		y = 0;
-		while (y < height)
+		ray.direction.x = -1 * halfwidth + (px_w / 2);
+		x = 0;
+		while (x < width)
 		{
-			if (intersect(calc_dir(ray, x, y, halfwidth, halfheight, width, height), data) == TRUE)
+			//ray.direction = unit(ray.direction); // pour les couleurs par rapport a la distance?
+			if (intersect(ray, data) == TRUE)
 				image_pixel_put(&(data->img), x, y, 0x00FFFFFF);
 			else
 				image_pixel_put(&(data->img), x, y, 0x00000000);
-			y++;
+			ray.direction.x += px_w;
+			x++;
 		}
-		x++;
+		ray.direction.y -= px_h;
+		y++;
 	}
+	ray.direction.x -= px_w;
+	ray.direction.y += px_h;
+	printf("dir.x = %f, dir.y = %f (x = %zu, y = %zu)\n", ray.direction.x, ray.direction.y, x - 1, y - 1);
+
 }
 
 t_bool	draw_image(t_global *data)
