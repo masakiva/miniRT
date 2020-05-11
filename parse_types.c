@@ -44,7 +44,7 @@ char	*p_ambient_lightning(char *line, t_global *data)
 	if (data->amb_light < 0 || data->amb_light > 1)
 		printf("ambient lightning ratio not in range [0.0,1.0]\n");
 
-	line = parse_color(line, data->color);
+	line = parse_color(line, &(data->color));
 	if (line == NULL)
 		printf("color error in lightning");
 	line = skip_sp_ht(line);
@@ -87,7 +87,7 @@ char	*p_light(char *line, t_global *data)
 	line = skip_float(line);
 	if (cur_light->brightness < 0 || cur_light->brightness > 1)
 		printf("ambient lightning ratio not in range [0.0,1.0]\n");
-	line = parse_color(line, cur_light->color);
+	line = parse_color(line, &(cur_light->color));
 	if (line == NULL)
 		printf("color error");
 	line = skip_sp_ht(line);
@@ -109,9 +109,8 @@ char	*p_sphere(char *line, t_global *data)
 		if (cur_sphere->radius >= 0)
 		{
 			line = skip_float(line);
-			line = parse_color(line, cur_sphere->color);
 			if (line != NULL)
-				wrap_object((void *)cur_sphere, &(data->objects), SPHERE);
+				line = wrap_object((void *)cur_sphere, &(data->objects), SPHERE, line);
 		}
 		else
 			line = NULL;
@@ -126,20 +125,8 @@ char	*p_plane(char *line, t_global *data)
 	cur_plane = (t_plane *)malloc(sizeof(t_plane));
 
 	line = parse_vector(line, &(cur_plane->position));
-	if (line == NULL)
-		printf("COORD ERROR");
-
 	line = parse_vector(line, &(cur_plane->normal));
-	if (line == NULL)
-		printf("o_vec ERROR\n");
-
-	line = parse_color(line, cur_plane->color);
-	if (line == NULL)
-		printf("COLOR ERROR");
-	line = skip_sp_ht(line);
-	if (*line != '\0')
-		printf("spHERE PARAMETERS NOT VALID\n");
-	wrap_object((void *)cur_plane, &(data->objects), PLANE);
+	line = wrap_object((void *)cur_plane, &(data->objects), PLANE, line);
 	return (line);
 }
 
@@ -149,22 +136,12 @@ char	*p_square(char *line, t_global *data)
 
 	cur_square = (t_square *)malloc(sizeof(t_square));
 	line = parse_coord(line, cur_square->coord);
-	if (line == NULL)
-		printf("COORD ERROR");
 	line = parse_o_vec(line, cur_square->o_vec);
-	if (line == NULL)
-		printf("o_vec ERROR\n");
 	cur_square->height = ft_atof(line);
 	line = skip_float(line);
 	if (cur_square->height < 0)
 		printf("MUST BE POSITIVE");
-	line = parse_color(line, cur_square->color);
-	if (line == NULL)
-		printf("COLOR ERROR");
-	line = skip_sp_ht(line);
-	if (*line != '\0')
-		printf("sQu PARAMETERS NOT VALID\n");
-	wrap_object((void *)cur_square, &(data->objects), SQUARE);
+	line = wrap_object((void *)cur_square, &(data->objects), SQUARE, line);
 	return (line);
 }
 
@@ -174,11 +151,7 @@ char	*p_cylinder(char *line, t_global *data)
 
 	cur_cylinder = (t_cylinder *)malloc(sizeof(t_cylinder));
 	line = parse_coord(line, cur_cylinder->coord);
-	if (line == NULL)
-		printf("COORD ERROR");
 	line = parse_o_vec(line, cur_cylinder->o_vec);
-	if (line == NULL)
-		printf("o_vec ERROR\n");
 	cur_cylinder->diameter = ft_atof(line);
 	line = skip_float(line);
 	if (cur_cylinder->diameter < 0)
@@ -187,13 +160,7 @@ char	*p_cylinder(char *line, t_global *data)
 	line = skip_float(line);
 	if (cur_cylinder->height < 0)
 		printf("MUST BE POSITIVE");
-	line = parse_color(line, cur_cylinder->color);
-	if (line == NULL)
-		printf("COLOR ERROR");
-	line = skip_sp_ht(line);
-	if (*line != '\0')
-		printf("CYLI PARAMETERS NOT VALID\n");
-	wrap_object((void *)cur_cylinder, &(data->objects), CYLINDER);
+	line = wrap_object((void *)cur_cylinder, &(data->objects), CYLINDER, line);
 	return (line);
 }
 
@@ -203,20 +170,8 @@ char	*p_triangle(char *line, t_global *data)
 
 	cur_triangle = (t_triangle *)malloc(sizeof(t_triangle));
 	line = parse_coord(line, cur_triangle->coord1);
-	if (line == NULL)
-		printf("COORD ERROR");
 	line = parse_coord(line, cur_triangle->coord2);
-	if (line == NULL)
-		printf("COORD ERROR");
 	line = parse_coord(line, cur_triangle->coord3);
-	if (line == NULL)
-		printf("COORD ERROR");
-	line = parse_color(line, cur_triangle->color);
-	if (line == NULL)
-		printf("COLOR ERROR");
-	line = skip_sp_ht(line);
-	if (*line != '\0')
-		printf("TRIAngle PARAMETERS NOT VALID\n");
-	wrap_object((void *)cur_triangle, &(data->objects), TRIANGLE);
+	line = wrap_object((void *)cur_triangle, &(data->objects), TRIANGLE, line);
 	return (line);
 }

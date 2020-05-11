@@ -18,27 +18,7 @@ double		sq(double n)
 	return (n * n);
 }
 
-t_vector	new_vector_default(void)
-{
-	t_vector	v;
-
-	v.x = 0;
-	v.y = 1;
-	v.z = 0;
-	return (v);
-}
-
-t_vector	new_vector(double x, double y, double z)
-{
-	t_vector	v;
-
-	v.x = x;
-	v.y = y;
-	v.z = z;
-	return (v);
-}
-
-double		length_sq(t_vector v)
+double		length_sq(t_vector v)// to keep? same as dot(v, v)
 {
 	return (sq(v.x) + sq(v.y) + sq(v.z));
 }
@@ -48,7 +28,7 @@ double		length(t_vector v)
 	return (sqrt(length_sq(v)));
 }
 
-t_vector	add(t_vector v1, t_vector v2)
+t_vector	add(t_vector v1, t_vector v2)// to keep?
 {
 	t_vector v3;
 
@@ -68,7 +48,7 @@ t_vector	sub(t_vector v1, t_vector v2)
 	return (v3);
 }
 
-t_vector	mult(t_vector v1, double f)
+t_vector	mult(t_vector v1, double f)// to keep?
 {
 	t_vector v2;
 
@@ -78,7 +58,7 @@ t_vector	mult(t_vector v1, double f)
 	return (v2);
 }
 
-t_vector	divi(t_vector v1, double f)
+t_vector	div(t_vector v1, double f)// to keep?
 {
 	t_vector v2;
 
@@ -88,7 +68,7 @@ t_vector	divi(t_vector v1, double f)
 	return (v2);
 }
 
-t_vector	neg(t_vector v1)
+t_vector	neg(t_vector v1)// to keep?
 {
 	t_vector v2;
 
@@ -100,7 +80,7 @@ t_vector	neg(t_vector v1)
 
 t_vector	unit(t_vector v1) // length en para?
 {
-	return (divi(v1, length(v1)));
+	return (div(v1, length(v1)));
 }
 
 double		dot(t_vector v1, t_vector v2)

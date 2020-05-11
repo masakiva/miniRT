@@ -55,7 +55,7 @@ enum	e_objects
 	"e.g. sp 0.0,0.0,20.6 12.6 10,0,255\n"
 # define E_PLA ""
 # define E_SQU ""
-# define E_CYL ""
+# define E_CYL "attention a l'ordre dans l'exemple"
 # define E_TRI ""
 # define E_CAM "Camera parameters not valid. The following must be specified in order:\n"\
 	"· x,y,z coordinates of the view point: 0.0,0.0,20.6\n"\
@@ -111,31 +111,28 @@ typedef struct	s_light
 {
 	double		coord[3];
 	double		brightness;
-	uint8_t		color[4];
+	int			color;
 	uint8_t		pad[4];
 }				t_light;
 
 typedef struct	s_obj
 {
 	void		*obj;
+	int			color;
 	uint8_t		type;
-	uint8_t		pad[7];
+	uint8_t		pad[3];
 }				t_obj;
 
 typedef struct	s_sphere
 {
 	t_point		centre;
 	double		radius;
-	uint8_t		color[4];
-	uint8_t		pad[4];
 }				t_sphere;
 
 typedef struct	s_plane
 {
 	t_point		position;
 	t_vector	normal;
-	uint8_t		color[4];
-	uint8_t		pad[4];
 }				t_plane;
 
 typedef struct	s_square
@@ -143,8 +140,6 @@ typedef struct	s_square
 	double		coord[3];
 	double		o_vec[3];
 	double		height;
-	uint8_t		color[4];
-	uint8_t		pad[4];
 }				t_square;
 
 typedef struct	s_cylinder
@@ -153,8 +148,6 @@ typedef struct	s_cylinder
 	double		o_vec[3];
 	double		diameter;
 	double		height;
-	uint8_t		color[4];
-	uint8_t		pad[4];
 }				t_cylinder;
 
 typedef struct	s_triangle
@@ -162,14 +155,12 @@ typedef struct	s_triangle
 	double		coord1[3];
 	double		coord2[3];
 	double		coord3[3];
-	uint8_t		color[4];
-	uint8_t		pad[4];
 }				t_triangle;
 
 typedef struct	s_image
 {
 	void	*ptr;
-	char	*addr;
+	char	*addr;// 1 octet pour une couleur sur 4?
 	int		bpp;
 	int		line_len;
 	int		endian;
@@ -183,7 +174,7 @@ typedef struct	s_global
 	t_image		img;
 	size_t		res[2];
 	double		amb_light;
-	uint8_t		color[4];
+	int			color;
 	uint8_t		pad[4];
 	t_list		*cameras;
 	t_list		*lights;
@@ -191,7 +182,7 @@ typedef struct	s_global
 }				t_global;
 
 typedef char	*(*t_parse)(char *, t_global *);
-typedef t_bool	(*t_intersect)(t_ray, void *);
+typedef double	(*t_intersect)(t_ray *, void *);
 
 double			sq(double n);
 t_vector		new_vector_default(void);
@@ -229,10 +220,10 @@ char			*skip_int_comma(char *str);
 char			*skip_float_comma(char *str);
 char			*parse_coord(char *line, double coord[3]); //tmp
 char			*parse_vector(char *line, t_vector *v);
-char			*parse_color(char *line, uint8_t color[4]);
+char			*parse_color(char *line, int *color);
 char			*parse_o_vec(char *line, double o_vec[3]);
 void			add_to_list(void *cur_object, t_list **lst);
-void			wrap_object(void *cur_obj, t_list **lst, int8_t type);
+char			*wrap_object(void *cur_obj, t_list **lst, int8_t type, char *line);
 
 void			parsing_errors(size_t line_nb, uint8_t type_index, t_global *data);
 void			errors(void (*err_func)(void));

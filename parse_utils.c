@@ -113,19 +113,18 @@ char	*parse_vector(char *line, t_vector *v)
 	return (line);
 }
 
-char	*parse_color(char *line, uint8_t color[4])
+char	*parse_color(char *line, int *color)
 {
 	int8_t	i;
 	int		tmp;
 
-	// utiliser directement un int? en se servant de <<
-	color[3] = 0;
+	*color = 0;
 	i = 2;
 	while (i >= 0)
 	{
 		tmp = ft_atoi(line); // atoi renvoie 0 s'il n'y a pas de nombre...
 		if (tmp >= 0 && tmp <= 255)
-			color[i] = (uint8_t)tmp;
+			*color |= tmp << 8 * i;
 		else
 			printf("COLOR NOT VALID\n");
 		line = skip_int_comma(line);
@@ -158,7 +157,7 @@ void	add_to_list(void *cur_obj, t_list **lst)
 	ft_lstadd_back(lst, new);
 }
 
-void	wrap_object(void *cur_obj, t_list **lst, int8_t type)
+char	*wrap_object(void *cur_obj, t_list **lst, int8_t type, char *line)
 {
 	t_obj		*wrapper;
 
@@ -166,5 +165,7 @@ void	wrap_object(void *cur_obj, t_list **lst, int8_t type)
 	//errr
 	wrapper->type = type;
 	wrapper->obj = cur_obj;
+	line = parse_color(line, &(wrapper->color));
 	add_to_list(wrapper, lst);
+	return (line);
 }

@@ -23,87 +23,101 @@ int		close_win(int keycode, t_global *data)
 	return (TRUE);
 }
 
-t_bool	i_sphere(t_ray ray, void *obj)
+double	i_sphere(t_ray *ray, void *obj)
 {
 	t_sphere	*sp;
+	t_vector	OC;
 	double		a;
 	double		b;
 	double		c;
 	double		discriminant;
+	double		t;
 
 	sp = (t_sphere *)obj;
-	ray.origin = sub(ray.origin, sp->centre);
-	ray.direction = sub(ray.direction, ray.origin);
-	a = length_sq(ray.direction);
-	b = 2 * dot(ray.direction, ray.origin);
-	c = length_sq(ray.origin) - sp->radius;
+	OC = sub(ray->origin, sp->centre);
+	//ray.direction = sub(ray.direction, ray.origin);
+	a = length_sq(ray->direction);
+	b = 2 * dot(ray->direction, OC);
+	c = length_sq(OC) - sq(sp->radius);
 	discriminant = sq(b) - 4 * a * c;
 	if (discriminant < 0)
-		return (FALSE);
-	return (TRUE);
+		t = -1;
+	else
+		t = (-1 * b - sqrt(discriminant)) / (2 * a);
+	//t2 = (-1 * b + sqrt(discriminant)) / (2 * a);
+	return (t);
 }
 
-t_bool	intersect(t_ray ray, t_global *data)
+int		intersect(t_ray *ray, t_global *data)
 {
 	static t_intersect	types[1/*NB_OBJ*/] = {i_sphere/*, i_plane,
 		i_square, i_cylinder, i_triangle*/};
-	t_list			*cur;
+	t_list			*cur_elem;
+	double			t;
+	double			t_cur;
+	int				color;
 
-	cur = data->objects;
-	while (cur != NULL)
+	t = 2147483647;
+	cur_elem = data->objects;
+	while (cur_elem != NULL)
 	{
-		if(types[((t_obj *)cur->content)->type](ray, ((t_obj *)cur->content)->obj) == TRUE)
-			return (TRUE);
-		cur = cur->next;
+		t_cur = types[((t_obj *)cur_elem->content)->type](ray, ((t_obj *)cur_elem->content)->obj);
+		if(t_cur >= 0 && t_cur < t) // ou >= 1?
+		{
+			color = ((t_obj *)cur_elem->content)->color;
+			t = t_cur;
+		}
+		cur_elem = cur_elem->next;
 	}
-	return (FALSE);
+	if (t == 2147483647)
+		return (0x00000000);
+	else
+		return (color);
 }
 
 void	fill_image(t_global *data)
 {
 	size_t	x;
 	size_t	y;
-	size_t	width;
-	size_t	height;
-	double	halfwidth;
-	double	halfheight;
-	double	px_w;
-	double	px_h;
+	size_t	view_width;
+	size_t	view_height;
+	double	half_width;
+	double	half_height;
+	double	pixel_size;
+	int		color;
 	t_ray	ray;
 
 	ray.origin = ((t_camera *)data->cameras->content)->origin;
 	ray.direction = ((t_camera *)data->cameras->content)->direction;
-	width = data->res[0];
-	height = data->res[1];
-	halfwidth = tan((M_PI * ((t_camera *)data->cameras->content)->fov / 180) / 2);
-	halfheight = halfwidth * ((double)height / (double)width);
-	px_w = halfwidth * 2 / (double)width;
-	px_h = halfheight * 2 / (double)height;
-	ray.direction.x = -1 * halfwidth + px_w / 2; // a retirer
-	ray.direction.y = 1 * halfheight - px_h / 2;
-	printf("dir.x = %f, dir.y = %f (x = 0, y = 0)\n", ray.direction.x, ray.direction.y);
+	view_width = data->res[0];
+	view_height = data->res[1];
+
+	half_width = tan((M_PI * ((t_camera *)data->cameras->content)->fov / 180) / 2);
+	half_height = half_width * ((double)view_height / (double)view_width);
+	pixel_size = half_width * 2 / (double)view_width;
+
+	ray.direction.x += -1 * half_width + pixel_size / 2; // a retirer
+	ray.direction.y += half_height - pixel_size / 2;
+	printf("dir.x = %f, dir.y = %f (x = 0, y = 0)\n", ray.direction.x, ray.direction.y); // a retirer
+
 	y = 0;
-	while (y < height)
+	while (y < view_height)
 	{
-		ray.direction.x = -1 * halfwidth + (px_w / 2);
 		x = 0;
-		while (x < width)
+		while (x < view_width)
 		{
 			//ray.direction = unit(ray.direction); // pour les couleurs par rapport a la distance?
-			if (intersect(ray, data) == TRUE)
-				image_pixel_put(&(data->img), x, y, 0x00FFFFFF);
-			else
-				image_pixel_put(&(data->img), x, y, 0x00000000);
-			ray.direction.x += px_w;
+			color = intersect(&ray, data);
+			image_pixel_put(&(data->img), x, y, color);
+			ray.direction.x += pixel_size;
 			x++;
 		}
-		ray.direction.y -= px_h;
+		ray.direction.y -= pixel_size;
+		ray.direction.x -= half_width * 2;
 		y++;
 	}
-	ray.direction.x -= px_w;
-	ray.direction.y += px_h;
-	printf("dir.x = %f, dir.y = %f (x = %zu, y = %zu)\n", ray.direction.x, ray.direction.y, x - 1, y - 1);
-
+	ray.direction.y += pixel_size; // a retirer
+	printf("dir.x = %f, dir.y = %f (x = %zu, y = %zu)\n", ray.direction.x, ray.direction.y, x - 1, y - 1); // a retirer
 }
 
 t_bool	draw_image(t_global *data)
@@ -111,6 +125,8 @@ t_bool	draw_image(t_global *data)
 	data->img.ptr = mlx_new_image(data->mlx_ptr, data->res[0], data->res[1]);
 	data->img.addr = mlx_get_data_addr(data->img.ptr,
 			&(data->img.bpp), &(data->img.line_len), &(data->img.endian));
+	printf("bpp = %d, line_len = %d, endian = %d\n", data->img.bpp, data->img.line_len, data->img.endian);
+	//mlx_get_color_value and endian
 	fill_image(data);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.ptr, 0, 0);
 	return (TRUE);
