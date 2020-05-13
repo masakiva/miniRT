@@ -225,6 +225,11 @@ char			*parse_o_vec(char *line, double o_vec[3]);
 void			add_to_list(void *cur_object, t_list **lst);
 char			*wrap_object(void *cur_obj, t_list **lst, int8_t type, char *line);
 
+int				close_win(int keycode, t_global *data);
+t_bool			draw_image(t_global *data);
+t_bool			draw_window(t_global *data);
+void			fill_image(t_global *data);
+
 void			parsing_errors(size_t line_nb, uint8_t type_index, t_global *data);
 void			errors(void (*err_func)(void));
 void			arg_missing();

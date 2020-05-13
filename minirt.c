@@ -1,5 +1,4 @@
 #include "minirt.h"
-#include <mlx.h>
 #include <math.h>
 #include <stdlib.h>
 
@@ -11,17 +10,6 @@ void            image_pixel_put(t_image *img, int x, int y, int color)
     *(unsigned int*)dst = color;
 }
 
-
-int		close_win(int keycode, t_global *data)
-{
-	if (keycode == 65307)
-	{
-		mlx_destroy_image(data->mlx_ptr, data->img.ptr);
-		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
-		exit(EXIT_SUCCESS);
-	}
-	return (TRUE);
-}
 
 double	i_sphere(t_ray *ray, void *obj)
 {
@@ -41,10 +29,9 @@ double	i_sphere(t_ray *ray, void *obj)
 	c = length_sq(OC) - sq(sp->radius);
 	discriminant = sq(b) - 4 * a * c;
 	if (discriminant < 0)
-		t = -1;
+		t = 2147483647;
 	else
 		t = (-1 * b - sqrt(discriminant)) / (2 * a);
-	//t2 = (-1 * b + sqrt(discriminant)) / (2 * a);
 	return (t);
 }
 
@@ -107,7 +94,7 @@ void	fill_image(t_global *data)
 		while (x < view_width)
 		{
 			//ray.direction = unit(ray.direction); // pour les couleurs par rapport a la distance?
-			color = intersect(&ray, data);
+			color = intersect(&ray, data) * data->amb_light;
 			image_pixel_put(&(data->img), x, y, color);
 			ray.direction.x += pixel_size;
 			x++;
@@ -118,30 +105,6 @@ void	fill_image(t_global *data)
 	}
 	ray.direction.y += pixel_size; // a retirer
 	printf("dir.x = %f, dir.y = %f (x = %zu, y = %zu)\n", ray.direction.x, ray.direction.y, x - 1, y - 1); // a retirer
-}
-
-t_bool	draw_image(t_global *data)
-{
-	data->img.ptr = mlx_new_image(data->mlx_ptr, data->res[0], data->res[1]);
-	data->img.addr = mlx_get_data_addr(data->img.ptr,
-			&(data->img.bpp), &(data->img.line_len), &(data->img.endian));
-	printf("bpp = %d, line_len = %d, endian = %d\n", data->img.bpp, data->img.line_len, data->img.endian);
-	//mlx_get_color_value and endian
-	fill_image(data);
-	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.ptr, 0, 0);
-	return (TRUE);
-}
-
-t_bool	draw_window(t_global *data)
-{
-	data->mlx_ptr = mlx_init();
-	if (data->mlx_ptr == NULL)
-		return (FALSE);
-	data->win_ptr = mlx_new_window(data->mlx_ptr, data->res[0], data->res[1], "miniRT");
-	draw_image(data);
-	mlx_key_hook(data->win_ptr, &close_win, data);
-	mlx_loop(data->mlx_ptr);
-	return (TRUE);
 }
 
 int		main(int argc, char **argv)

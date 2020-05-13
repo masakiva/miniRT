@@ -17,6 +17,7 @@ SRCS		+= parsing.c
 SRCS		+= parse_types.c
 SRCS		+= parse_utils.c
 SRCS		+= vectors.c
+SRCS		+= mlx_handling.c
 SRCS		+= errors.c
 
 HEADERS		= minirt.h
