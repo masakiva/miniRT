@@ -88,6 +88,20 @@ char	*skip_float_comma(char *str)
 	return (str);
 }
 
+char	*parse_int(char *line, int *i)
+{
+	*i = ft_atoi(line);
+	line = skip_float(line);
+	return (line);
+}
+
+char	*parse_float(char *line, double *f)
+{
+	*f = ft_atof(line);
+	line = skip_float(line);
+	return (line);
+}
+
 char	*parse_coord(char *line, double coord[3]) // temporaire
 {
 	int8_t	i;
@@ -113,27 +127,37 @@ char	*parse_vector(char *line, t_vector *v)
 	return (line);
 }
 
-char	*parse_color(char *line, int *color)
+char	*parse_color(char *line, t_rgb *color)
 {
-	int8_t	i;
-	int		tmp;
-
-	*color = 0;
-	i = 2;
-	while (i >= 0)
-	{
-		tmp = ft_atoi(line); // atoi renvoie 0 s'il n'y a pas de nombre...
-		if (tmp >= 0 && tmp <= 255)
-			*color |= tmp << 8 * i;
-		else
-			printf("COLOR NOT VALID\n");
-		line = skip_int_comma(line);
-		i--;
-	}
+	color->x = (double)ft_atoi(line); // atoi renvoie 0 s'il n'y a pas de nombre...
+	if (color->x < 0.0 || color->x > 255.0) return (NULL);
+	line = skip_int_comma(line);
+	color->y = (double)ft_atoi(line);
+	if (color->y < 0.0 || color->y > 255.0) return (NULL);
+	line = skip_int_comma(line);
+	color->z = (double)ft_atoi(line);
+	if (color->z < 0.0 || color->z > 255.0) return (NULL);
+	line = skip_int_comma(line);
 	return (line);
+//	int8_t	i;
+//	int		tmp;
+//
+//	*color = 0;
+//	i = 2;
+//	while (i >= 0)
+//	{
+//		tmp = ft_atoi(line);
+//		if (tmp >= 0 && tmp <= 255)
+//			*color |= tmp << 8 * i;
+//		else
+//			printf("COLOR NOT VALID\n");
+//		line = skip_int_comma(line);
+//		i--;
+//	}
+//	return (line);
 }
 
-char	*parse_o_vec(char *line, double o_vec[3])
+char	*parse_o_vec(char *line, double o_vec[3])// temp
 {
 	int8_t	i;
 
@@ -166,6 +190,7 @@ char	*wrap_object(void *cur_obj, t_list **lst, int8_t type, char *line)
 	wrapper->type = type;
 	wrapper->obj = cur_obj;
 	line = parse_color(line, &(wrapper->color));
+	//errr
 	add_to_list(wrapper, lst);
 	return (line);
 }

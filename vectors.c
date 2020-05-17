@@ -62,7 +62,7 @@ t_vector	div(t_vector v1, double f)// to keep?
 {
 	t_vector v2;
 
-	v2.x = v1.x / f;
+	v2.x = v1.x / f; // div by zero error
 	v2.y = v1.y / f;
 	v2.z = v1.z / f;
 	return (v2);
@@ -80,7 +80,7 @@ t_vector	neg(t_vector v1)// to keep?
 
 t_vector	unit(t_vector v1) // length en para?
 {
-	return (div(v1, length(v1)));
+	return (div(v1, length(v1)));// div by zero
 }
 
 double		dot(t_vector v1, t_vector v2)

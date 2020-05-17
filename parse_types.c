@@ -39,17 +39,14 @@ char	*p_resolution(char *line, t_global *data)
 
 char	*p_ambient_lightning(char *line, t_global *data)
 {
-	data->amb_light = ft_atof(line);
-	line = skip_float(line);
-	if (data->amb_light < 0 || data->amb_light > 1)
-		printf("ambient lightning ratio not in range [0.0,1.0]\n");
-
-	line = parse_color(line, &(data->color));
-	if (line == NULL)
-		printf("color error in lightning");
-	line = skip_sp_ht(line);
-	if (*line != '\0')
-		printf("ambient lightning not valid\n");
+	line = parse_float(line, &(data->amb_light));
+	if (line != NULL && data->amb_light >= 0.0 && data->amb_light <= 1.0)
+	{
+		line = parse_color(line, &(data->color));
+		//errr
+	}
+	else // hmm
+		line = NULL;
 	return (line);
 }
 
@@ -64,10 +61,9 @@ char	*p_camera(char *line, t_global *data)
 		line = parse_vector(line, &(cur_camera->direction));
 		if (line != NULL)
 		{
-			cur_camera->fov = ft_atoi(line);
+			line = parse_int(line, &(cur_camera->fov));
 			if (cur_camera->fov >= 0 && cur_camera->fov <= 180)
 			{
-				line = skip_int(line);
 				add_to_list((void *)cur_camera, &(data->cameras));
 			}
 		}
@@ -75,24 +71,21 @@ char	*p_camera(char *line, t_global *data)
 	return (line);
 }
 
-char	*p_light(char *line, t_global *data)
+char	*p_light(char *line, t_global *data) // error in return, ptr of line in parameter
 {
 	t_light		*cur_light;
 
 	cur_light = (t_light *)malloc(sizeof(t_light));
-	line = parse_coord(line, cur_light->coord);
+	line = parse_vector(line, &(cur_light->position));
 	if (line == NULL)
 		printf("coord error");
 	cur_light->brightness = ft_atof(line);
 	line = skip_float(line);
-	if (cur_light->brightness < 0 || cur_light->brightness > 1)
+	if (cur_light->brightness < 0.0 || cur_light->brightness > 1.0)
 		printf("ambient lightning ratio not in range [0.0,1.0]\n");
 	line = parse_color(line, &(cur_light->color));
 	if (line == NULL)
 		printf("color error");
-	line = skip_sp_ht(line);
-	if (*line != '\0')
-		printf("camera parameters not valid\n");
 	add_to_list((void *)cur_light, &(data->lights));
 	return (line);
 }
@@ -101,20 +94,16 @@ char	*p_sphere(char *line, t_global *data)
 {
 	t_sphere	*cur_sphere;
 
+	//errno = 0; // for malloc
 	cur_sphere = (t_sphere *)malloc(sizeof(t_sphere));
+	if (cur_sphere == NULL) return (NULL);
 	line = parse_vector(line, &(cur_sphere->centre));
-	if (line != NULL)
-	{
-		cur_sphere->radius = ft_atof(line) / 2;
-		if (cur_sphere->radius >= 0)
-		{
-			line = skip_float(line);
-			if (line != NULL)
-				line = wrap_object((void *)cur_sphere, &(data->objects), SPHERE, line);
-		}
-		else
-			line = NULL;
-	}
+	if (line == NULL) return (NULL);
+	line = parse_float(line, &(cur_sphere->radius));
+	if (cur_sphere->radius < 0) return (NULL);
+	cur_sphere->radius /= 2;
+	if (line == NULL) return (NULL); //errrrrrrr
+	line = wrap_object((void *)cur_sphere, &(data->objects), SPHERE, line);
 	return (line);
 }
 

@@ -18,8 +18,8 @@
 # define FALSE	0
 # define ERROR	-1
 
-# define X		0
-# define Y		1
+# define LITTLE_ENDIAN 0
+# define BIG_ENDIAN 1
 
 # define R		1
 # define G		2
@@ -92,6 +92,7 @@ typedef struct	s_vector
 }				t_vector;
 
 typedef t_vector	t_point;
+typedef t_vector	t_rgb;
 
 typedef struct	s_ray
 {
@@ -109,18 +110,17 @@ typedef struct	s_camera
 
 typedef struct	s_light
 {
-	double		coord[3];
+	t_point		position;
 	double		brightness;
-	int			color;
-	uint8_t		pad[4];
+	t_rgb		color;
 }				t_light;
 
 typedef struct	s_obj
 {
 	void		*obj;
-	int			color;
+	t_rgb		color;
 	uint8_t		type;
-	uint8_t		pad[3];
+	uint8_t		pad[7];
 }				t_obj;
 
 typedef struct	s_sphere
@@ -160,8 +160,8 @@ typedef struct	s_triangle
 typedef struct	s_image
 {
 	void	*ptr;
-	char	*addr;// 1 octet pour une couleur sur 4?
-	int		bpp;
+	char	*addr;
+	int		bits_per_pixel;
 	int		line_len;
 	int		endian;
 	uint8_t	pad[4];
@@ -174,15 +174,15 @@ typedef struct	s_global
 	t_image		img;
 	size_t		res[2];
 	double		amb_light;
-	int			color;
-	uint8_t		pad[4];
+	t_rgb		color;
 	t_list		*cameras;
 	t_list		*lights;
 	t_list		*objects;
 }				t_global;
 
-typedef char	*(*t_parse)(char *, t_global *);
-typedef double	(*t_intersect)(t_ray *, void *);
+typedef char		*(*t_parse)(char *, t_global *);
+typedef double		(*t_equations)(t_ray *, void *);
+typedef t_vector	(*t_normal)(t_point, void *);
 
 double			sq(double n);
 t_vector		new_vector_default(void);
@@ -218,13 +218,16 @@ double			ft_atof(char *str);
 char			*skip_float(char *str);
 char			*skip_int_comma(char *str);
 char			*skip_float_comma(char *str);
+char			*parse_int(char *line, int *i);
+char			*parse_float(char *line, double *f);
 char			*parse_coord(char *line, double coord[3]); //tmp
 char			*parse_vector(char *line, t_vector *v);
-char			*parse_color(char *line, int *color);
-char			*parse_o_vec(char *line, double o_vec[3]);
+char			*parse_color(char *line, t_rgb *color);
+char			*parse_o_vec(char *line, double o_vec[3]);// tmp
 void			add_to_list(void *cur_object, t_list **lst);
 char			*wrap_object(void *cur_obj, t_list **lst, int8_t type, char *line);
 
+void			image_pixel_put(t_global *data, int x, int y, int color);
 int				close_win(int keycode, t_global *data);
 t_bool			draw_image(t_global *data);
 t_bool			draw_window(t_global *data);
