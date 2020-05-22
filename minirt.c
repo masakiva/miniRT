@@ -37,6 +37,56 @@ t_vector	n_sphere(t_point position, void *obj)
 	return (normal);
 }
 
+t_intersection	closest_intersection(t_ray ray, t_list *obj, double t_min, double t_max)
+{
+	static t_equations	find_t[1/*NB_OBJ*/] = {i_sphere/*, i_plane,
+		i_square, i_cylinder, i_triangle*/};
+	double			cur_t;
+	t_list			*closest_elem;
+	double			closest_t;
+
+	closest_t = t_max;
+	while (obj != NULL)
+	{
+		cur_t = find_t[((t_obj *)obj->content)->type](&ray, ((t_obj *)obj->content)->obj);
+		if (cur_t >= t_min && cur_t < closest_t) // ou >= 1? ; et s'il y a deux memes t
+		{
+			closest_t = cur_t;
+			closest_elem = obj;
+		}
+		obj = obj->next;
+	}
+	return ((t_intersection){closest_elem, closest_t});
+}
+
+t_bool	intersection_or_not(t_ray ray, t_list *obj, double t_min, double t_max)
+{
+	static t_equations	find_t[1/*NB_OBJ*/] = {i_sphere/*, i_plane,
+		i_square, i_cylinder, i_triangle*/};
+	double			cur_t;
+
+	while (obj != NULL)
+	{
+		cur_t = find_t[((t_obj *)obj->content)->type](&ray, ((t_obj *)obj->content)->obj);
+		if (cur_t >= t_min && cur_t < t_max) // ou >= 1? ; et s'il y a deux memes t
+			return (TRUE);
+		obj = obj->next;
+	}
+	return (FALSE);
+}
+
+t_bool	shadows(t_point cur_pos, t_vector light_dir, t_list *objects)
+{
+	t_ray	light_ray;
+
+	light_ray.origin = cur_pos;
+	light_ray.direction = light_dir;
+	if (intersection_or_not(light_ray, objects, 0.00001 /**/, 1) == TRUE)
+		return (TRUE);
+	else
+		return (FALSE);
+}
+
 double	lighting(t_point cur_pos, t_list *elem, t_global *data)
 {
 	static t_normal	calc_normal[1/*NB_OBJ*/] = {n_sphere/*, n_plane,
@@ -56,8 +106,11 @@ double	lighting(t_point cur_pos, t_list *elem, t_global *data)
 		n_dot_l = dot(normal, light_dir);
 		if (n_dot_l > 0)
 		{
-			n_dot_l /= length(normal) * length(light_dir);
-			intensity += ((t_light *)cur_light->content)->brightness * n_dot_l;// div by zero
+			if (shadows(cur_pos, light_dir, data->objects) == FALSE)
+			{
+				n_dot_l /= length(normal) * length(light_dir);
+				intensity += ((t_light *)cur_light->content)->brightness * n_dot_l;// div by zero
+			}
 		}
 		cur_light = cur_light->next;
 	}
@@ -90,36 +143,20 @@ int		rgb_to_int(t_rgb color)
 
 int		process_pixel(t_ray ray, t_global *data)// better name? previous: intersection
 {
-	static t_equations	find_t[1/*NB_OBJ*/] = {i_sphere/*, i_plane,
-		i_square, i_cylinder, i_triangle*/};
-	t_list			*cur_elem;
-	double			closest_t;
-	double			t_cur;
-	t_list			*closest_elem;
 	t_rgb			color;
 	t_point			position;
 	double			light;
+	t_intersection	intxn;
 
-	ray.direction = unit(ray.direction);
-	closest_t = 2147483647;
-	cur_elem = data->objects;
-	while (cur_elem != NULL)
-	{
-		t_cur = find_t[((t_obj *)cur_elem->content)->type](&ray, ((t_obj *)cur_elem->content)->obj);
-		if(t_cur >= 0 && t_cur < closest_t) // ou >= 1?
-		{
-			color = ((t_obj *)cur_elem->content)->color;
-			closest_t = t_cur;
-			closest_elem = cur_elem;
-		}
-		cur_elem = cur_elem->next;
-	}
-	if (closest_t == 2147483647)
+	//ray.direction = unit(ray.direction);
+	intxn = closest_intersection(ray, data->objects, 0, 2147483647);
+	if (intxn.t == 2147483647)
 		color = (t_rgb){0.0, 0.0, 0.0};
 	else
 	{
-		position = add(ray.origin, mult(ray.direction, closest_t));
-		light = lighting(position, closest_elem, data);
+		color = ((t_obj *)intxn.obj->content)->color;
+		position = add(ray.origin, mult(ray.direction, intxn.t));
+		light = lighting(position, intxn.obj, data);
 		color = mult(color, light + data->amb_light);
 	}
 	return (rgb_to_int(color));
@@ -146,9 +183,9 @@ void	fill_image(t_global *data)
 	half_height = half_width * ((double)view_height / (double)view_width); // div by zero
 	pixel_size = half_width * 2 / (double)view_width;
 
-	ray.direction.x += -1 * half_width + pixel_size / 2; // a retirer
-	ray.direction.y += half_height - pixel_size / 2;
-	printf("dir.x = %f, dir.y = %f (x = 0, y = 0)\n", ray.direction.x, ray.direction.y); // a retirer
+	ray.direction.x += -1 * half_width + pixel_size / 2;
+	ray.direction.y += 1 * half_height - pixel_size / 2;
+	printf("dir.x = %f, dir.y = %f (x = 0, y = 0)\n", ray.direction.x, ray.direction.y);
 
 	y = 0;
 	while (y < view_height)
@@ -165,8 +202,8 @@ void	fill_image(t_global *data)
 		ray.direction.x -= half_width * 2;
 		y++;
 	}
-	ray.direction.y += pixel_size; // a retirer
-	printf("dir.x = %f, dir.y = %f (x = %zu, y = %zu)\n", ray.direction.x, ray.direction.y, x - 1, y - 1); // a retirer
+	ray.direction.y += pixel_size; // pour le printf
+	printf("dir.x = %f, dir.y = %f (x = %zu, y = %zu)\n", ray.direction.x, ray.direction.y, x - 1, y - 1);
 }
 
 int		main(int argc, char **argv)

@@ -100,6 +100,12 @@ typedef struct	s_ray
 	t_vector	direction;
 }				t_ray;
 
+typedef struct	s_intersection
+{
+	t_list		*obj;
+	double		t;
+}				t_intersection;
+
 typedef struct	s_camera
 {
 	t_point		origin;
