@@ -20,29 +20,35 @@ SRCS		+= vectors.c
 SRCS		+= mlx_handling.c
 SRCS		+= errors.c
 
-HEADERS		= minirt.h
+HDRS		= minirt.h
+
+INCDIR		= includes/
+SRCDIR		= sources/
+OBJDIR		= objects
+LIBFTDIR	= libft/
+MLXDIR		= minilibx-linux/
 
 OBJS		= $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 
-OBJDIR		= objects
+vpath %.c $(SRCDIR)
+vpath %.h $(INCDIR)
 
 CC			= clang
 
 CFLAGS		+= -Wall
 CFLAGS		+= -Wextra
 CFLAGS		+= -Werror
-CFLAGS		+= -fsanitize=address
-CFLAGS		+= -Wpadded
-#CFLAGS		+= -g3
+CFLAGS		+= -fsanitize=address,undefined #remove or flag it
+CFLAGS		+= -Wpadded #remove it
+#CFLAGS		+= -g3 #remove it
 
-CPPFLAGS	+= -I ./
-CPPFLAGS	+= -I ../libft/
-CPPFLAGS	+= -I ../minilibx-linux/
+CPPFLAGS	+= -I $(INCDIR)
+CPPFLAGS	+= -I $(LIBFTDIR)
+CPPFLAGS	+= -I $(MLXDIR)
 
-LDFLAGS		+= -L ./
-LDFLAGS		+= -L ../libft/
-LDFLAGS		+= -L ../minilibx-linux/
-LDFLAGS		+= -fsanitize=address
+LDFLAGS		+= -L $(LIBFTDIR)
+LDFLAGS		+= -L $(MLXDIR)
+LDFLAGS		+= -fsanitize=address,undefined #remove it
 
 LDLIBS		+= -lft
 LDLIBS		+= -lmlx
@@ -50,26 +56,34 @@ LDLIBS		+= -lXext
 LDLIBS		+= -lX11
 LDLIBS		+= -lm
 
-all:			$(NAME)
+all:				$(NAME)
 
-$(NAME):		$(OBJS)
-				$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+$(NAME):			$(LIBFTDIR)libft.a $(MLXDIR)libmlx.a $(OBJS)
+					$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
 
-$(OBJDIR)/%.o:	%.c
-				$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+$(OBJDIR)/%.o:		%.c
+					$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 
-$(OBJS):		$(HEADERS) | $(OBJDIR)
+$(OBJS):			$(HDRS) | $(OBJDIR)
 
 $(OBJDIR):
-				mkdir $@
+					mkdir $@
+
+$(LIBFTDIR)libft.a:	#FORCE
+					$(MAKE) -C $(LIBFTDIR) bonus custom
+
+$(MLXDIR)libmlx.a:	#FORCE
+					$(MAKE) -C $(MLXDIR)
 
 clean:
-				$(RM) -r $(OBJDIR)
+					$(RM) -r $(OBJDIR)
 
-fclean:			clean
-				$(RM) $(NAME)
+fclean:				clean
+					$(RM) $(NAME)
 
 
-re:				fclean all
+re:					fclean all
 
-.PHONY:			all clean fclean re
+#FORCE:
+
+.PHONY:				all clean fclean re #FORCE

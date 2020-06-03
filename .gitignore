@@ -1,7 +1,13 @@
-a.out*
-.DS_Store
-*.o
+# binary stuff
 *.a
+*.o
 objects
+a.out*
 miniRT
+
+# macos garbage
+.DS_Store
+
+# vim utils
 *.swp
+*.vim
