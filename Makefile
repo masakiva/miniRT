@@ -24,9 +24,10 @@ HDRS		= minirt.h
 
 INCDIR		= includes/
 SRCDIR		= sources/
-OBJDIR		= objects
+OBJDIR		= objects #what if i add / (and remove it in OBJS and $(OBJDIR)/%.o)
 LIBFTDIR	= libft/
 MLXDIR		= minilibx-linux/
+MLXDIR		= minilibx_opengl_20191021/
 
 OBJS		= $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 
@@ -54,6 +55,8 @@ LDLIBS		+= -lft
 LDLIBS		+= -lmlx
 LDLIBS		+= -lXext
 LDLIBS		+= -lX11
+#LDLIBS		+= -framework OpenGL
+#LDLIBS		+= -framework AppKit
 LDLIBS		+= -lm
 
 all:				$(NAME)

@@ -26,6 +26,10 @@
 # define KEYCODE_RIGHT_ARROW 65363
 # define KEYCODE_LEFT_ARROW 65361
 
+# define MACOS_KEYCODE_ESCAPE 53
+# define MACOS_KEYCODE_RIGHT_ARROW 124
+# define MACOS_KEYCODE_LEFT_ARROW 123
+
 # define RES	"R"
 # define AMB	"A"
 # define CAM	"c"

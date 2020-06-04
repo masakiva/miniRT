@@ -97,6 +97,8 @@ int		key_hooks(int keycode, t_global *data)
 		switch_camera(data, 1);
 	else if (keycode == KEYCODE_LEFT_ARROW)
 		switch_camera(data, -1);
+	else
+		printf("keycode = %d\n", keycode);
 	return (SUCCESS);
 }
 
@@ -128,7 +130,7 @@ void	check_resolution(t_global *data)
 	int		screen_height;
 
 	errno = 0;
-	mlx_get_screen_size(data->mlx_ptr, &screen_width, &screen_height);
+	mlx_get_screen_size(data->mlx_ptr, &screen_width, &screen_height); // not in macos
 	if (screen_width <= 0 || screen_height <= 0)
 		error(MLX_SCREEN_SIZE_ERROR);
 	if (data->res[0] == 0 || data->res[0] > (size_t)screen_width)
