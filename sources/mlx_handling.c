@@ -3,11 +3,12 @@
 #include <stdlib.h>
 #include <errno.h>
 
-void	image_pixel_put(t_image *image, int x, int y, unsigned color)
+void	image_pixel_put(t_image *image, size_t x, size_t y, unsigned color)
 {
 	char		*pixel_pos;
 
-	pixel_pos = image->addr + (y * image->line_len + x * (image->bits_per_pixel / 8));
+	pixel_pos = image->addr + ((int)y * image->line_len +
+			(int)x * (image->bits_per_pixel / 8));
 	if (image->endian == 0)//LITTLE_ENDIAN
 	{
 		*pixel_pos = (char)color;
@@ -41,6 +42,14 @@ void	image_pixel_put(t_image *image, int x, int y, unsigned color)
 		else if (image->bits_per_pixel >= 8)
 			*pixel_pos = (char)color;
 	}
+}
+
+void	pixel_put_converted_color(t_global *data, t_image *image, size_t px_coord[2], int color)
+{
+	unsigned	converted_color;
+
+	converted_color = (unsigned)mlx_get_color_value(data->mlx_ptr, color);
+	image_pixel_put(image, px_coord[0], px_coord[1], converted_color);
 }
 
 void	switch_camera(t_global *data, int8_t order)

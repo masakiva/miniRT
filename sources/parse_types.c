@@ -13,6 +13,7 @@
 #include "minirt.h"
 #include <stdlib.h>
 #include <errno.h>
+#include <math.h>
 
 const char	*p_resolution(const char *line, t_global *data)
 {
@@ -47,9 +48,20 @@ const char	*p_ambient_lightning(const char *line, t_global *data)
 	return (line);
 }
 
+void		calc_camera_properties(t_camera *cur_camera, t_point target, int fov)
+{
+	cur_camera->forward_vec = unit(sub(target, cur_camera->origin));
+	cur_camera->right_vec = unit(cross(cur_camera->forward_vec,
+				(t_vector){0.0, 1.0, 0.0}));
+	cur_camera->up_vec = cross(cur_camera->right_vec, cur_camera->forward_vec);
+	cur_camera->half_width = tan((M_PI * fov / 180) / 2);
+}
+
 const char	*p_camera(const char *line, t_global *data)
 {
 	t_camera	*cur_camera;
+	t_point		target;
+	int			fov;
 
 	errno = 0;
 	cur_camera = (t_camera *)malloc(sizeof(t_camera));
@@ -60,12 +72,13 @@ const char	*p_camera(const char *line, t_global *data)
 	line = parse_coord(line, &(cur_camera->origin));
 	if (line == NULL)
 		return (NULL);
-	line = parse_coord(line, &(cur_camera->direction));
+	line = parse_coord(line, &target);
 	if (line == NULL)
 		return (NULL);
-	line = parse_int(line, &(cur_camera->fov));
-	if (line == NULL || cur_camera->fov < 0 || cur_camera->fov > 180)
+	line = parse_int(line, &fov);
+	if (line == NULL || fov < 0 || fov > 180)
 		return (NULL);
+	calc_camera_properties(cur_camera, target, fov);
 	return (line);
 }
 

@@ -17,7 +17,7 @@ void	putstr_stderr(const char *str)
 const char	*error_code_to_str(t_error_code err_code)
 {
 	static const char *const err_str[NB_ERRORS] = {E0, E1, E2, E3, E4, E5, E6,
-		E7, E8, E9, E10};
+		E7, E8, E9, E10, E11};
 	return (err_str[err_code]);
 }
 
@@ -27,7 +27,7 @@ void	error(t_error_code err_code)
 
 	err_msg = error_code_to_str(err_code);
 	putstr_stderr("Error\n");
-	if (err_code <= 2)
+	if (err_code <= 3)
 		putstr_stderr(err_msg);
 	else
 		perror(err_msg);

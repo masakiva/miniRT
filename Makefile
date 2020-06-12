@@ -24,12 +24,12 @@ HDRS		= minirt.h
 
 INCDIR		= includes/
 SRCDIR		= sources/
-OBJDIR		= objects #what if i add / (and remove it in OBJS and $(OBJDIR)/%.o)
+OBJDIR		= objects/
 LIBFTDIR	= libft/
 MLXDIR		= minilibx-linux/
-MLXDIR		= minilibx_opengl_20191021/
+#MLXDIR		= minilibx_opengl_20191021/
 
-OBJS		= $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
+OBJS		= $(addprefix $(OBJDIR), $(SRCS:.c=.o))
 
 vpath %.c $(SRCDIR)
 vpath %.h $(INCDIR)
@@ -39,9 +39,9 @@ CC			= clang
 CFLAGS		+= -Wall
 CFLAGS		+= -Wextra
 CFLAGS		+= -Werror
-CFLAGS		+= -fsanitize=address,undefined #remove or flag it
-CFLAGS		+= -Wpadded #remove it
-#CFLAGS		+= -g3 #remove it
+CFLAGS		+= -fsanitize=address,undefined
+CFLAGS		+= -Wpadded
+#CFLAGS		+= -g3
 
 CPPFLAGS	+= -I $(INCDIR)
 CPPFLAGS	+= -I $(LIBFTDIR)
@@ -64,7 +64,7 @@ all:				$(NAME)
 $(NAME):			$(LIBFTDIR)libft.a $(MLXDIR)libmlx.a $(OBJS)
 					$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
 
-$(OBJDIR)/%.o:		%.c
+$(OBJDIR)%.o:		%.c
 					$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 
 $(OBJS):			$(HDRS) | $(OBJDIR)

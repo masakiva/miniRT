@@ -11,3 +11,10 @@ miniRT
 # vim utils
 *.swp
 *.vim
+
+# ctags
+tags
+
+
+#tmp (to remove)
+new.c

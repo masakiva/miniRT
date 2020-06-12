@@ -3,32 +3,35 @@
 
 typedef	enum	e_error_code
 {
-	ARG_MISSING_ERROR, //0
+	ARGC_ERROR, //0
 	RTFILE_NAME_ERROR, //1
-	NO_CAMERA_ERROR, //2
-	OPEN_ERROR, //3
-	CLOSE_ERROR, //4
-	MALLOC_ERROR, //5
-	GNL_ERROR, //6
-	MLX_INIT_ERROR, //7
-	MLX_SCREEN_SIZE_ERROR, //8
-	MLX_NEW_WINDOW_ERROR, //9
-	MLX_NEW_IMAGE_ERROR, //10
+	SAVE_OPTION_ERROR, //2
+	NO_CAMERA_ERROR, //3
+	OPEN_ERROR, //4
+	CLOSE_ERROR, //5
+	MALLOC_ERROR, //6
+	GNL_ERROR, //7
+	MLX_INIT_ERROR, //8
+	MLX_SCREEN_SIZE_ERROR, //9
+	MLX_NEW_WINDOW_ERROR, //10
+	MLX_NEW_IMAGE_ERROR, //11
 	NB_ERRORS
 }				t_error_code;
 
-# define E0 "A scene description file with the .rt extension must be given as "\
-	"argument.\n"
+# define E0 "A scene description file with the .rt extension must be given \n"\
+	"as argument, with an optional --save option to save the rendered \n"\
+	"image in bmp format.\n"
 # define E1 "The name of the file given as argument must end with '.rt'.\n"
-# define E2 "There must be at least one camera in the scene.\n"
-# define E3 "Cannot open file"
-# define E4 "Cannot close file descriptor previously opened for .rt file"
-# define E5 "Cannot allocate required memory"
-# define E6 "Cannot read file or allocate memory"
-# define E7 "The MinilibX initialization failed"
-# define E8 "MinilibX problem retrieving the actual display size"
-# define E9 "MinilibX problem creating a new window"
-# define E10 "MinilibX problem creating a new image"
+# define E2 "Only a --save option is allowed as second argument.\n"
+# define E3 "There must be at least one camera in the scene.\n"
+# define E4 "Cannot open file"
+# define E5 "Cannot close file descriptor previously opened for .rt file"
+# define E6 "Cannot allocate required memory"
+# define E7 "Cannot read file or allocate memory"
+# define E8 "The MinilibX initialization failed"
+# define E9 "MinilibX problem retrieving the actual display size"
+# define E10 "MinilibX problem creating a new window"
+# define E11 "MinilibX problem creating a new image"
 
 # define E_RES "Resolution parameters not valid, "\
 	"or declared twice in the file.\n"\

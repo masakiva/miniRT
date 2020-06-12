@@ -83,10 +83,23 @@ typedef struct	s_intersection
 typedef struct	s_camera
 {
 	t_point		origin;
-	t_vector	direction;// changer le nom : target
-	int			fov;
-	uint8_t		_pad[4];
+	t_vector	forward_vec;
+	t_vector	right_vec;
+	t_vector	up_vec;
+	double		half_width;
 }				t_camera;
+
+typedef struct	s_view_properties
+{
+	double		half_height;
+	double		half_pixel_width;
+	double		x_factor;
+	double		x_factor_i;
+	t_vector	x_factor_vec;
+	double		y_factor;
+	double		y_factor_i;
+	t_vector	y_factor_vec;
+}				t_view_properties;
 
 typedef struct	s_light
 {
@@ -208,7 +221,8 @@ const char		*parse_color(const char *line, t_rgb *color);
 t_bool			add_to_list(void *cur_object, t_list **lst);
 t_rgb			*wrap_object(void *cur_obj, t_list **lst, int8_t type);
 
-void			image_pixel_put(t_image *image, int x, int y, unsigned color);
+void			image_pixel_put(t_image *image, size_t x, size_t y, unsigned color);
+void			pixel_put_converted_color(t_global *data, t_image *image, size_t px_coord[2], int color);
 int				key_hooks(int keycode, t_global *data);
 t_image			*new_image(t_global *data);
 t_bool			draw_images(t_global *data);

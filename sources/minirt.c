@@ -15,12 +15,12 @@ double	i_sphere(t_ray *ray, void *obj)
 	double		t;
 
 	sp = (t_sphere *)obj;
-	OC = sub(ray->origin, sp->centre);
+	OC = sub(ray->origin, sp->centre);// a mettre en cache? ->liste chainee dans sp
 	//ray.direction = sub(ray.direction, ray.origin);
 	a = length_sq(ray->direction);
 	b = 2 * dot(ray->direction, OC);
 	c = length_sq(OC) - sq(sp->radius);
-	discriminant = sq(b) - 4 * a * c;
+	discriminant = sq(b) - 4 * a * c; // 4c a mettre en cache?
 	if (discriminant < 0.0)
 		t = 2147483647;
 	else
@@ -71,7 +71,7 @@ t_vector	n_plane(t_point position, void *obj)
 t_intersection	closest_intersection(t_ray ray, t_list *obj, double t_min, double t_max)
 {
 	static t_equations	find_t[2/*NB_OBJ*/] = {i_sphere, i_plane/*,
-		i_square, i_cylinder, i_triangle*/};
+		i_square, i_cylinder, i_triangle*/}; //i_ -> intersect_
 	double			cur_t;
 	t_list			*closest_elem;
 	double			closest_t;
@@ -121,7 +121,7 @@ t_bool	shadows(t_point cur_pos, t_vector light_dir, t_list *objects)
 double	lighting(t_point cur_pos, t_list *elem, t_global *data)
 {
 	static t_normal	calc_normal[2/*NB_OBJ*/] = {n_sphere, n_plane/*,
-		n_square, n_cylinder, n_triangle*/};
+		n_square, n_cylinder, n_triangle*/}; //n_ -> normal_
 	t_vector		normal;
 	double			intensity;
 	t_light			*cur_light; // faire pareil pour les deux fonctions d'intersection?
@@ -196,69 +196,70 @@ int		process_pixel(t_ray ray, t_global *data)// better name? previous: intersect
 	return (rgb_to_int(color));
 }
 
+void	get_view_properties(t_global *data, t_view_properties *props, t_camera *cur_camera)
+{
+	props->half_height = cur_camera->half_width *
+		((double)(data->res[1]) / (double)(data->res[0]));
+	props->half_pixel_width = cur_camera->half_width / (double)(data->res[0]);
+	props->x_factor = -1;
+	props->x_factor_i = 2 / (double)(data->res[0]);
+	props->x_factor_vec = mult(cur_camera->right_vec,
+			props->x_factor * cur_camera->half_width + props->half_pixel_width);
+	props->y_factor = 1;
+	props->y_factor_i = 2 / (double)(data->res[1]);
+	props->y_factor_vec = mult(cur_camera->up_vec,
+			props->y_factor * props->half_height - props->half_pixel_width);
+}
+
+void	next_pixel_x(t_camera *cur_camera, t_view_properties *props)
+{
+	props->x_factor += props->x_factor_i;
+	props->x_factor_vec = mult(cur_camera->right_vec,
+		props->x_factor * cur_camera->half_width + props->half_pixel_width);
+}
+
+void	next_pixel_y(t_camera *cur_camera, t_view_properties *props)
+{
+	props->y_factor -= props->y_factor_i;
+	props->y_factor_vec = mult(cur_camera->up_vec,
+			props->y_factor * props->half_height - props->half_pixel_width);
+	props->x_factor = -1;
+}
+
 void	fill_image(t_global *data, t_image *cur_image, t_camera *cur_camera)
 {
-	size_t	x;
-	size_t	y;
-	size_t	view_width;
-	size_t	view_height;
-	double	half_width;
-	double	half_height;
-	double	pixel_size;
-	int		color;
-	unsigned int	converted_color;
-	t_ray	ray;
-	t_vector	forward;
-	t_vector	right;
-	t_vector	up;
-	double		right_factor;
-	double		up_factor;
+	size_t				x;
+	size_t				y;
+	int					color;
+	t_ray				ray;
+	t_view_properties	props;
 
+	get_view_properties(data, &props, cur_camera);
 	ray.origin = cur_camera->origin;
-	forward = unit(sub(cur_camera->direction, ray.origin));
-	printf("forward = ");
-	print_vec(forward);
-	right = unit(cross(forward, (t_vector){0.0, 1.0, 0.0}));
-	up = cross(right, forward);
-	printf("right = ");
-	print_vec(right);
-	printf("up = ");
-	print_vec(up);
-
-	view_width = data->res[0];
-	view_height = data->res[1];
-
-	half_width = tan((M_PI * cur_camera->fov / 180) / 2);
-	half_height = half_width * ((double)view_height / (double)view_width); // div by zero
-	pixel_size = half_width * 2 / (double)view_width;
-
-//	ray.direction.x += -1 * half_width + pixel_size / 2;
-//	ray.direction.y += 1 * half_height - pixel_size / 2;
-	ray.direction = add(add(forward, mult(right, -1 * half_width)), mult(up, 1 * half_height));
-	printf("dir.x = %f, dir.y = %f (x = 0, y = 0)\n", ray.direction.x, ray.direction.y);
-
 	y = 0;
-	while (y < view_height)
+	while (y < data->res[0])
 	{
 		x = 0;
-		while (x < view_width)
+		while (x < data->res[1])
 		{
-			right_factor = (2 * (double)x) / (double)view_width - 1;
-			up_factor = (-2 * (double)y) / (double)view_height + 1;
-			ray.direction = add(add(forward, mult(right, right_factor * half_width)), mult(up, up_factor * half_height));
-//			if (x == 0)
-//			{
-//				printf("ray.dir = ");
-//				print_vec(ray.direction);
-//			}
+			ray.direction = add(cur_camera->forward_vec,
+						add(props.x_factor_vec, props.y_factor_vec));
+			if (x == 0 && y == 0)
+			{
+				printf("ray.dir (x = %4zu, y = %4zu) = ", x, y);
+				print_vec(ray.direction);
+			}
 			color = process_pixel(ray, data);
-			converted_color = (unsigned)mlx_get_color_value(data->mlx_ptr, color);
-			image_pixel_put(cur_image, x, y, converted_color);
+			pixel_put_converted_color(data, cur_image, (size_t[2]){x, y}, color);
+			next_pixel_x(cur_camera, &props);
 			x++;
 		}
+		next_pixel_y(cur_camera, &props);
 		y++;
 	}
-	printf("dir.x = %f, dir.y = %f (x = %zu, y = %zu)\n", ray.direction.x, ray.direction.y, x - 1, y - 1);
+	printf("ray.dir (x = %4zu, y = %4zu) = ", x - 1, y - 1);
+	print_vec(ray.direction);
+	printf("\n");
 }
 
 t_bool	draw_images(t_global *data)
@@ -276,13 +277,8 @@ t_bool	draw_images(t_global *data)
 	return (SUCCESS);
 }
 
-int		main(int argc, char **argv)
+void	render_with_mlx(t_global *data)
 {
-	t_global	*data;
-
-	if (argc != 2) // to change for export bmp
-		error(ARG_MISSING_ERROR);
-	data = parse_rtfile(argv[1]);
 	errno = 0;
 	data->mlx_ptr = mlx_init();
 	if (data->mlx_ptr == NULL)
@@ -297,11 +293,59 @@ int		main(int argc, char **argv)
 	if (data->win_ptr == NULL)
 	{
 		free_data(data);
-		error(MLX_NEW_WINDOW_ERROR);// free mlx_init
+		error(MLX_NEW_WINDOW_ERROR);
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr,
 			((t_image *)data->images->content)->ptr, 0, 0);
 	mlx_key_hook(data->win_ptr, &key_hooks, data);
 	mlx_loop(data->mlx_ptr);
+}
+
+void	export_in_bmp(t_global *data)
+{
+	(void)data;
+}
+
+void	check_rtfile_name(const char *filename)
+{
+	if (ft_memcmp(filename + ft_strlen(filename) - 3, ".rt", 4) != 0)
+		error(RTFILE_NAME_ERROR);
+}
+
+void	check_save_option(const char *option)
+{
+	if (ft_memcmp(option, "--save", 7) != 0)
+		error(SAVE_OPTION_ERROR);
+}
+
+int		main(int argc, char **argv)
+{
+	t_global	*data;
+
+	data = NULL;
+	if (argc < 2 || argc > 3)
+		error(ARGC_ERROR);
+	else if (argc == 2)
+	{
+		check_rtfile_name(argv[1]);
+		data = parse_rtfile(argv[1]);
+		render_with_mlx(data);
+	}
+	else if (argc == 3)
+	{
+		check_rtfile_name(argv[1]);
+		check_save_option(argv[2]);
+		data = parse_rtfile(argv[1]);
+		export_in_bmp(data);
+	}
+//	t_list			*images_iter;
+//
+//	images_iter = data->images;
+//	while (images_iter != NULL)
+//	{
+//		mlx_destroy_image(data->mlx_ptr, ((t_image *)images_iter->content)->ptr);// err?
+//		images_iter = images_iter->next;
+//	}
+//	free_data(data);
 	return (EXIT_SUCCESS);
 }

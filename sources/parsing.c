@@ -60,6 +60,7 @@ void	cycle_through_lines(t_global *data, int fd)
 		if (ret == ERROR)
 		{
 			free_data(data);
+			close(fd);
 			error(GNL_ERROR);
 		}
 		line_nb++;
@@ -89,20 +90,17 @@ void	free_data(t_global *data)
 	free(data);
 }
 
-void		init_global_struct(t_global **data)
+void		init_global_struct(t_global **data, int fd)
 {
 	errno = 0;
 	*data = (t_global *)malloc(sizeof(t_global));
 	if (*data == NULL)
+	{
+		close(fd);
 		error(MALLOC_ERROR);
+	}
 	else
 		ft_bzero(*data, sizeof(t_global));
-}
-
-void	check_name(const char *name)
-{
-	if (ft_memcmp(name + ft_strlen(name) - 3, ".rt", 3) != 0)
-		error(RTFILE_NAME_ERROR);
 }
 
 t_global	*parse_rtfile(const char *rtfile)
@@ -110,13 +108,12 @@ t_global	*parse_rtfile(const char *rtfile)
 	int			fd;
 	t_global	*data;
 
-	check_name(rtfile);
 	errno = 0;
 	fd = open(rtfile, O_RDONLY);
 	if (fd == ERROR)
 		error(OPEN_ERROR);
 	data = NULL;
-	init_global_struct(&data);
+	init_global_struct(&data, fd);
 	cycle_through_lines(data, fd);
 	errno = 0;
 	if (close(fd) == ERROR)
