@@ -3,6 +3,10 @@
 #include <math.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 double	i_sphere(t_ray *ray, void *obj)
 {
@@ -47,17 +51,10 @@ double	i_plane(t_ray *ray, void *obj)
 
 	pl = (t_plane *)obj;
 	d_dot_n = dot(ray->direction, pl->normal);
-	if (d_dot_n == 0)
+	t = 2147483647;
+	if (d_dot_n != 0)
 	{
-		if (dot(sub(ray->origin, pl->position), pl->normal) == 0)
-			t = 1; ///////////////////// arbitraire
-		else
-			t = 2147483647;
-	}
-	else
-	{
-		t = (1 / d_dot_n) *
-			(dot(pl->position, pl->normal) - dot(ray->origin, pl->normal));
+		t = dot(pl->normal, sub(pl->position, ray->origin)) / d_dot_n;
 	}
 	return (t);
 }
@@ -77,6 +74,7 @@ t_intersection	closest_intersection(t_ray ray, t_list *obj, double t_min, double
 	double			closest_t;
 
 	closest_t = t_max;
+	closest_elem = NULL;
 	while (obj != NULL)
 	{
 		cur_t = find_t[((t_obj *)obj->content)->type](&ray, ((t_obj *)obj->content)->obj);
@@ -182,10 +180,10 @@ int		process_pixel(t_ray ray, t_global *data)// better name? previous: intersect
 	t_intersection	intxn;
 
 	//ray.direction = unit(ray.direction);
-	intxn = closest_intersection(ray, data->objects, 0, 2147483647);
+	intxn = closest_intersection(ray, data->objects, 1, 2147483647); // 1 pose pb pour le plan ; define ces constantes
 	//printf("t = %f\n", intxn.t);
 	if (intxn.t == 2147483647)
-		color = (t_rgb){0.0, 0.0, 0.0};
+		color = (t_rgb){0.0, 0.0, 0.0}; // ou blanc?
 	else
 	{
 		color = ((t_obj *)intxn.obj->content)->color;
@@ -199,14 +197,14 @@ int		process_pixel(t_ray ray, t_global *data)// better name? previous: intersect
 void	get_view_properties(t_global *data, t_view_properties *props, t_camera *cur_camera)
 {
 	props->half_height = cur_camera->half_width *
-		((double)(data->res[1]) / (double)(data->res[0]));
-	props->half_pixel_width = cur_camera->half_width / (double)(data->res[0]);
+		((double)data->res[1] / (double)data->res[0]);
+	props->half_pixel_width = cur_camera->half_width / (double)data->res[0];
 	props->x_factor = -1;
-	props->x_factor_i = 2 / (double)(data->res[0]);
+	props->x_factor_i = 2 / (double)data->res[0];
 	props->x_factor_vec = mult(cur_camera->right_vec,
 			props->x_factor * cur_camera->half_width + props->half_pixel_width);
 	props->y_factor = 1;
-	props->y_factor_i = 2 / (double)(data->res[1]);
+	props->y_factor_i = 2 / (double)data->res[1];
 	props->y_factor_vec = mult(cur_camera->up_vec,
 			props->y_factor * props->half_height - props->half_pixel_width);
 }
@@ -218,7 +216,7 @@ void	next_pixel_x(t_camera *cur_camera, t_view_properties *props)
 		props->x_factor * cur_camera->half_width + props->half_pixel_width);
 }
 
-void	next_pixel_y(t_camera *cur_camera, t_view_properties *props)
+void	next_row_y(t_camera *cur_camera, t_view_properties *props)
 {
 	props->y_factor -= props->y_factor_i;
 	props->y_factor_vec = mult(cur_camera->up_vec,
@@ -237,10 +235,10 @@ void	fill_image(t_global *data, t_image *cur_image, t_camera *cur_camera)
 	get_view_properties(data, &props, cur_camera);
 	ray.origin = cur_camera->origin;
 	y = 0;
-	while (y < data->res[0])
+	while (y < data->res[1])
 	{
 		x = 0;
-		while (x < data->res[1])
+		while (x < data->res[0])
 		{
 			ray.direction = add(cur_camera->forward_vec,
 						add(props.x_factor_vec, props.y_factor_vec));
@@ -254,7 +252,7 @@ void	fill_image(t_global *data, t_image *cur_image, t_camera *cur_camera)
 			next_pixel_x(cur_camera, &props);
 			x++;
 		}
-		next_pixel_y(cur_camera, &props);
+		next_row_y(cur_camera, &props);
 		y++;
 	}
 	printf("ray.dir (x = %4zu, y = %4zu) = ", x - 1, y - 1);
@@ -301,14 +299,140 @@ void	render_with_mlx(t_global *data)
 	mlx_loop(data->mlx_ptr);
 }
 
-void	export_in_bmp(t_global *data)
+void	uint_to_str_little_endian(unsigned nb, char *str)
 {
-	(void)data;
+	str[0] = (char)nb;
+	str[1] = (char)(nb >> 8);
+	str[2] = (char)(nb >> 16);
+	str[3] = (char)(nb >> 24);
 }
 
-void	check_rtfile_name(const char *filename)
+char	*get_bmpfile_name(char *bmpfile_name, int index)
 {
-	if (ft_memcmp(filename + ft_strlen(filename) - 3, ".rt", 4) != 0)
+	char	*index_str;
+
+	if (index == 0)
+		return (bmpfile_name);
+	errno = 0;
+	index_str = ft_itoa(index);
+	if (index_str == NULL)
+		error(MALLOC_ERROR); // new code
+	errno = 0;
+	bmpfile_name = ft_strins("export.bmp", index_str, 6);
+	free(index_str);
+	if (bmpfile_name == NULL)
+		error(MALLOC_ERROR); // new code
+	return (bmpfile_name);
+}
+
+int		create_bmpfile(char *rtfile_name)
+{
+	int		fd;
+	char	*tmp;
+	char	*bmpfile_name;
+	int		i;
+
+	rtfile_name[ft_strlen(rtfile_name) - 3] = '\0';
+	errno = 0;
+	bmpfile_name = ft_strjoin(rtfile_name, ".bmp");
+	free(tmp);
+	if (bmpfile_name == NULL)
+		error(MALLOC_ERROR); // new code
+	fd = ERROR;
+	i = 0;
+	while (fd == ERROR)
+	{
+		errno = 0;
+		if (i > 0)
+			bmpfile_name = next_bmpfile_name(bmpfile_name, i);
+		bmpfile_name = get_bmpfile_name(rtfile_name, i);
+		fd = open(bmpfile_name, O_WRONLY | O_CREAT | O_EXCL, 0644);
+		free(bmpfile_name);
+		if (fd == ERROR && errno != EEXIST)
+		{
+			free_data(data);
+			error(OPEN_ERROR); // another code
+		}
+		i++;
+	}
+	return (fd);
+}
+
+void	export_in_bmp(t_global *data, char *rtfile_name)
+{
+	size_t	line_padding;
+	size_t	file_size;
+	char	*file_data;
+	int		fd;
+
+	fd = create_bmpfile(file_name);
+	line_padding = 0;
+	if ((data->res[0] * 3) % 4 != 0)
+		line_padding = 4 - (data->res[0] * 3) % 4;
+	printf("line_padding = %zu\n", line_padding);
+	file_size = BMP_METADATA_SIZE + (data->res[0] * 3 + line_padding) * data->res[1];
+	errno = 0;
+	file_data = (char *)malloc(file_size * sizeof(char));
+	if (file_data == NULL)
+	{
+		free_data(data);
+		close(fd);
+		error(MALLOC_ERROR); // another code?
+	}
+	ft_bzero(file_data, file_size);
+	file_data[0x0] = 'B';
+	file_data[0x1] = 'M';
+	uint_to_str_little_endian((unsigned)file_size, file_data + 0x2);
+	file_data[0xA] = BMP_METADATA_SIZE;
+	uint_to_str_little_endian((unsigned)data->res[0], file_data + 0x12);
+	uint_to_str_little_endian((unsigned)data->res[1], file_data + 0x16);
+	file_data[0xE] = BMP_INFOHEADER_SIZE;
+	file_data[0x1A] = BMP_NB_COLOR_PLANES;
+	file_data[0x1C] = BMP_BITS_PER_PIXEL;
+
+	size_t				x;
+	size_t				y;
+	int					color;
+	t_ray				ray;
+	t_view_properties	props;
+	t_camera			*cur_camera;
+	size_t				i;
+	char				*data_addr;
+
+	cur_camera = (t_camera *)data->cameras->content;
+	get_view_properties(data, &props, cur_camera);
+	ray.origin = cur_camera->origin;
+	i = BMP_METADATA_SIZE;
+	data_addr = file_data + i;
+	y = 0;
+	while (y < data->res[1])
+	{
+		i = (data->res[1] - y - 1) * (data->res[0] * 3 + line_padding);
+		x = 0;
+		while (x < data->res[0])
+		{
+			ray.direction = add(cur_camera->forward_vec,
+						add(props.x_factor_vec, props.y_factor_vec));
+			color = process_pixel(ray, data);
+			data_addr[i] = color;
+			data_addr[i + 1] = color >> 8;
+			data_addr[i + 2] = color >> 16;
+			next_pixel_x(cur_camera, &props);
+			i += 3;
+			x++;
+		}
+		next_row_y(cur_camera, &props);
+		y++;
+	}
+	printf("file_size = %zu\n", file_size);
+	write(fd, file_data, file_size);
+	close(fd);
+	free(file_data);
+}
+
+void	check_rtfile_name(const char *file_name)
+{
+	if (ft_memcmp(file_name + ft_strlen(file_name) - 3, ".rt", 4) != 0)
 		error(RTFILE_NAME_ERROR);
 }
 
@@ -336,7 +460,8 @@ int		main(int argc, char **argv)
 		check_rtfile_name(argv[1]);
 		check_save_option(argv[2]);
 		data = parse_rtfile(argv[1]);
-		export_in_bmp(data);
+		export_in_bmp(data, argv[1]);
+		free_data(data);
 	}
 //	t_list			*images_iter;
 //

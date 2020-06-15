@@ -30,6 +30,11 @@
 # define MACOS_KEYCODE_RIGHT_ARROW 124
 # define MACOS_KEYCODE_LEFT_ARROW 123
 
+# define BMP_METADATA_SIZE 54
+# define BMP_INFOHEADER_SIZE 40
+# define BMP_NB_COLOR_PLANES 1
+# define BMP_BITS_PER_PIXEL 24
+
 # define RES	"R"
 # define AMB	"A"
 # define CAM	"c"
@@ -166,7 +171,7 @@ typedef struct	s_global // couper en deux? mlx & scene
 	void		*win_ptr;
 	t_list		*images;
 
-	size_t		res[2]; // ->resolution
+	size_t		res[2]; // ->resolution ; define for 0 et 1? WIDTH et HEIGHT par ex
 	double		amb_light; // ->amb_light_intensity
 	t_rgb		color; // ->amb_light_color
 	t_list		*cameras;

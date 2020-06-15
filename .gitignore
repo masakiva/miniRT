@@ -5,6 +5,9 @@ objects
 a.out*
 miniRT
 
+# exported bmp
+*.bmp
+
 # macos garbage
 .DS_Store
 
@@ -14,7 +17,3 @@ miniRT
 
 # ctags
 tags
-
-
-#tmp (to remove)
-new.c

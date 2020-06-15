@@ -24,6 +24,7 @@ typedef struct	s_list
 	void			*content;
 	struct s_list	*next;
 }				t_list;
+
 typedef	uint8_t	t_byte;
 
 void			*ft_memset(void *b, int c, size_t len);
@@ -79,7 +80,7 @@ void			ft_putlnbr_hex_fd(long n, char v, int fd);
 char			*ft_uitoa(unsigned un);
 char			*ft_uitoa_hex(unsigned un, char v);
 char			*ft_ulitoa_hex(unsigned long uln, char v);
-int				ft_index(char *haystack, char needle);
+ssize_t			ft_index(char *haystack, char needle);
 t_byte			read_bit(t_byte b, t_byte index);
 t_byte			turn_bit_on(t_byte b, t_byte index);
 t_byte			turn_bit_off(t_byte b, t_byte index);

@@ -21,9 +21,10 @@ void    print_8_bits(t_byte b)
     while (z > 0)
     {
         if (b & z)
-            write(1, "1", 1);
+			ft_putchar_fd('1', STDOUT_FILENO);
         else
-            write(1, "0", 1);
+			ft_putchar_fd('0', STDOUT_FILENO);
         z >>= 1;
     }
+	ft_putchar_fd('\n', STDOUT_FILENO);
 }
