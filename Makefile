@@ -6,7 +6,7 @@
 #    By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/23 13:17:34 by mvidal-a          #+#    #+#              #
-#    Updated: 2020/01/29 14:12:23 by mvidal-a         ###   ########.fr        #
+#    Updated: 2020/06/16 17:51:13 by mvidal-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,8 +26,8 @@ INCDIR		= includes/
 SRCDIR		= sources/
 OBJDIR		= objects/
 LIBFTDIR	= libft/
-MLXDIR		= minilibx-linux/
-#MLXDIR		= minilibx_opengl_20191021/
+#MLXDIR		= minilibx-linux/
+MLXDIR		= minilibx_opengl_20191021/
 
 OBJS		= $(addprefix $(OBJDIR), $(SRCS:.c=.o))
 
@@ -53,10 +53,10 @@ LDFLAGS		+= -fsanitize=address,undefined #remove it
 
 LDLIBS		+= -lft
 LDLIBS		+= -lmlx
-LDLIBS		+= -lXext
-LDLIBS		+= -lX11
-#LDLIBS		+= -framework OpenGL
-#LDLIBS		+= -framework AppKit
+#LDLIBS		+= -lXext
+#LDLIBS		+= -lX11
+LDLIBS		+= -framework OpenGL
+LDLIBS		+= -framework AppKit
 LDLIBS		+= -lm
 
 all:				$(NAME)

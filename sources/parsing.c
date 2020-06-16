@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 13:21:10 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/03/02 16:26:43 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/16 18:24:02 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	parse_line(const char *line, t_global *data, size_t line_nb)
 	uint8_t			identifier_size;
 
 	line = skip_spaces_tabs(line);
-	if (*line == '\0')
+	if (*line == '\0' || *line == '#')
 		return ;
 	cur_elem_iter = 0;
 	while (cur_elem_iter < NB_ELEM)

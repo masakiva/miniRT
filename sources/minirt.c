@@ -307,45 +307,48 @@ void	uint_to_str_little_endian(unsigned nb, char *str)
 	str[3] = (char)(nb >> 24);
 }
 
-char	*get_bmpfile_name(char *bmpfile_name, int index)
+char	*get_bmpfile_name(char *basename, int index)
 {
 	char	*index_str;
+	char	*suffix;
+	char	*bmpfile_name;
 
-	if (index == 0)
-		return (bmpfile_name);
 	errno = 0;
-	index_str = ft_itoa(index);
-	if (index_str == NULL)
+	if (index == 0)
+		suffix = ft_strdup(".bmp");
+	else
+	{
+		index_str = ft_itoa(index);
+		if (index_str == NULL)
+			error(MALLOC_ERROR); // new code
+		errno = 0;
+		suffix = ft_strjoin(index_str, ".bmp");
+		free(index_str);
+	}
+	if (suffix == NULL)
 		error(MALLOC_ERROR); // new code
 	errno = 0;
-	bmpfile_name = ft_strins("export.bmp", index_str, 6);
-	free(index_str);
+	bmpfile_name = ft_strjoin(basename, suffix);
+	free(suffix);
 	if (bmpfile_name == NULL)
 		error(MALLOC_ERROR); // new code
 	return (bmpfile_name);
 }
 
-int		create_bmpfile(char *rtfile_name)
+int		create_bmpfile(const char *rtfile_name, t_global *data)
 {
 	int		fd;
-	char	*tmp;
+	char	*basename;
 	char	*bmpfile_name;
 	int		i;
 
-	rtfile_name[ft_strlen(rtfile_name) - 3] = '\0';
-	errno = 0;
-	bmpfile_name = ft_strjoin(rtfile_name, ".bmp");
-	free(tmp);
-	if (bmpfile_name == NULL)
-		error(MALLOC_ERROR); // new code
+	basename = ft_strrchr(rtfile_name, '/') + 1;
+	basename[ft_strlen(basename) - 3] = '\0';
 	fd = ERROR;
 	i = 0;
 	while (fd == ERROR)
 	{
-		errno = 0;
-		if (i > 0)
-			bmpfile_name = next_bmpfile_name(bmpfile_name, i);
-		bmpfile_name = get_bmpfile_name(rtfile_name, i);
+		bmpfile_name = get_bmpfile_name(basename, i);
 		fd = open(bmpfile_name, O_WRONLY | O_CREAT | O_EXCL, 0644);
 		free(bmpfile_name);
 		if (fd == ERROR && errno != EEXIST)
@@ -358,14 +361,15 @@ int		create_bmpfile(char *rtfile_name)
 	return (fd);
 }
 
-void	export_in_bmp(t_global *data, char *rtfile_name)
+void	export_in_bmp(t_global *data, const char *rtfile_name)
 {
 	size_t	line_padding;
 	size_t	file_size;
 	char	*file_data;
 	int		fd;
 
-	fd = create_bmpfile(file_name);
+	fd = create_bmpfile(rtfile_name, data);
+	return ;
 	line_padding = 0;
 	if ((data->res[0] * 3) % 4 != 0)
 		line_padding = 4 - (data->res[0] * 3) % 4;
