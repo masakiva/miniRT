@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_handling.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/06/17 15:00:45 by mvidal-a          #+#    #+#             */
+/*   Updated: 2020/06/17 16:57:03 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 #include "mlx.h"
 #include <stdlib.h>
@@ -98,19 +110,6 @@ void	quit_program(t_global *data)
 	exit(EXIT_SUCCESS);
 }
 
-int		key_hooks(int keycode, t_global *data)
-{
-	if (keycode == MACOS_KEYCODE_ESCAPE)// define codes
-		quit_program(data);
-	else if (keycode == MACOS_KEYCODE_RIGHT_ARROW)
-		switch_camera(data, 1);
-	else if (keycode == MACOS_KEYCODE_LEFT_ARROW)
-		switch_camera(data, -1);
-	else
-		printf("keycode = %d\n", keycode);
-	return (SUCCESS);
-}
-
 t_image	*new_image(t_global *data)
 {
 	t_image	*new_image;
@@ -133,19 +132,41 @@ t_image	*new_image(t_global *data)
 	return (new_image);
 }
 
-void	check_resolution(t_global *data)
+t_bool	draw_images(t_global *data)
 {
-	int		screen_width;
-	int		screen_height;
+	t_list	*cameras_iter;
+	t_image	*cur_image;
 
+	cameras_iter = data->cameras;
+	while (cameras_iter != NULL)
+	{
+		cur_image = new_image(data);
+		fill_image(data, cur_image, ((t_camera *)cameras_iter->content));
+		cameras_iter = cameras_iter->next;
+	}
+	return (SUCCESS);
+}
+
+void	render_with_mlx(t_global *data)
+{
 	errno = 0;
-	//mlx_get_screen_size(data->mlx_ptr, &screen_width, &screen_height); // not in macos
-	screen_width = 2560;
-	screen_height = 1440;
-	if (screen_width <= 0 || screen_height <= 0)
-		error(MLX_SCREEN_SIZE_ERROR);
-	if (data->res[0] == 0 || data->res[0] > (size_t)screen_width)
-		data->res[0] = (size_t)screen_width;
-	if (data->res[1] == 0 || data->res[1] > (size_t)screen_height)
-		data->res[1] = (size_t)screen_height;
+	data->mlx_ptr = mlx_init();
+	if (data->mlx_ptr == NULL)
+	{
+		free_data(data);
+		error(MLX_INIT_ERROR);
+	}
+	check_resolution(data);
+	draw_images(data);
+	errno = 0;
+	data->win_ptr = mlx_new_window(data->mlx_ptr, data->res[0], data->res[1], "miniRT");
+	if (data->win_ptr == NULL)
+	{
+		free_data(data);
+		error(MLX_NEW_WINDOW_ERROR);
+	}
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr,
+			((t_image *)data->images->content)->ptr, 0, 0);
+	mlx_key_hook(data->win_ptr, &key_hooks, data);
+	mlx_loop(data->mlx_ptr);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   errors.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/06/17 15:01:06 by mvidal-a          #+#    #+#             */
+/*   Updated: 2020/06/17 16:26:21 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef ERRORS_H
 # define ERRORS_H
 
@@ -7,14 +19,15 @@ typedef	enum	e_error_code
 	RTFILE_NAME_ERROR, //1
 	SAVE_OPTION_ERROR, //2
 	NO_CAMERA_ERROR, //3
-	OPEN_ERROR, //4
-	CLOSE_ERROR, //5
-	MALLOC_ERROR, //6
-	GNL_ERROR, //7
-	MLX_INIT_ERROR, //8
-	MLX_SCREEN_SIZE_ERROR, //9
-	MLX_NEW_WINDOW_ERROR, //10
-	MLX_NEW_IMAGE_ERROR, //11
+	RESOLUTION_MISSING_ERROR, //4
+	OPEN_ERROR, //5
+	CLOSE_ERROR, //6
+	MALLOC_ERROR, //7
+	GNL_ERROR, //8
+	MLX_INIT_ERROR, //9
+	MLX_SCREEN_SIZE_ERROR, //10
+	MLX_NEW_WINDOW_ERROR, //11
+	MLX_NEW_IMAGE_ERROR, //12
 	NB_ERRORS
 }				t_error_code;
 
@@ -24,14 +37,15 @@ typedef	enum	e_error_code
 # define E1 "The name of the file given as argument must end with '.rt'.\n"
 # define E2 "Only a --save option is allowed as second argument.\n"
 # define E3 "There must be at least one camera in the scene.\n"
-# define E4 "Cannot open file"
-# define E5 "Cannot close file descriptor previously opened for .rt file"
-# define E6 "Cannot allocate required memory"
-# define E7 "Cannot read file or allocate memory"
-# define E8 "The MinilibX initialization failed"
-# define E9 "MinilibX problem retrieving the actual display size"
-# define E10 "MinilibX problem creating a new window"
-# define E11 "MinilibX problem creating a new image"
+# define E4 "Image resolution must be defined to export a bmp file.\n"
+# define E5 "Cannot open file"
+# define E6 "Cannot close file descriptor previously opened for .rt file"
+# define E7 "Cannot allocate required memory"
+# define E8 "Cannot read file or allocate memory"
+# define E9 "The MinilibX initialization failed"
+# define E10 "MinilibX problem retrieving the actual display size"
+# define E11 "MinilibX problem creating a new window"
+# define E12 "MinilibX problem creating a new image"
 
 # define E_RES "Resolution parameters not valid, "\
 	"or declared twice in the file.\n"\

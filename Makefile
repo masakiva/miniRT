@@ -6,7 +6,7 @@
 #    By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/23 13:17:34 by mvidal-a          #+#    #+#              #
-#    Updated: 2020/06/16 17:51:13 by mvidal-a         ###   ########.fr        #
+#    Updated: 2020/06/17 16:27:14 by mvidal-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ SRCS		+= parse_types.c
 SRCS		+= parse_utils.c
 SRCS		+= vectors.c
 SRCS		+= mlx_handling.c
+SRCS		+= bmp_export.c
 SRCS		+= errors.c
 
 HDRS		= minirt.h
@@ -26,8 +27,6 @@ INCDIR		= includes/
 SRCDIR		= sources/
 OBJDIR		= objects/
 LIBFTDIR	= libft/
-#MLXDIR		= minilibx-linux/
-MLXDIR		= minilibx_opengl_20191021/
 
 OBJS		= $(addprefix $(OBJDIR), $(SRCS:.c=.o))
 
@@ -53,11 +52,20 @@ LDFLAGS		+= -fsanitize=address,undefined #remove it
 
 LDLIBS		+= -lft
 LDLIBS		+= -lmlx
-#LDLIBS		+= -lXext
-#LDLIBS		+= -lX11
-LDLIBS		+= -framework OpenGL
-LDLIBS		+= -framework AppKit
 LDLIBS		+= -lm
+
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+	SRCS	+= screen_res_mac.c
+	MLXDIR	= minilibx_opengl_20191021/
+	LDLIBS	+= -framework OpenGL
+	LDLIBS	+= -framework AppKit
+else
+	SRCS	+= screen_res_linux.c
+	MLXDIR	= minilibx-linux/
+	LDLIBS	+= -lXext
+	LDLIBS	+= -lX11
+endif
 
 all:				$(NAME)
 

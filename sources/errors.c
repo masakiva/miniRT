@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   errors.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/06/17 15:01:09 by mvidal-a          #+#    #+#             */
+/*   Updated: 2020/06/17 16:26:28 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 #include "errors.h"
 #include "libft.h"
@@ -27,7 +39,7 @@ void	error(t_error_code err_code)
 
 	err_msg = error_code_to_str(err_code);
 	putstr_stderr("Error\n");
-	if (err_code <= 3)
+	if (err_code <= 4)
 		putstr_stderr(err_msg);
 	else
 		perror(err_msg);

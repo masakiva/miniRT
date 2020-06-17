@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 18:24:12 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/03/09 18:25:09 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/17 16:57:57 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,36 +15,14 @@
 
 # define SUCCESS	1
 # define FAILURE	0
+
 # define TRUE	1
 # define FALSE	0
+
 # define ERROR	-1
 
 # define LITTLE_ENDIAN 0
 # define BIG_ENDIAN 1
-
-# define KEYCODE_ESCAPE 65307
-# define KEYCODE_RIGHT_ARROW 65363
-# define KEYCODE_LEFT_ARROW 65361
-
-# define MACOS_KEYCODE_ESCAPE 53
-# define MACOS_KEYCODE_RIGHT_ARROW 124
-# define MACOS_KEYCODE_LEFT_ARROW 123
-
-# define BMP_METADATA_SIZE 54
-# define BMP_INFOHEADER_SIZE 40
-# define BMP_NB_COLOR_PLANES 1
-# define BMP_BITS_PER_PIXEL 24
-
-# define RES	"R"
-# define AMB	"A"
-# define CAM	"c"
-# define LIG	"l"
-# define SPH	"sp"
-# define PLA	"pl"
-# define SQU	"sq"
-# define CYL	"cy"
-# define TRI	"tr"
-# define NB_ELEM	9
 
 # define NB_OBJ	5
 
@@ -62,6 +40,10 @@ enum	e_object
 #include <stdio.h>
 
 typedef int8_t	t_bool;
+
+/*
+ * structs for ray tracing algorithm: vector, ray, intersection, color
+*/
 
 typedef struct	s_vector
 {
@@ -84,6 +66,10 @@ typedef struct	s_intersection
 	t_list		*obj;
 	double		t;
 }				t_intersection;
+
+/*
+ * scene utils: camera, misc properties, lights
+*/
 
 typedef struct	s_camera
 {
@@ -112,6 +98,10 @@ typedef struct	s_light
 	double		intensity;
 	t_rgb		color;
 }				t_light;
+
+/*
+** scene objects: wrapper struct, then sphere, plane, square, etc.
+*/
 
 typedef struct	s_obj
 {
@@ -155,6 +145,10 @@ typedef struct	s_triangle
 	t_point		vertex3;
 }				t_triangle;
 
+/*
+** minilibx image data
+*/
+
 typedef struct	s_image
 {
 	void	*ptr;
@@ -164,6 +158,10 @@ typedef struct	s_image
 	int		endian;
 	uint8_t	_pad[4];
 }				t_image;
+
+/*
+** global struct for all the data
+*/
 
 typedef struct	s_global // couper en deux? mlx & scene
 {
@@ -180,51 +178,14 @@ typedef struct	s_global // couper en deux? mlx & scene
 }				t_global;
 
 # include "errors.h"
+# include "parsing.h"
+# include "mlx_handling.h"
+# include "bmp.h"
 
-typedef const char	*(*t_parse)(const char *, t_global *);
 typedef double		(*t_equations)(t_ray *, void *);
 typedef t_vector	(*t_normal)(t_point, void *);
 
-double			sq(double n);
-t_vector		new_vector_default(void);
-t_vector		new_vector(double x, double y, double z);
-double			length_sq(t_vector v);
-double			length(t_vector v);
-t_vector		add(t_vector v1, t_vector v2);
-t_vector		sub(t_vector v1, t_vector v2);
-t_vector		mult(t_vector v1, double f);
-t_vector		divi(t_vector v1, double f);
-t_vector		neg(t_vector v1);
-t_vector		unit(t_vector v1); // length en para?
-double			dot(t_vector v1, t_vector v2);
-t_vector		cross(t_vector v1, t_vector v2);
-void print_vec(t_vector v);
-
 void			free_data(t_global *data);
-t_global		*parse_rtfile(const char *rtfile);
-const char		*p_sphere(const char *line, t_global *data);
-const char		*p_plane(const char *line, t_global *data);
-const char		*p_square(const char *line, t_global *data);
-const char		*p_cylinder(const char *line, t_global *data);
-const char		*p_triangle(const char *line, t_global *data);
-const char		*p_camera(const char *line, t_global *data);
-const char		*p_light(const char *line, t_global *data);
-const char		*p_resolution(const char *line, t_global *data);
-const char		*p_ambient_lightning(const char *line, t_global *data);
-
-const char		*skip_spaces_tabs(const char *str);
-const char		*skip_int(const char *str);
-int8_t			atoi_sign(const char *str, int *nb);
-double			atof_decimal_part(const char *str);
-int8_t			atof_double(const char *str, double *nb_f);
-const char		*skip_float(const char *str);
-const char		*skip_comma(const char *str);
-const char		*parse_int(const char *line, int *i);
-const char		*parse_float(const char *line, double *f);
-const char		*parse_coord(const char *line, t_point *v);
-const char		*parse_color(const char *line, t_rgb *color);
-t_bool			add_to_list(void *cur_object, t_list **lst);
-t_rgb			*wrap_object(void *cur_obj, t_list **lst, int8_t type);
 
 void			image_pixel_put(t_image *image, size_t x, size_t y, unsigned color);
 void			pixel_put_converted_color(t_global *data, t_image *image, size_t px_coord[2], int color);
@@ -232,6 +193,9 @@ int				key_hooks(int keycode, t_global *data);
 t_image			*new_image(t_global *data);
 t_bool			draw_images(t_global *data);
 void			check_resolution(t_global *data);
+void			switch_camera(t_global *data, int8_t order);
+void			quit_program(t_global *data);
+int				key_hooks(int keycode, t_global *data);
 void			fill_image(t_global *data, t_image *cur_image, t_camera *cur_camera);
 
 #endif

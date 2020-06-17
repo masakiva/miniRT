@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 13:21:10 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/16 18:24:02 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/17 16:05:14 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,8 @@ t_global	*parse_rtfile(const char *rtfile)
 	cycle_through_lines(data, fd);
 	errno = 0;
 	if (close(fd) == ERROR)
-		error(CLOSE_ERROR);
+		error(CLOSE_ERROR);// free
 	if (data->cameras == NULL)
-		error(NO_CAMERA_ERROR);
+		error(NO_CAMERA_ERROR);// free
 	return (data);
 }
