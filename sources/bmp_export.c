@@ -40,18 +40,18 @@ char	*get_bmpfile_name(char *basename, int index)
 	{
 		index_str = ft_itoa(index);
 		if (index_str == NULL)
-			error(MALLOC_ERROR); // new code
+			error_and_exit(MALLOC_ERROR); // new code
 		errno = 0;
 		suffix = ft_strjoin(index_str, ".bmp");
 		free(index_str);
 	}
 	if (suffix == NULL)
-		error(MALLOC_ERROR); // new code
+		error_and_exit(MALLOC_ERROR); // new code
 	errno = 0;
 	bmpfile_name = ft_strjoin(basename, suffix);
 	free(suffix);
 	if (bmpfile_name == NULL)
-		error(MALLOC_ERROR); // new code
+		error_and_exit(MALLOC_ERROR); // new code
 	return (bmpfile_name);
 }
 
@@ -74,7 +74,7 @@ int		create_bmpfile(const char *rtfile_name, t_global *data)
 		if (fd == ERROR && errno != EEXIST)
 		{
 			free_data(data);
-			error(OPEN_ERROR); // another code
+			error_and_exit(OPEN_ERROR); // another code
 		}
 		i++;
 	}
@@ -104,7 +104,7 @@ void	export_in_bmp(t_global *data, const char *rtfile_name)
 	if (data->res[0] == 0)
 	{
 		free_data(data);
-		error(RESOLUTION_MISSING_ERROR);
+		error_and_exit(RESOLUTION_MISSING_ERROR);
 	}
 	fd = create_bmpfile(rtfile_name, data);
 	return ;
@@ -118,46 +118,11 @@ void	export_in_bmp(t_global *data, const char *rtfile_name)
 	{
 		free_data(data);
 		close(fd);
-		error(MALLOC_ERROR); // another code?
+		error_and_exit(MALLOC_ERROR); // another code?
 	}
 	ft_bzero(file_data, file_size);
 	fill_bmp_header(file_data, file_size, data);
-
-	size_t				x;
-	size_t				y;
-	int					color;
-	t_ray				ray;
-	t_view_properties	props;
-	t_camera			*cur_camera;
-	size_t				i;
-	char				*data_addr;
-
-	cur_camera = (t_camera *)data->cameras->content;
-	get_view_properties(data, &props, cur_camera);
-	ray.origin = cur_camera->origin;
-	i = BMP_METADATA_SIZE;
-	data_addr = file_data + i;
-	y = 0;
-	while (y < data->res[1])
-	{
-		i = (data->res[1] - y - 1) * (data->res[0] * 3 + line_padding);
-		x = 0;
-		while (x < data->res[0])
-		{
-			ray.direction = add(cur_camera->forward_vec,
-						add(props.x_factor_vec, props.y_factor_vec));
-			color = process_pixel(ray, data);
-			data_addr[i] = color;
-			data_addr[i + 1] = color >> 8;
-			data_addr[i + 2] = color >> 16;
-			next_pixel_x(cur_camera, &props);
-			i += 3;
-			x++;
-		}
-		next_row_y(cur_camera, &props);
-		y++;
-	}
-	printf("file_size = %zu\n", file_size);
+	fill_bmp_data(data, file_data, line_padding);
 	write(fd, file_data, file_size);
 	close(fd);
 	free(file_data);

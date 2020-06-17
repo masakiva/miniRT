@@ -10,10 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
-#include "errors.h"
-#include "libft.h"
-#include <stdlib.h>
+#include "minirt.h" // inverser: include errors.h ici, minirt.h dans errors.h
+#include <stdlib.h> // ... et include les lib dans errors.h
 #include <unistd.h>
 #include <errno.h>
 
@@ -33,27 +31,27 @@ const char	*error_code_to_str(t_error_code err_code)
 	return (err_str[err_code]);
 }
 
-void	error(t_error_code err_code)
+void	error_and_exit(t_error_code err_code)
 {
 	const char	*err_msg;
 
 	err_msg = error_code_to_str(err_code);
 	putstr_stderr("Error\n");
-	if (err_code <= 4)
+	if (err_code <= RESOLUTION_MISSING_ERROR)
 		putstr_stderr(err_msg);
 	else
 		perror(err_msg);
 	exit(EXIT_FAILURE);
 }
 
-void	parsing_error(size_t line_nb, uint8_t type_index, t_global *data)
+void	parsing_error_exit(size_t line_nb, uint8_t type_index, t_global *data)
 {
 	static const char	*const err_msg[NB_ELEM + 1] = {E_RES, E_AMB, E_CAM,
 		E_LIG, E_SPH, E_PLA, E_SQU, E_CYL, E_TRI, E_ID};
 
 	free_data(data);
 	if (errno != 0)
-		error(MALLOC_ERROR);
+		error_and_exit(MALLOC_ERROR);
 	putstr_stderr("Error\n");
 	putstr_stderr("In .rt file, line number ");
 	if (ft_putnbr_fd(line_nb, STDERR_FILENO) == ERROR)

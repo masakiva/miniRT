@@ -10,6 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minirt.h"
+#include <math.h>
+
 t_intersection	closest_intersection(t_ray ray, t_list *obj, double t_min, double t_max)
 {
 	static t_equations	find_t[2/*NB_OBJ*/] = {i_sphere, i_plane/*,
@@ -169,7 +172,7 @@ void	next_row_y(t_camera *cur_camera, t_view_properties *props)
 	props->x_factor = -1;
 }
 
-void	fill_image(t_global *data, t_image *cur_image, t_camera *cur_camera)
+void	fill_mlx_image(t_global *data, t_image *cur_image, t_camera *cur_camera)
 {
 	size_t				x;
 	size_t				y;
@@ -205,3 +208,40 @@ void	fill_image(t_global *data, t_image *cur_image, t_camera *cur_camera)
 	printf("\n");
 }
 
+void	fill_bmp_data(t_global *data, char *file_data, size_t line_padding)
+{
+	size_t				x;
+	size_t				y;
+	int					color;
+	t_ray				ray;
+	t_view_properties	props;
+	t_camera			*cur_camera;
+	size_t				i;
+	char				*data_addr;
+
+	cur_camera = (t_camera *)data->cameras->content;
+	get_view_properties(data, &props, cur_camera);
+	ray.origin = cur_camera->origin;
+	i = BMP_METADATA_SIZE;
+	data_addr = file_data + i;
+	y = 0;
+	while (y < data->res[1])
+	{
+		i = (data->res[1] - y - 1) * (data->res[0] * 3 + line_padding);
+		x = 0;
+		while (x < data->res[0])
+		{
+			ray.direction = add(cur_camera->forward_vec,
+						add(props.x_factor_vec, props.y_factor_vec));
+			color = process_pixel(ray, data);
+			data_addr[i] = color;
+			data_addr[i + 1] = color >> 8;
+			data_addr[i + 2] = color >> 16;
+			next_pixel_x(cur_camera, &props);
+			i += 3;
+			x++;
+		}
+		next_row_y(cur_camera, &props);
+		y++;
+	}
+}

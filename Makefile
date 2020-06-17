@@ -12,14 +12,17 @@
 
 NAME		= miniRT
 
-SRCS		+= minirt.c
+SRCS		+= main.c
+SRCS		+= vectors.c
 SRCS		+= parsing.c
 SRCS		+= parse_types.c
 SRCS		+= parse_utils.c
-SRCS		+= vectors.c
+SRCS		+= ray_tracing.c
+SRCS		+= object_equations.c
 SRCS		+= mlx_handling.c
 SRCS		+= bmp_export.c
 SRCS		+= errors.c
+SRCS		+= free_utils.c
 
 HDRS		= minirt.h
 
@@ -56,12 +59,12 @@ LDLIBS		+= -lm
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
-	SRCS	+= screen_res_mac.c
+	SRCS	+= mac_specific.c
 	MLXDIR	= minilibx_opengl_20191021/
 	LDLIBS	+= -framework OpenGL
 	LDLIBS	+= -framework AppKit
 else
-	SRCS	+= screen_res_linux.c
+	SRCS	+= linux_specific.c
 	MLXDIR	= minilibx-linux/
 	LDLIBS	+= -lXext
 	LDLIBS	+= -lX11

@@ -112,7 +112,7 @@ typedef	enum	e_error_code
 # define E_ID "Line does not begin with a proper element type identifier.\n"\
 	"Possible identifiers: R A c l sp pl sq cy tr\n"
 
-void			parsing_error(size_t line_nb, uint8_t type_index, t_global *data);
-void			error(t_error_code err_code);
+void	parsing_error_exit(size_t line_nb, uint8_t type_index, t_global *data);
+void	error_and_exit(t_error_code err_code);
 
-#endif /* ERRORS_H */
+#endif

@@ -51,6 +51,8 @@ const char	*p_ambient_lightning(const char *line, t_global *data)
 void		calc_camera_properties(t_camera *cur_camera, t_point target, int fov)
 {
 	cur_camera->forward_vec = unit(sub(target, cur_camera->origin));
+	if (cur_camera->forward_vec == NULL)
+		return (NULL);
 	cur_camera->right_vec = unit(cross(cur_camera->forward_vec,
 				(t_vector){0.0, 1.0, 0.0}));
 	cur_camera->up_vec = cross(cur_camera->right_vec, cur_camera->forward_vec);

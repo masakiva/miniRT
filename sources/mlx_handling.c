@@ -125,7 +125,7 @@ t_image	*new_image(t_global *data)
 	if (new_image->ptr == NULL)
 	{
 		free_data(data);
-		error(MLX_NEW_IMAGE_ERROR);// free mlx_init
+		error_and_exit(MLX_NEW_IMAGE_ERROR);// free mlx_init
 	}
 	new_image->addr = mlx_get_data_addr(new_image->ptr,
 		&(new_image->bits_per_pixel), &(new_image->line_len), &(new_image->endian));
@@ -141,7 +141,7 @@ t_bool	draw_images(t_global *data)
 	while (cameras_iter != NULL)
 	{
 		cur_image = new_image(data);
-		fill_image(data, cur_image, ((t_camera *)cameras_iter->content));
+		fill_mlx_image(data, cur_image, ((t_camera *)cameras_iter->content));
 		cameras_iter = cameras_iter->next;
 	}
 	return (SUCCESS);
@@ -154,7 +154,7 @@ void	render_with_mlx(t_global *data)
 	if (data->mlx_ptr == NULL)
 	{
 		free_data(data);
-		error(MLX_INIT_ERROR);
+		error_and_exit(MLX_INIT_ERROR);
 	}
 	check_resolution(data);
 	draw_images(data);
@@ -163,7 +163,7 @@ void	render_with_mlx(t_global *data)
 	if (data->win_ptr == NULL)
 	{
 		free_data(data);
-		error(MLX_NEW_WINDOW_ERROR);
+		error_and_exit(MLX_NEW_WINDOW_ERROR);
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr,
 			((t_image *)data->images->content)->ptr, 0, 0);

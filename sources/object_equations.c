@@ -10,6 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minirt.h"
+#include <math.h>
+
 double	i_sphere(t_ray *ray, void *obj)
 {
 	t_sphere	*sp;

@@ -178,24 +178,15 @@ typedef struct	s_global // couper en deux? mlx & scene
 }				t_global;
 
 # include "errors.h"
+# include "vectors.h"
 # include "parsing.h"
 # include "mlx_handling.h"
 # include "bmp.h"
+# include "ray_tracing.h"
 
 typedef double		(*t_equations)(t_ray *, void *);
 typedef t_vector	(*t_normal)(t_point, void *);
 
 void			free_data(t_global *data);
-
-void			image_pixel_put(t_image *image, size_t x, size_t y, unsigned color);
-void			pixel_put_converted_color(t_global *data, t_image *image, size_t px_coord[2], int color);
-int				key_hooks(int keycode, t_global *data);
-t_image			*new_image(t_global *data);
-t_bool			draw_images(t_global *data);
-void			check_resolution(t_global *data);
-void			switch_camera(t_global *data, int8_t order);
-void			quit_program(t_global *data);
-int				key_hooks(int keycode, t_global *data);
-void			fill_image(t_global *data, t_image *cur_image, t_camera *cur_camera);
 
 #endif

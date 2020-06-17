@@ -23,7 +23,7 @@ t_vector		sub(t_vector v1, t_vector v2);
 t_vector		mult(t_vector v1, double f);
 t_vector		divi(t_vector v1, double f);
 t_vector		neg(t_vector v1);
-t_vector		unit(t_vector v1); // length en para?
+t_vector		unit(t_vector v1);
 double			dot(t_vector v1, t_vector v2);
 t_vector		cross(t_vector v1, t_vector v2);
 void print_vec(t_vector v);

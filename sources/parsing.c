@@ -44,10 +44,10 @@ void	parse_line(const char *line, t_global *data, size_t line_nb)
 	if (line != NULL)
 		line = skip_spaces_tabs(line);
 	if (line == NULL || *line != '\0')
-		parsing_error(line_nb, cur_elem_iter, data);
+		parsing_error_exit(line_nb, cur_elem_iter, data);
 }
 
-void	cycle_through_lines(t_global *data, int fd)
+void	cycle_through_lines_and_parse(t_global *data, int fd)
 {
 	char		*line;
 	int8_t		ret;
@@ -63,33 +63,12 @@ void	cycle_through_lines(t_global *data, int fd)
 		{
 			free_data(data);
 			close(fd);
-			error(GNL_ERROR);
+			error_and_exit(GNL_ERROR);
 		}
 		line_nb++;
 		parse_line((const char *)line, data, line_nb);
 		free(line);
 	}
-}
-
-void	free_list_elem(void *content)
-{
-	free(content);
-}
-
-void	free_object(void *content)
-{
-	free(((t_obj *)content)->obj);
-	free_list_elem(content);
-}
-
-void	free_data(t_global *data)
-{
-	ft_lstclear(&(data->images), &free_list_elem);
-	free(data->mlx_ptr);
-	ft_lstclear(&(data->cameras), &free_list_elem);
-	ft_lstclear(&(data->lights), &free_list_elem);
-	ft_lstclear(&(data->objects), &free_object);
-	free(data);
 }
 
 void		init_global_struct(t_global **data, int fd)
@@ -99,7 +78,7 @@ void		init_global_struct(t_global **data, int fd)
 	if (*data == NULL)
 	{
 		close(fd);
-		error(MALLOC_ERROR);
+		error_and_exit(MALLOC_ERROR);
 	}
 	else
 		ft_bzero(*data, sizeof(t_global));
@@ -113,14 +92,20 @@ t_global	*parse_rtfile(const char *rtfile)
 	errno = 0;
 	fd = open(rtfile, O_RDONLY);
 	if (fd == ERROR)
-		error(OPEN_ERROR);
+		error_and_exit(OPEN_ERROR);
 	data = NULL;
 	init_global_struct(&data, fd);
-	cycle_through_lines(data, fd);
+	cycle_through_lines_and_parse(data, fd);
 	errno = 0;
 	if (close(fd) == ERROR)
-		error(CLOSE_ERROR);// free
+	{
+		free_data(data);
+		error_and_exit(CLOSE_ERROR);
+	}
 	if (data->cameras == NULL)
-		error(NO_CAMERA_ERROR);// free
+	{
+		free_data(data);
+		error_and_exit(NO_CAMERA_ERROR);
+	}
 	return (data);
 }
