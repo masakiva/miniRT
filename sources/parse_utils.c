@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 13:33:04 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/03/02 16:27:20 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/18 16:34:16 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,17 +136,29 @@ const char	*parse_float(const char *line, double *f)
 	return (line);
 }
 
-const char	*parse_coord(const char *line, t_point *v)
+const char	*parse_coord(const char *line, t_point *p)
 {
-	line = parse_float(line, &(v->x));
+	line = parse_float(line, &(p->x));
 	if (line == NULL)
 		return (NULL);
 	line = skip_comma(line);
-	line = parse_float(line, &(v->y));
+	line = parse_float(line, &(p->y));
 	if (line == NULL)
 		return (NULL);
 	line = skip_comma(line);
-	line = parse_float(line, &(v->z));
+	line = parse_float(line, &(p->z));
+	return (line);
+}
+
+const char	*parse_unit_vector(const char *line, t_vector *v)
+{
+	line = parse_coord(line, v);
+	if (line == NULL)
+		return (NULL);
+	if (v->x > 1 || v->x < -1 ||
+		v->y > 1 || v->y < -1 ||
+		v->z > 1 || v->z < -1)
+		return (NULL);
 	return (line);
 }
 

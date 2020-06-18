@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 14:49:31 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/03/10 20:04:42 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/18 15:23:51 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@ t_vector	div(t_vector v1, double f)// to keep?
 {
 	t_vector v2;
 
-	if (f == 0)
-		return (NULL);
 	v2.x = v1.x / f; // div by zero error
 	v2.y = v1.y / f;
 	v2.z = v1.z / f;
@@ -80,7 +78,7 @@ t_vector	neg(t_vector v1)// to keep?
 	return (v2);
 }
 
-t_vector	unit(t_vector v1)
+t_vector	unit(t_vector v1) // -> unit_vec
 {
 	return (div(v1, length(v1)));// div by zero
 }

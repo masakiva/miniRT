@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 18:24:12 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/17 16:57:57 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/18 16:18:17 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ typedef struct	s_intersection
 typedef struct	s_camera
 {
 	t_point		origin;
-	t_vector	forward_vec;
+	t_vector	direction;
 	t_vector	right_vec;
 	t_vector	up_vec;
 	double		half_width;

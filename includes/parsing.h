@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 16:37:19 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/17 16:52:56 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/18 16:34:04 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ const char		*skip_comma(const char *str);
 const char		*parse_int(const char *line, int *i);
 const char		*parse_float(const char *line, double *f);
 const char		*parse_coord(const char *line, t_point *v);
+const char		*parse_unit_vector(const char *line, t_vector *v);
 const char		*parse_color(const char *line, t_rgb *color);
 t_bool			add_to_list(void *cur_object, t_list **lst);
 t_rgb			*wrap_object(void *cur_obj, t_list **lst, int8_t type);

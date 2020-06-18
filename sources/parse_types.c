@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 16:40:33 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/03/02 16:38:43 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/18 16:39:48 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,21 +48,17 @@ const char	*p_ambient_lightning(const char *line, t_global *data)
 	return (line);
 }
 
-void		calc_camera_properties(t_camera *cur_camera, t_point target, int fov)
+void		calc_camera_properties(t_camera *cur_camera, int fov)
 {
-	cur_camera->forward_vec = unit(sub(target, cur_camera->origin));
-	if (cur_camera->forward_vec == NULL)
-		return (NULL);
-	cur_camera->right_vec = unit(cross(cur_camera->forward_vec,
-				(t_vector){0.0, 1.0, 0.0}));
-	cur_camera->up_vec = cross(cur_camera->right_vec, cur_camera->forward_vec);
+	cur_camera->right_vec = unit(cross((t_vector){0.0, 1.0, 0.0},
+				cur_camera->direction));
+	cur_camera->up_vec = cross(cur_camera->direction, cur_camera->right_vec);
 	cur_camera->half_width = tan((M_PI * fov / 180) / 2);
 }
 
 const char	*p_camera(const char *line, t_global *data)
 {
 	t_camera	*cur_camera;
-	t_point		target;
 	int			fov;
 
 	errno = 0;
@@ -74,13 +70,13 @@ const char	*p_camera(const char *line, t_global *data)
 	line = parse_coord(line, &(cur_camera->origin));
 	if (line == NULL)
 		return (NULL);
-	line = parse_coord(line, &target);
+	line = parse_unit_vector(line, &(cur_camera->direction));
 	if (line == NULL)
 		return (NULL);
 	line = parse_int(line, &fov);
 	if (line == NULL || fov < 0 || fov > 180)
 		return (NULL);
-	calc_camera_properties(cur_camera, target, fov);
+	calc_camera_properties(cur_camera, fov);
 	return (line);
 }
 
@@ -142,7 +138,7 @@ const char	*p_plane(const char *line, t_global *data)
 	line = parse_coord(line, &(cur_plane->position));
 	if (line == NULL)
 		return (NULL);
-	line = parse_coord(line, &(cur_plane->normal));
+	line = parse_unit_vector(line, &(cur_plane->normal));
 	line = parse_color(line, color_ptr);
 	return (line);
 }
@@ -162,7 +158,7 @@ const char	*p_square(const char *line, t_global *data)
 	line = parse_coord(line, &(cur_square->position));
 	if (line == NULL)
 		return (NULL);
-	line = parse_coord(line, &(cur_square->normal));
+	line = parse_unit_vector(line, &(cur_square->normal));
 	if (line == NULL)
 		return (NULL);
 	line = parse_float(line, &(cur_square->height));
@@ -187,7 +183,7 @@ const char	*p_cylinder(const char *line, t_global *data)
 	line = parse_coord(line, &(cur_cylinder->position));
 	if (line == NULL)
 		return (NULL);
-	line = parse_coord(line, &(cur_cylinder->normal));
+	line = parse_unit_vector(line, &(cur_cylinder->normal));
 	if (line == NULL)
 		return (NULL);
 	line = parse_float(line, &(cur_cylinder->diameter));

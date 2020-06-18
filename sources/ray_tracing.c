@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 16:54:56 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/17 16:55:42 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/18 16:18:55 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ void	fill_mlx_image(t_global *data, t_image *cur_image, t_camera *cur_camera)
 		x = 0;
 		while (x < data->res[0])
 		{
-			ray.direction = add(cur_camera->forward_vec,
+			ray.direction = add(cur_camera->direction,
 						add(props.x_factor_vec, props.y_factor_vec));
 			if (x == 0 && y == 0)
 			{
@@ -231,7 +231,7 @@ void	fill_bmp_data(t_global *data, char *file_data, size_t line_padding)
 		x = 0;
 		while (x < data->res[0])
 		{
-			ray.direction = add(cur_camera->forward_vec,
+			ray.direction = add(cur_camera->direction,
 						add(props.x_factor_vec, props.y_factor_vec));
 			color = process_pixel(ray, data);
 			data_addr[i] = color;
