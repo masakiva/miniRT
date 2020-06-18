@@ -13,19 +13,20 @@
 #ifndef VECTORS_H
 # define VECTORS_H
 
+#include <math.h>
+
+#include "minirt.h"
+
 double			sq(double n);
-t_vector		new_vector_default(void);
-t_vector		new_vector(double x, double y, double z);
-double			length_sq(t_vector v);
-double			length(t_vector v);
-t_vector		add(t_vector v1, t_vector v2);
-t_vector		sub(t_vector v1, t_vector v2);
-t_vector		mult(t_vector v1, double f);
-t_vector		divi(t_vector v1, double f);
-t_vector		neg(t_vector v1);
-t_vector		unit(t_vector v1);
-double			dot(t_vector v1, t_vector v2);
-t_vector		cross(t_vector v1, t_vector v2);
+t_vector		add_vec(t_vector v1, t_vector v2);
+t_vector		sub_vec(t_vector v1, t_vector v2);
+t_vector		mult_vec(t_vector v1, double f);
+t_vector		div_vec(t_vector v1, double f);
+t_vector		neg_vec(t_vector v1);
+t_vector		unit_vec(t_vector v, double v_length);
+double			dot_vec(t_vector v1, t_vector v2);
+t_vector		cross_vec(t_vector v1, t_vector v2);
+double			length_vec(t_vector v);
 void print_vec(t_vector v);
 
 #endif

@@ -10,25 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
-#include <math.h>
+#include "vectors.h"
 
 double		sq(double n)
 {
 	return (n * n);
 }
 
-double		length_sq(t_vector v)// to keep? same as dot(v, v)
-{
-	return (sq(v.x) + sq(v.y) + sq(v.z));
-}
-
-double		length(t_vector v)
-{
-	return (sqrt(length_sq(v)));
-}
-
-t_vector	add(t_vector v1, t_vector v2)// to keep?
+t_vector	add_vec(t_vector v1, t_vector v2)
 {
 	t_vector v3;
 
@@ -38,7 +27,7 @@ t_vector	add(t_vector v1, t_vector v2)// to keep?
 	return (v3);
 }
 
-t_vector	sub(t_vector v1, t_vector v2)
+t_vector	sub_vec(t_vector v1, t_vector v2)
 {
 	t_vector v3;
 
@@ -48,7 +37,7 @@ t_vector	sub(t_vector v1, t_vector v2)
 	return (v3);
 }
 
-t_vector	mult(t_vector v1, double f)// to keep?
+t_vector	mult_vec(t_vector v1, double f)
 {
 	t_vector v2;
 
@@ -58,17 +47,17 @@ t_vector	mult(t_vector v1, double f)// to keep?
 	return (v2);
 }
 
-t_vector	div(t_vector v1, double f)// to keep?
+t_vector	div_vec(t_vector v1, double f)
 {
 	t_vector v2;
 
-	v2.x = v1.x / f; // div by zero error
+	v2.x = v1.x / f;
 	v2.y = v1.y / f;
 	v2.z = v1.z / f;
 	return (v2);
 }
 
-t_vector	neg(t_vector v1)// to keep?
+t_vector	neg_vec(t_vector v1)// to keep?
 {
 	t_vector v2;
 
@@ -78,17 +67,19 @@ t_vector	neg(t_vector v1)// to keep?
 	return (v2);
 }
 
-t_vector	unit(t_vector v1) // -> unit_vec
+t_vector	unit_vec(t_vector v, double v_length)
 {
-	return (div(v1, length(v1)));// div by zero
+	return (div_vec(v, v_length));
 }
 
-double		dot(t_vector v1, t_vector v2)
+double		dot_vec(t_vector v1, t_vector v2)
 {
-	return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z);
+	return (v1.x * v2.x +
+			v1.y * v2.y +
+			v1.z * v2.z);
 }
 
-t_vector	cross(t_vector v1, t_vector v2)
+t_vector	cross_vec(t_vector v1, t_vector v2)
 {
 	t_vector v3;
 
@@ -96,6 +87,11 @@ t_vector	cross(t_vector v1, t_vector v2)
 	v3.y = v1.z * v2.x - v1.x * v2.z;
 	v3.z = v1.x * v2.y - v1.y * v2.x;
 	return (v3);
+}
+
+double		length_vec(t_vector v)
+{
+	return (sqrt(dot_vec(v, v)));
 }
 
 void		print_vec(t_vector v)

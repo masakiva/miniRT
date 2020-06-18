@@ -10,10 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h" // inverser: include errors.h ici, minirt.h dans errors.h
-#include <stdlib.h> // ... et include les lib dans errors.h
-#include <unistd.h>
-#include <errno.h>
+#include "errors.h"
 
 void	putstr_stderr(const char *str)
 {
@@ -27,7 +24,7 @@ void	putstr_stderr(const char *str)
 const char	*error_code_to_str(t_error_code err_code)
 {
 	static const char *const err_str[NB_ERRORS] = {E0, E1, E2, E3, E4, E5, E6,
-		E7, E8, E9, E10, E11};
+		E7, E8, E9, E10, E11, E12, E13, E14};
 	return (err_str[err_code]);
 }
 

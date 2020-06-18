@@ -10,58 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
-#include "mlx.h"
-#include <stdlib.h>
-#include <errno.h>
+#include "mlx_handling.h"
 
-void	image_pixel_put(t_image *image, size_t x, size_t y, unsigned color)
+unsigned	convert_color(void *mlx_ptr, int color)
 {
-	char		*pixel_pos;
-
-	pixel_pos = image->addr + ((int)y * image->line_len +
-			(int)x * (image->bits_per_pixel / 8));
-	if (image->endian == 0)//LITTLE_ENDIAN
-	{
-		*pixel_pos = (char)color;
-		if (image->bits_per_pixel >= 16)
-			*(pixel_pos + 1) = (char)(color >> 8);
-		if (image->bits_per_pixel >= 24)
-			*(pixel_pos + 2) = (char)(color >> 16);
-		if (image->bits_per_pixel >= 32)
-			*(pixel_pos + 3) = (char)(color >> 24);
-	}
-	else if (image->endian == 1) //BIG_ENDIAN
-	{
-		if (image->bits_per_pixel >= 32)
-		{
-			*(pixel_pos + 3) = (char)color;
-			*(pixel_pos + 2) = (char)(color >> 8);
-			*(pixel_pos + 1) = (char)(color >> 16);
-			*pixel_pos = (char)(color >> 24);
-		}
-		else if (image->bits_per_pixel >= 24)
-		{
-			*(pixel_pos + 2) = (char)color;
-			*(pixel_pos + 1) = (char)(color >> 8);
-			*pixel_pos = (char)(color >> 16);
-		}
-		else if (image->bits_per_pixel >= 16)
-		{
-			*(pixel_pos + 1) = (char)color;
-			*pixel_pos = (char)(color >> 8);
-		}
-		else if (image->bits_per_pixel >= 8)
-			*pixel_pos = (char)color;
-	}
-}
-
-void	pixel_put_converted_color(t_global *data, t_image *image, size_t px_coord[2], int color)
-{
-	unsigned	converted_color;
-
-	converted_color = (unsigned)mlx_get_color_value(data->mlx_ptr, color);
-	image_pixel_put(image, px_coord[0], px_coord[1], converted_color);
+	return ((unsigned)mlx_get_color_value(mlx_ptr, color));
 }
 
 void	switch_camera(t_global *data, int8_t order)
@@ -121,7 +74,7 @@ t_image	*new_image(t_global *data)
 	errno = 0;
 	if (add_to_list(new_image, &(data->images)) == FAILURE)
 		return (NULL);// error
-	new_image->ptr = mlx_new_image(data->mlx_ptr, data->res[0], data->res[1]);
+	new_image->ptr = mlx_new_image(data->mlx_ptr, data->resolution[WIDTH], data->resolution[HEIGHT]);
 	if (new_image->ptr == NULL)
 	{
 		free_data(data);
@@ -159,7 +112,7 @@ void	render_with_mlx(t_global *data)
 	check_resolution(data);
 	draw_images(data);
 	errno = 0;
-	data->win_ptr = mlx_new_window(data->mlx_ptr, data->res[0], data->res[1], "miniRT");
+	data->win_ptr = mlx_new_window(data->mlx_ptr, data->resolution[WIDTH], data->resolution[HEIGHT], "miniRT");
 	if (data->win_ptr == NULL)
 	{
 		free_data(data);
@@ -169,4 +122,19 @@ void	render_with_mlx(t_global *data)
 			((t_image *)data->images->content)->ptr, 0, 0);
 	mlx_key_hook(data->win_ptr, &key_hooks, data);
 	mlx_loop(data->mlx_ptr);
+}
+
+void	check_resolution(t_global *data)
+{
+	int		screen_width;
+	int		screen_height;
+
+	errno = 0;
+	mlx_get_screen_size(data->mlx_ptr, &screen_width, &screen_height);
+	if (screen_width <= 0 || screen_height <= 0)
+		error_and_exit(MLX_SCREEN_SIZE_ERROR);
+	if (data->resolution[WIDTH] == 0 || data->resolution[WIDTH] > (size_t)screen_width)
+		data->resolution[WIDTH] = (size_t)screen_width;
+	if (data->resolution[HEIGHT] == 0 || data->resolution[HEIGHT] > (size_t)screen_height)
+		data->resolution[HEIGHT] = (size_t)screen_height;
 }

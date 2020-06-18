@@ -10,10 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
-#include <math.h>
+#include "ray_tracing.h"
 
-double	i_sphere(t_ray *ray, void *obj)
+double	intersect_sphere(t_ray *ray, void *obj)
 {
 	t_sphere	*sp;
 	t_vector	OC;
@@ -24,11 +23,11 @@ double	i_sphere(t_ray *ray, void *obj)
 	double		t;
 
 	sp = (t_sphere *)obj;
-	OC = sub(ray->origin, sp->centre);// a mettre en cache? ->liste chainee dans sp
-	//ray.direction = sub(ray.direction, ray.origin);
-	a = length_sq(ray->direction);
-	b = 2 * dot(ray->direction, OC);
-	c = length_sq(OC) - sq(sp->radius);
+	OC = sub_vec(ray->origin, sp->centre);// a mettre en cache? ->liste chainee dans sp
+	//ray.direction = sub_vec(ray.direction, ray.origin);
+	a = dot_vec(ray->direction, ray->direction);
+	b = 2 * dot_vec(ray->direction, OC);
+	c = dot_vec(OC, OC) - sq(sp->radius);
 	discriminant = sq(b) - 4 * a * c; // 4c a mettre en cache?
 	if (discriminant < 0.0)
 		t = 2147483647;
@@ -37,34 +36,34 @@ double	i_sphere(t_ray *ray, void *obj)
 	return (t);
 }
 
-t_vector	n_sphere(t_point position, void *obj)
+t_vector	normal_sphere(t_point position_on_the_surface, void *obj)
 {
 	t_sphere	*sp;
 	t_vector	normal;
 
 	sp = (t_sphere *)obj;
-	normal = sub(position, sp->centre);
-	normal = unit(normal);
+	normal = sub_vec(position_on_the_surface, sp->centre);
+	normal = unit_vec(normal, length_vec(normal));
 	return (normal);
 }
 
-double	i_plane(t_ray *ray, void *obj)
+double	intersect_plane(t_ray *ray, void *obj)
 {
 	t_plane		*pl;
 	double		d_dot_n;
 	double		t;
 
 	pl = (t_plane *)obj;
-	d_dot_n = dot(ray->direction, pl->normal);
+	d_dot_n = dot_vec(ray->direction, pl->normal);
 	t = 2147483647;
 	if (d_dot_n != 0)
 	{
-		t = dot(pl->normal, sub(pl->position, ray->origin)) / d_dot_n;
+		t = dot_vec(pl->normal, sub_vec(pl->position, ray->origin)) / d_dot_n;
 	}
 	return (t);
 }
 
-t_vector	n_plane(t_point position, void *obj)
+t_vector	normal_plane(t_point position, void *obj)
 {
 	(void)position;
 	return (((t_plane *)obj)->normal);

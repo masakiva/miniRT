@@ -1,5 +1,7 @@
 #include "minirt.h"
-#include <stdlib.h>
+#include "parsing.h"
+#include "mlx_handling.h"
+#include "errors.h"
 
 static void	check_rtfile_name(const char *file_name)
 {

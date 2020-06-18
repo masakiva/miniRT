@@ -13,6 +13,12 @@
 #ifndef ERRORS_H
 # define ERRORS_H
 
+# include <unistd.h>
+# include <errno.h>
+
+# include "parsing.h"
+# include "minirt.h"
+
 typedef	enum	e_error_code
 {
 	ARGC_ERROR, //0
@@ -20,14 +26,16 @@ typedef	enum	e_error_code
 	SAVE_OPTION_ERROR, //2
 	NO_CAMERA_ERROR, //3
 	RESOLUTION_MISSING_ERROR, //4
-	OPEN_ERROR, //5
-	CLOSE_ERROR, //6
+	OPEN_RTFILE_ERROR, //5
+	CLOSE_RTFILE_ERROR, //6
 	MALLOC_ERROR, //7
 	GNL_ERROR, //8
-	MLX_INIT_ERROR, //9
-	MLX_SCREEN_SIZE_ERROR, //10
-	MLX_NEW_WINDOW_ERROR, //11
-	MLX_NEW_IMAGE_ERROR, //12
+	OPEN_BMPFILE_ERROR, //9
+	CLOSE_BMPFILE_ERROR, //10
+	MLX_INIT_ERROR, //11
+	MLX_SCREEN_SIZE_ERROR, //12
+	MLX_NEW_WINDOW_ERROR, //13
+	MLX_NEW_IMAGE_ERROR, //14
 	NB_ERRORS
 }				t_error_code;
 
@@ -38,14 +46,16 @@ typedef	enum	e_error_code
 # define E2 "Only a --save option is allowed as second argument.\n"
 # define E3 "There must be at least one camera in the scene.\n"
 # define E4 "Image resolution must be defined to export a bmp file.\n"
-# define E5 "Cannot open file"
+# define E5 "Cannot open .rt file"
 # define E6 "Cannot close file descriptor previously opened for .rt file"
 # define E7 "Cannot allocate required memory"
-# define E8 "Cannot read file or allocate memory"
-# define E9 "The MinilibX initialization failed"
-# define E10 "MinilibX problem retrieving the actual display size"
-# define E11 "MinilibX problem creating a new window"
-# define E12 "MinilibX problem creating a new image"
+# define E8 "Cannot read .rt file or allocate memory (get_next_line error)"
+# define E9 "Cannot open .bmp file"
+# define E10 "Cannot close file descriptor previously opened for .bmp file"
+# define E11 "The MinilibX initialization failed"
+# define E12 "MinilibX problem retrieving the actual display size"
+# define E13 "MinilibX problem creating a new window"
+# define E14 "MinilibX problem creating a new image"
 
 # define E_RES "Resolution parameters not valid, "\
 	"or declared twice in the file.\n"\

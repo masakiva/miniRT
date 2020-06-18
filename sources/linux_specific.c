@@ -10,13 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
-#include <mlx.h>
-#include <errno.h>
+#include "mlx_handling.h"
 
 int		key_hooks(int keycode, t_global *data)
 {
-	if (keycode == KEYCODE_ESCAPE)
+	if (keycode == KEYCODE_ESCAPE) // add conditional defines to the header
 		quit_program(data);
 	else if (keycode == KEYCODE_RIGHT_ARROW)
 		switch_camera(data, 1);
@@ -25,19 +23,4 @@ int		key_hooks(int keycode, t_global *data)
 	else
 		printf("keycode = %d\n", keycode);
 	return (SUCCESS);
-}
-
-void	check_resolution(t_global *data)
-{
-	int		screen_width;
-	int		screen_height;
-
-	errno = 0;
-	mlx_get_screen_size(data->mlx_ptr, &screen_width, &screen_height);
-	if (screen_width <= 0 || screen_height <= 0)
-		error_and_exit(MLX_SCREEN_SIZE_ERROR);
-	if (data->res[0] == 0 || data->res[0] > (size_t)screen_width)
-		data->res[0] = (size_t)screen_width;
-	if (data->res[1] == 0 || data->res[1] > (size_t)screen_height)
-		data->res[1] = (size_t)screen_height;
 }

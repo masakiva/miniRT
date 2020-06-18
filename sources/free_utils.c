@@ -1,5 +1,4 @@
 #include "minirt.h"
-#include <stdlib.h>
 
 void	free_list_elem(void *content)
 {

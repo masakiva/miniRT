@@ -21,8 +21,8 @@
 
 # define ERROR	-1
 
-# define LITTLE_ENDIAN 0
-# define BIG_ENDIAN 1
+# define WIDTH 0
+# define HEIGHT 1
 
 # define NB_OBJ	5
 
@@ -35,9 +35,9 @@ enum	e_object
 	TRIANGLE
 };
 
-# include <stdint.h>
-# include "libft.h"
-#include <stdio.h>
+# include <stdlib.h>
+# include "libft.h"// a inclure sorezore
+#include <stdio.h>/////////////
 
 typedef int8_t	t_bool;
 
@@ -163,30 +163,23 @@ typedef struct	s_image
 ** global struct for all the data
 */
 
-typedef struct	s_global // couper en deux? mlx & scene
+typedef struct	s_global
 {
 	void		*mlx_ptr;
 	void		*win_ptr;
 	t_list		*images;
-
-	size_t		res[2]; // ->resolution ; define for 0 et 1? WIDTH et HEIGHT par ex
-	double		amb_light; // ->amb_light_intensity
-	t_rgb		color; // ->amb_light_color
+	size_t		resolution[2];
+	double		amb_light_intensity;
+	t_rgb		amb_light_color;
 	t_list		*cameras;
 	t_list		*lights;
 	t_list		*objects;
 }				t_global;
 
-# include "errors.h"
-# include "vectors.h"
-# include "parsing.h"
-# include "mlx_handling.h"
-# include "bmp.h"
-# include "ray_tracing.h"
-
 typedef double		(*t_equations)(t_ray *, void *);
 typedef t_vector	(*t_normal)(t_point, void *);
 
-void			free_data(t_global *data);
+void	free_data(t_global *data);
+t_bool	add_to_list(void *cur_object, t_list **lst);
 
 #endif

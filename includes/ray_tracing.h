@@ -13,10 +13,20 @@
 #ifndef RAY_TRACING_H
 # define RAY_TRACING_H
 
-double		i_sphere(t_ray *ray, void *obj);
-t_vector	n_sphere(t_point position, void *obj);
-double		i_plane(t_ray *ray, void *obj);
-t_vector	n_plane(t_point position, void *obj);
+# include <math.h>
+
+# include "mlx_handling.h"
+# include "bmp_export.h"
+# include "vectors.h"
+# include "minirt.h"
+
+# define LITTLE_ENDIAN_ 0
+# define BIG_ENDIAN_ 1
+
+double		intersect_sphere(t_ray *ray, void *obj);
+t_vector	normal_sphere(t_point position, void *obj);
+double		intersect_plane(t_ray *ray, void *obj);
+t_vector	normal_plane(t_point position, void *obj);
 
 void	get_view_properties(t_global *data, t_view_properties *props, t_camera *cur_camera);
 void	fill_mlx_image(t_global *data, t_image *cur_image, t_camera *cur_camera);

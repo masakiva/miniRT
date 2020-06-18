@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "mlx_handling.h"
 
 int		key_hooks(int keycode, t_global *data)
 {
@@ -23,17 +23,4 @@ int		key_hooks(int keycode, t_global *data)
 	else
 		printf("keycode = %d\n", keycode);
 	return (SUCCESS);
-}
-
-void	check_resolution(t_global *data)
-{
-	size_t	screen_width;
-	size_t	screen_height;
-
-	screen_width = 2560;
-	screen_height = 1440;
-	if (data->res[0] == 0 || data->res[0] > screen_width)
-		data->res[0] = screen_width;
-	if (data->res[1] == 0 || data->res[1] > screen_height)
-		data->res[1] = screen_height;
 }

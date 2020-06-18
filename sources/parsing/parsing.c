@@ -10,13 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <errno.h>
+#include "parsing.h"
 
 void	parse_line(const char *line, t_global *data, size_t line_nb)
 {
@@ -92,7 +86,7 @@ t_global	*parse_rtfile(const char *rtfile)
 	errno = 0;
 	fd = open(rtfile, O_RDONLY);
 	if (fd == ERROR)
-		error_and_exit(OPEN_ERROR);
+		error_and_exit(OPEN_RTFILE_ERROR);
 	data = NULL;
 	init_global_struct(&data, fd);
 	cycle_through_lines_and_parse(data, fd);
@@ -100,7 +94,7 @@ t_global	*parse_rtfile(const char *rtfile)
 	if (close(fd) == ERROR)
 	{
 		free_data(data);
-		error_and_exit(CLOSE_ERROR);
+		error_and_exit(CLOSE_RTFILE_ERROR);
 	}
 	if (data->cameras == NULL)
 	{
