@@ -70,18 +70,21 @@ t_image	*new_image(t_global *data)
 	errno = 0;
 	new_image = (t_image *)malloc(sizeof(t_image));
 	if (new_image == NULL)
-		return (NULL);// error
+		return (NULL);
 	errno = 0;
 	if (add_to_list(new_image, &(data->images)) == FAILURE)
-		return (NULL);// error
-	new_image->ptr = mlx_new_image(data->mlx_ptr, data->resolution[WIDTH], data->resolution[HEIGHT]);
+		return (NULL);
+	errno = 0;
+	new_image->ptr = mlx_new_image(data->mlx_ptr,
+			data->resolution[WIDTH], data->resolution[HEIGHT]);
 	if (new_image->ptr == NULL)
 	{
 		free_data(data);
-		error_and_exit(MLX_NEW_IMAGE_ERROR);// free mlx_init
+		error_and_exit(MLX_NEW_IMAGE_ERROR);
 	}
 	new_image->addr = mlx_get_data_addr(new_image->ptr,
-		&(new_image->bits_per_pixel), &(new_image->line_len), &(new_image->endian));
+			&(new_image->bits_per_pixel), &(new_image->line_len),
+			&(new_image->endian));
 	return (new_image);
 }
 
@@ -94,6 +97,8 @@ t_bool	draw_images(t_global *data)
 	while (cameras_iter != NULL)
 	{
 		cur_image = new_image(data);
+		if (cur_image == NULL)
+			error_and_exit(MALLOC_ERROR);
 		fill_mlx_image(data, cur_image, ((t_camera *)cameras_iter->content));
 		cameras_iter = cameras_iter->next;
 	}
@@ -112,7 +117,7 @@ void	render_with_mlx(t_global *data)
 	check_resolution(data);
 	draw_images(data);
 	errno = 0;
-	data->win_ptr = mlx_new_window(data->mlx_ptr, data->resolution[WIDTH], data->resolution[HEIGHT], "miniRT");
+	data->win_ptr = mlx_new_window(data->mlx_ptr, data->resolution[WIDTH], data->resolution[HEIGHT], MLX_WINDOW_TITLE);
 	if (data->win_ptr == NULL)
 	{
 		free_data(data);

@@ -50,17 +50,17 @@ const char	*parse_color(const char *line, t_rgb *color)
 	line = parse_int(line, &tmp);
 	if (line == NULL || tmp < 0 || tmp > 255)
 		return (NULL);
-	color->x = (double)tmp;
+	color->x = (double)tmp / 255;
 	line = skip_comma(line);
 	line = parse_int(line, &tmp);
 	if (line == NULL || tmp < 0 || tmp > 255)
 		return (NULL);
-	color->y = (double)tmp;
+	color->y = (double)tmp / 255;
 	line = skip_comma(line);
 	line = parse_int(line, &tmp);
 	if (line == NULL || tmp < 0 || tmp > 255)
 		return (NULL);
-	color->z = (double)tmp;
+	color->z = (double)tmp / 255;
 	return (line);
 }
 

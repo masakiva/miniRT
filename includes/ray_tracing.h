@@ -20,6 +20,11 @@
 # include "vectors.h"
 # include "minirt.h"
 
+# define RAY_T_MIN	0.0001
+# define RAY_T_MAX	1.0e30
+
+# define GAMMA 2.2
+
 # define LITTLE_ENDIAN_ 0
 # define BIG_ENDIAN_ 1
 

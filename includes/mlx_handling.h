@@ -21,6 +21,8 @@
 #include "errors.h"
 #include "minirt.h"
 
+# define MLX_WINDOW_TITLE "miniRT"
+
 # define KEYCODE_ESCAPE 65307
 # define KEYCODE_RIGHT_ARROW 65363
 # define KEYCODE_LEFT_ARROW 65361

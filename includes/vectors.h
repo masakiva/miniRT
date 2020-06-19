@@ -20,7 +20,8 @@
 double			sq(double n);
 t_vector		add_vec(t_vector v1, t_vector v2);
 t_vector		sub_vec(t_vector v1, t_vector v2);
-t_vector		mult_vec(t_vector v1, double f);
+t_vector		mult_vec_f(t_vector v1, double f);
+t_vector		mult_vec_vec(t_vector v1, t_vector v2);
 t_vector		div_vec(t_vector v1, double f);
 t_vector		neg_vec(t_vector v1);
 t_vector		unit_vec(t_vector v, double v_length);
