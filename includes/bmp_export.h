@@ -28,6 +28,9 @@
 # define BMP_NB_COLOR_PLANES 1
 # define BMP_BITS_PER_PIXEL 24
 
-void			export_in_bmp(t_global *data, const char *rtfile_name);
+void	pixel_put_bmp(char *pixel_pos, int color);
+void	uint_to_str_little_endian(unsigned nb, char *str);
+void	export_in_bmp(t_global *data, const char *rtfile_name);
+void	fill_bmp_data(t_global *data, char *file_data, size_t line_padding);
 
 #endif

@@ -13,23 +13,29 @@
 #ifndef MLX_HANDLING_H
 # define MLX_HANDLING_H
 
-#include <stdlib.h>
-#include <errno.h>
-#include "mlx.h"
+# include <stdlib.h>
+# include <errno.h>
+# include "mlx.h"
 
-#include "ray_tracing.h"
-#include "errors.h"
-#include "minirt.h"
+# include "ray_tracing.h"
+# include "errors.h"
+# include "minirt.h"
 
 # define MLX_WINDOW_TITLE "miniRT"
+# define NEXT		1
+# define PREVIOUS	-1
 
-# define KEYCODE_ESCAPE 65307
-# define KEYCODE_RIGHT_ARROW 65363
-# define KEYCODE_LEFT_ARROW 65361
+# ifdef PLATFORM_LINUX
+#  define KEYCODE_ESCAPE 65307
+#  define KEYCODE_RIGHT_ARROW 65363
+#  define KEYCODE_LEFT_ARROW 65361
+# endif
 
-# define MACOS_KEYCODE_ESCAPE 53
-# define MACOS_KEYCODE_RIGHT_ARROW 124
-# define MACOS_KEYCODE_LEFT_ARROW 123
+# ifdef PLATFORM_MACOS
+#  define KEYCODE_ESCAPE 53
+#  define KEYCODE_RIGHT_ARROW 124
+#  define KEYCODE_LEFT_ARROW 123
+# endif
 
 unsigned	convert_color(void *mlx_ptr, int color);
 int			key_hooks(int keycode, t_global *data);

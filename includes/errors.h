@@ -31,11 +31,12 @@ typedef	enum	e_error_code
 	MALLOC_ERROR, //7
 	GNL_ERROR, //8
 	OPEN_BMPFILE_ERROR, //9
-	CLOSE_BMPFILE_ERROR, //10
-	MLX_INIT_ERROR, //11
-	MLX_SCREEN_SIZE_ERROR, //12
-	MLX_NEW_WINDOW_ERROR, //13
-	MLX_NEW_IMAGE_ERROR, //14
+	WRITE_BMPFILE_ERROR, //10
+	CLOSE_BMPFILE_ERROR, //11
+	MLX_INIT_ERROR, //12
+	MLX_SCREEN_SIZE_ERROR, //13
+	MLX_NEW_WINDOW_ERROR, //14
+	MLX_NEW_IMAGE_ERROR, //15
 	NB_ERRORS
 }				t_error_code;
 
@@ -46,16 +47,17 @@ typedef	enum	e_error_code
 # define E2 "Only a --save option is allowed as second argument.\n"
 # define E3 "There must be at least one camera in the scene.\n"
 # define E4 "Image resolution must be defined to export a bmp file.\n"
-# define E5 "Cannot open .rt file"
+# define E5 "Cannot open .rt file specified in argument"
 # define E6 "Cannot close file descriptor previously opened for .rt file"
 # define E7 "Cannot allocate required memory"
 # define E8 "Cannot read .rt file or allocate memory (get_next_line error)"
-# define E9 "Cannot open .bmp file"
-# define E10 "Cannot close file descriptor previously opened for .bmp file"
-# define E11 "The MinilibX initialization failed"
-# define E12 "MinilibX problem retrieving the actual display size"
-# define E13 "MinilibX problem creating a new window"
-# define E14 "MinilibX problem creating a new image"
+# define E9 "Cannot open (create) .bmp file"
+# define E10 "Cannot write data in the .bmp file previously created"
+# define E11 "Could not close file descriptor previously opened for .bmp file"
+# define E12 "The MinilibX initialization failed"
+# define E13 "MinilibX problem retrieving the actual display size"
+# define E14 "MinilibX problem creating a new window"
+# define E15 "MinilibX problem creating a new image"
 
 # define E_RES "Resolution parameters not valid, "\
 	"or declared twice in the file.\n"\
@@ -63,7 +65,7 @@ typedef	enum	e_error_code
 	"· x render size\n"\
 	"· y render size\n"\
 	"e.g. R 1920 1080\n"
-# define E_AMB "Ambient lightning parameters not valid, "\
+# define E_AMB "Ambient lighting parameters not valid, "\
 	"or declared twice in the file.\n"\
 	"The following must be specified in order:\n"\
 	"· ambient lighting ratio in range [0.0,1.0]: 0.2\n"\
@@ -122,6 +124,7 @@ typedef	enum	e_error_code
 # define E_ID "Line does not begin with a proper element type identifier.\n"\
 	"Possible identifiers: R A c l sp pl sq cy tr\n"
 
+void	write_error(ssize_t bytes_written, size_t file_size);
 void	parsing_error_exit(size_t line_nb, uint8_t type_index, t_global *data);
 void	error_and_exit(t_error_code err_code);
 

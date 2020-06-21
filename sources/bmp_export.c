@@ -12,14 +12,6 @@
 
 #include "bmp_export.h"
 
-void	uint_to_str_little_endian(unsigned nb, char *str)
-{
-	str[0] = (char)nb;
-	str[1] = (char)(nb >> 8);
-	str[2] = (char)(nb >> 16);
-	str[3] = (char)(nb >> 24);
-}
-
 char	*get_bmpfile_name(char *basename)
 {
 	static int	index = 0;
@@ -83,8 +75,8 @@ void	fill_bmp_header(char *file_data, size_t file_size, t_global *data)
 	file_data[0x1] = 'M';
 	uint_to_str_little_endian((unsigned)file_size, file_data + 0x2);
 	file_data[0xA] = BMP_METADATA_SIZE;
-	uint_to_str_little_endian((unsigned)data->resolution[WIDTH], file_data + 0x12);
-	uint_to_str_little_endian((unsigned)data->resolution[HEIGHT], file_data + 0x16);
+	uint_to_str_little_endian((unsigned)data->res[WIDTH], file_data + 0x12);
+	uint_to_str_little_endian((unsigned)data->res[HEIGHT], file_data + 0x16);
 	file_data[0xE] = BMP_INFOHEADER_SIZE;
 	file_data[0x1A] = BMP_NB_COLOR_PLANES;
 	file_data[0x1C] = BMP_BITS_PER_PIXEL;
@@ -96,10 +88,10 @@ char	*get_bmpfile_data(int fd, t_global *data, size_t *file_size)
 	char	*file_data;
 
 	line_padding = 0;
-	if ((data->resolution[WIDTH] * 3) % 4 != 0)
-		line_padding = 4 - (data->resolution[WIDTH] * 3) % 4;
+	if ((data->res[WIDTH] * 3) % 4 != 0)
+		line_padding = 4 - (data->res[WIDTH] * 3) % 4;
 	*file_size = BMP_METADATA_SIZE +
-		(data->resolution[WIDTH] * 3 + line_padding) * data->resolution[HEIGHT];
+		(data->res[WIDTH] * 3 + line_padding) * data->res[HEIGHT];
 	errno = 0;
 	file_data = (char *)malloc(*file_size * sizeof(char));
 	if (file_data == NULL)
@@ -110,7 +102,10 @@ char	*get_bmpfile_data(int fd, t_global *data, size_t *file_size)
 	}
 	ft_bzero(file_data, *file_size);
 	fill_bmp_header(file_data, *file_size, data);
-	fill_bmp_data(data, file_data, line_padding);
+	if (data->cameras->next != NULL)
+		ft_putstr_fd("Warning\nThe exported scene will be rendered from the "\
+				"first camera's point of view.\n", STDERR_FILENO);
+	fill_bmp_data(data, file_data + BMP_METADATA_SIZE, line_padding);
 	return (file_data);
 }
 
@@ -118,27 +113,27 @@ void	export_in_bmp(t_global *data, const char *rtfile_name)
 {
 	int		fd;
 	size_t	file_size;
-	char	*file_data;
+	ssize_t	bytes_written;
 
-	if (data->resolution[WIDTH] == 0)
+	if (data->res[WIDTH] == 0)
 	{
 		free_data(data);
 		error_and_exit(RESOLUTION_MISSING_ERROR);
 	}
 	fd = create_bmpfile(rtfile_name, data);
-	close(fd);return;
-	file_data = get_bmpfile_data(fd, data, &file_size);
-	if (write(fd, file_data, file_size) < (ssize_t)file_size)
+	//free_data(data);close(fd);return;////////////
+	data->bmpfile_data = get_bmpfile_data(fd, data, &file_size);
+	errno = 0;
+	bytes_written = write(fd, data->bmpfile_data, file_size);
+	free_data(data);
+	if (bytes_written == ERROR)
 	{
-		free(file_data);
-		free_data(data);
 		close(fd);
-		//write error
+		error_and_exit(WRITE_BMPFILE_ERROR);
 	}
-	free(file_data);
+	else if (bytes_written < (ssize_t)file_size)
+		write_error(bytes_written, file_size);
+	errno = 0;
 	if (close(fd) == ERROR)
-	{
-		free_data(data);
 		error_and_exit(CLOSE_BMPFILE_ERROR);
-	}
 }

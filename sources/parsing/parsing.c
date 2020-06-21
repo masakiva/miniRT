@@ -16,7 +16,7 @@ void	parse_line(const char *line, t_global *data, size_t line_nb)
 {
 	static char		*type_identifier[NB_ELEM] = {RES, AMB, CAM, LIG, SPH, PLA,
 		SQU, CYL, TRI};
-	static t_parse	parse_elem[NB_ELEM] = {p_resolution, p_ambient_lightning,
+	static t_parse	parse_elem[NB_ELEM] = {p_resolution, p_ambient_lighting,
 		p_camera, p_light, p_sphere, p_plane, p_square, p_cylinder, p_triangle};
 	uint8_t			cur_elem_iter;
 	uint8_t			identifier_size;
@@ -27,7 +27,7 @@ void	parse_line(const char *line, t_global *data, size_t line_nb)
 	cur_elem_iter = 0;
 	while (cur_elem_iter < NB_ELEM)
 	{
-		identifier_size = ft_strlen(type_identifier[cur_elem_iter]);
+		identifier_size = (uint8_t)ft_strlen(type_identifier[cur_elem_iter]);
 		if (ft_memcmp(line, type_identifier[cur_elem_iter], identifier_size) == 0)
 		{
 			line = parse_elem[cur_elem_iter](line + identifier_size, data);
@@ -52,7 +52,7 @@ void	cycle_through_lines_and_parse(t_global *data, int fd)
 	while (ret == 1)
 	{
 		errno = 0;
-		ret = get_next_line(fd, &line);
+		ret = (int8_t)get_next_line(fd, &line);
 		if (ret == ERROR)
 		{
 			free_data(data);

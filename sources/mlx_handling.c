@@ -17,50 +17,19 @@ unsigned	convert_color(void *mlx_ptr, int color)
 	return ((unsigned)mlx_get_color_value(mlx_ptr, color));
 }
 
-void	switch_camera(t_global *data, int8_t order)
+void	check_resolution(t_global *data)
 {
-	static t_image	*cur_image = NULL;
-	t_image			*next_image;
-	t_list			*images_iter;
+	int		screen_width;
+	int		screen_height;
 
-	images_iter = data->images;
-	if (cur_image == NULL)
-		cur_image = ((t_image *)images_iter->content);
-	next_image = cur_image;
-	while (images_iter != NULL && images_iter->next != NULL)
-	{
-		if (order == 1 && ((t_image *)images_iter->content) == cur_image)
-		{
-			next_image = ((t_image *)images_iter->next->content);
-			break ;
-		}
-		else if (order == -1 && ((t_image *)images_iter->next->content) == cur_image)
-		{
-			next_image = ((t_image *)images_iter->content);
-			break ;
-		}
-		images_iter = images_iter->next;
-	}
-	if (next_image != cur_image)
-	{
-		mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, next_image->ptr, 0, 0);
-		cur_image = next_image;
-	}
-}
-
-void	quit_program(t_global *data)
-{
-	t_list			*images_iter;
-
-	images_iter = data->images;
-	while (images_iter != NULL)
-	{
-		mlx_destroy_image(data->mlx_ptr, ((t_image *)images_iter->content)->ptr);// err?
-		images_iter = images_iter->next;
-	}
-	mlx_destroy_window(data->mlx_ptr, data->win_ptr);
-	free_data(data);
-	exit(EXIT_SUCCESS);
+	errno = 0;
+	mlx_get_screen_size(data->mlx_ptr, &screen_width, &screen_height);
+	if (screen_width <= 0 || screen_height <= 0)
+		error_and_exit(MLX_SCREEN_SIZE_ERROR);
+	if (data->res[WIDTH] == 0 || data->res[WIDTH] > (size_t)screen_width)
+		data->res[WIDTH] = (size_t)screen_width;
+	if (data->res[HEIGHT] == 0 || data->res[HEIGHT] > (size_t)screen_height)
+		data->res[HEIGHT] = (size_t)screen_height;
 }
 
 t_image	*new_image(t_global *data)
@@ -76,7 +45,7 @@ t_image	*new_image(t_global *data)
 		return (NULL);
 	errno = 0;
 	new_image->ptr = mlx_new_image(data->mlx_ptr,
-			data->resolution[WIDTH], data->resolution[HEIGHT]);
+			(int)data->res[WIDTH], (int)data->res[HEIGHT]);
 	if (new_image->ptr == NULL)
 	{
 		free_data(data);
@@ -99,7 +68,7 @@ t_bool	draw_images(t_global *data)
 		cur_image = new_image(data);
 		if (cur_image == NULL)
 			error_and_exit(MALLOC_ERROR);
-		fill_mlx_image(data, cur_image, ((t_camera *)cameras_iter->content));
+		fill_mlx_image(data, cur_image, (t_camera *)cameras_iter->content);
 		cameras_iter = cameras_iter->next;
 	}
 	return (SUCCESS);
@@ -117,7 +86,8 @@ void	render_with_mlx(t_global *data)
 	check_resolution(data);
 	draw_images(data);
 	errno = 0;
-	data->win_ptr = mlx_new_window(data->mlx_ptr, data->resolution[WIDTH], data->resolution[HEIGHT], MLX_WINDOW_TITLE);
+	data->win_ptr = mlx_new_window(data->mlx_ptr, (int)data->res[WIDTH],
+			(int)data->res[HEIGHT], MLX_WINDOW_TITLE);
 	if (data->win_ptr == NULL)
 	{
 		free_data(data);
@@ -127,19 +97,4 @@ void	render_with_mlx(t_global *data)
 			((t_image *)data->images->content)->ptr, 0, 0);
 	mlx_key_hook(data->win_ptr, &key_hooks, data);
 	mlx_loop(data->mlx_ptr);
-}
-
-void	check_resolution(t_global *data)
-{
-	int		screen_width;
-	int		screen_height;
-
-	errno = 0;
-	mlx_get_screen_size(data->mlx_ptr, &screen_width, &screen_height);
-	if (screen_width <= 0 || screen_height <= 0)
-		error_and_exit(MLX_SCREEN_SIZE_ERROR);
-	if (data->resolution[WIDTH] == 0 || data->resolution[WIDTH] > (size_t)screen_width)
-		data->resolution[WIDTH] = (size_t)screen_width;
-	if (data->resolution[HEIGHT] == 0 || data->resolution[HEIGHT] > (size_t)screen_height)
-		data->resolution[HEIGHT] = (size_t)screen_height;
 }

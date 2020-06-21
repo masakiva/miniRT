@@ -17,7 +17,7 @@ const char	*p_resolution(const char *line, t_global *data)
 	int8_t	i;
 	int		tmp;
 
-	if (data->resolution[WIDTH] > 0 && data->resolution[HEIGHT] > 0)
+	if (data->res[WIDTH] > 0 && data->res[HEIGHT] > 0)
 		return (NULL);
 	i = 0;
 	while (i < 2)
@@ -25,24 +25,28 @@ const char	*p_resolution(const char *line, t_global *data)
 		line = parse_int(line, &tmp);
 		if (line == NULL || tmp <= 0)
 			return (NULL);
-		data->resolution[i] = (size_t)tmp;
+		data->res[i] = (size_t)tmp;
 		i++;
 	}
 	return (line);
 }
 
-const char	*p_ambient_lightning(const char *line, t_global *data)
+const char	*p_ambient_lighting(const char *line, t_global *data)
 {
 	static t_bool	passed_once = 0;
+	double			intensity;
+	t_rgb			color;
 
 	if (passed_once == 1)
 		return (NULL);
 	passed_once = 1;
-	line = parse_float(line, &(data->amb_light_intensity));
-	if (line == NULL ||
-			data->amb_light_intensity < 0.0 || data->amb_light_intensity > 1.0)
+	line = parse_float(line, &intensity);
+	if (line == NULL || intensity < 0.0 || intensity > 1.0)
 		return (NULL);
-	line = parse_color(line, &(data->amb_light_color));
+	line = parse_color(line, &color);
+	if (line == NULL)
+		return (NULL);
+	data->ambient_light_color = mult_vec_f(color, intensity);
 	return (line);
 }
 
@@ -63,11 +67,11 @@ static void	calc_camera_properties(t_camera *cur_camera, int fov)
 	cur_camera->right_vec = cross_vec(upguide, cur_camera->direction);
 	right_vec_length = length_vec(cur_camera->right_vec);
 	if (right_vec_length == 0.0) // meme pb qu'au dessus
-		;//error ; si pas error, peut transferer cette fonction dans l'algo,
-			// et ainsi retirer math.h et vectors.h
+		;// error ; si pas error, peut transferer cette fonction dans l'algo
+			// (-> get_view_properties?) et ainsi retirer math.h et vectors.h
 	cur_camera->right_vec = unit_vec(cur_camera->right_vec, right_vec_length);
 	cur_camera->up_vec = cross_vec(cur_camera->direction, cur_camera->right_vec);
-	cur_camera->half_width = tan((M_PI * fov / 180) / 2);
+	cur_camera->half_width = tan((M_PI * fov / 180.0) / 2.0);
 }
 
 const char	*p_camera(const char *line, t_global *data)
@@ -97,6 +101,8 @@ const char	*p_camera(const char *line, t_global *data)
 const char	*p_light(const char *line, t_global *data)
 {
 	t_light		*cur_light;
+	double			intensity;
+	t_rgb			color;
 
 	errno = 0;
 	cur_light = (t_light *)malloc(sizeof(t_light));
@@ -107,9 +113,12 @@ const char	*p_light(const char *line, t_global *data)
 	line = parse_coord(line, &(cur_light->position));
 	if (line == NULL)
 		return (NULL);
-	line = parse_float(line, &(cur_light->intensity));
-	if (line == NULL || cur_light->intensity < 0.0 || cur_light->intensity > 1.0)
+	line = parse_float(line, &intensity);
+	if (line == NULL || intensity < 0.0 || intensity > 1.0)
 		return (NULL);
-	line = parse_color(line, &(cur_light->color));
+	line = parse_color(line, &color);
+	if (line == NULL)
+		return (NULL);
+	cur_light->color = mult_vec_f(color, intensity);
 	return (line);
 }

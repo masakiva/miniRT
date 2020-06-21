@@ -18,5 +18,6 @@ void	free_data(t_global *data)
 	ft_lstclear(&(data->cameras), &free_list_elem);
 	ft_lstclear(&(data->lights), &free_list_elem);
 	ft_lstclear(&(data->objects), &free_object);
+	free(data->bmpfile_data);
 	free(data);
 }

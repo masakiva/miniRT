@@ -40,7 +40,7 @@ typedef const char	*(*t_parse)(const char *, t_global *);
 t_global		*parse_rtfile(const char *rtfile);
 
 const char		*p_resolution(const char *line, t_global *data);
-const char		*p_ambient_lightning(const char *line, t_global *data);
+const char		*p_ambient_lighting(const char *line, t_global *data);
 const char		*p_camera(const char *line, t_global *data);
 const char		*p_light(const char *line, t_global *data);
 
@@ -63,6 +63,6 @@ const char		*parse_float(const char *line, double *f);
 const char		*parse_coord(const char *line, t_point *v);
 const char		*parse_unit_vector(const char *line, t_vector *v);
 const char		*parse_color(const char *line, t_rgb *color);
-t_rgb			*wrap_object(void *cur_obj, t_list **lst, int8_t type);
+t_rgb			*wrap_object(void *cur_obj, t_list **lst, uint8_t type);
 
 #endif

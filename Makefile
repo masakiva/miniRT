@@ -14,10 +14,20 @@ NAME		= miniRT
 
 SRCS		+= main.c
 SRCS		+= vectors.c
+
 SRCS		+= ray_tracing.c
+SRCS		+= intersections.c
+SRCS		+= lighting_shadows.c
 SRCS		+= object_equations.c
+SRCS		+= object_normals.c
+SRCS		+= pixel_put_to_str.c
+SRCS		+= rgb_utils.c
+
 SRCS		+= mlx_handling.c
+SRCS		+= key_mouse_hooks.c
 SRCS		+= bmp_export.c
+SRCS		+= bmp_ray_tracing.c
+
 SRCS		+= errors.c
 SRCS		+= list_utils.c
 SRCS		+= free_utils.c
@@ -53,6 +63,7 @@ CC			= clang
 CFLAGS		+= -Wall
 CFLAGS		+= -Wextra
 CFLAGS		+= -Werror
+#CFLAGS		+= -Weverything
 CFLAGS		+= -fsanitize=address,undefined
 CFLAGS		+= -Wpadded
 #CFLAGS		+= -g3
@@ -72,13 +83,13 @@ LDLIBS		+= -lm
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
-	SRCS	+= mac_specific.c
-	MLXDIR	= minilibx_mms_20200219/
+	MLXDIR		= minilibx_mms_20200219/
+	CPPFLAGS 	+= -D PLATFORM_MACOS
 else
-	SRCS	+= linux_specific.c
 	MLXDIR	= minilibx-linux/
 	LDLIBS	+= -lXext
 	LDLIBS	+= -lX11
+	CPPFLAGS 	+= -D PLATFORM_LINUX
 endif
 
 all:				$(NAME)

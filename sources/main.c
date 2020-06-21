@@ -34,7 +34,6 @@ int			main(int argc, char **argv)
 		check_save_option(argv[2]);
 		data = parse_rtfile(argv[1]);
 		export_in_bmp(data, argv[1]);
-		free_data(data);
 	}
 	return (EXIT_SUCCESS);
 }

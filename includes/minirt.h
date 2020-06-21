@@ -63,7 +63,7 @@ typedef struct	s_ray
 
 typedef struct	s_intersection
 {
-	t_list		*obj;
+	t_list		*obj; // -> t_obj
 	double		t;
 }				t_intersection;
 
@@ -95,7 +95,6 @@ typedef struct	s_view_properties
 typedef struct	s_light
 {
 	t_point		position;
-	double		intensity;
 	t_rgb		color;
 }				t_light;
 
@@ -109,7 +108,7 @@ typedef struct	s_obj
 	t_rgb		color;
 	uint8_t		type;
 	uint8_t		_pad[7];
-}				t_obj;
+}				t_obj; //--> t_obj_wrapper
 
 typedef struct	s_sphere
 {
@@ -168,12 +167,12 @@ typedef struct	s_global
 	void		*mlx_ptr;
 	void		*win_ptr;
 	t_list		*images;
-	size_t		resolution[2];
-	double		amb_light_intensity;
-	t_rgb		amb_light_color;
+	size_t		res[2];
+	t_rgb		ambient_light_color;
 	t_list		*cameras;
 	t_list		*lights;
 	t_list		*objects;
+	char		*bmpfile_data;
 }				t_global;
 
 typedef double		(*t_equations)(t_ray *, void *);
@@ -181,5 +180,8 @@ typedef t_vector	(*t_normal)(t_point, void *);
 
 void	free_data(t_global *data);
 t_bool	add_to_list(void *cur_object, t_list **lst);
+t_rgb	apply_gamma_correction(t_rgb color);
+void	majorize_color_channels(t_rgb *color);
+int		rgb_to_int(t_rgb color);
 
 #endif
