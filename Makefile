@@ -6,7 +6,7 @@
 #    By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/23 13:17:34 by mvidal-a          #+#    #+#              #
-#    Updated: 2020/06/17 16:27:14 by mvidal-a         ###   ########.fr        #
+#    Updated: 2020/06/22 16:48:29 by mvidal-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ SRCS		+= vectors.c
 
 SRCS		+= ray_tracing.c
 SRCS		+= intersections.c
-SRCS		+= lighting_shadows.c
+SRCS		+= shading.c
 SRCS		+= object_equations.c
 SRCS		+= object_normals.c
 SRCS		+= pixel_put_to_str.c
@@ -84,18 +84,24 @@ LDLIBS		+= -lm
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
 	MLXDIR		= minilibx_mms_20200219/
+	MLXLIB		= libmlx.dylib
 	CPPFLAGS 	+= -D PLATFORM_MACOS
+	LDFLAGS		+= -Xlinker -dylib_file -Xlinker libmlx.dylib:minilibx_mms_20200219/libmlx.dylib
 else
-	MLXDIR	= minilibx-linux/
-	LDLIBS	+= -lXext
-	LDLIBS	+= -lX11
+	MLXDIR		= minilibx-linux/
+	MLXLIB		= libmlx.a
+	LDLIBS		+= -lXext
+	LDLIBS		+= -lX11
 	CPPFLAGS 	+= -D PLATFORM_LINUX
 endif
 
 all:				$(NAME)
 
-$(NAME):			$(LIBFTDIR)libft.a $(MLXDIR)libmlx.a $(OBJS)
+$(NAME):			FORCE $(LIBFTDIR)libft.a $(MLXDIR)$(MLXLIB) $(OBJS)
 					$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
+ifeq ($(UNAME_S),Darwin)
+					install_name_tool -change libmlx.dylib minilibx_mms_20200219/libmlx.dylib miniRT
+endif
 
 $(OBJDIR)%.o:		%.c
 					$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
@@ -109,9 +115,10 @@ $(OBJDIR):
 $(LIBFTDIR)libft.a:
 					$(MAKE) -C $(LIBFTDIR) bonus custom
 
-$(MLXDIR)libmlx.a:
+$(MLXDIR)$(MLXLIB):
 					$(MAKE) -C $(MLXDIR)
 
+#add clean for mlx and libft?
 clean:
 					$(RM) -r $(OBJDIR)
 
@@ -122,5 +129,6 @@ fclean:				clean
 re:					fclean all
 
 # FORCE: (nothing in the rule; add to .PHONY too)
+FORCE:
 
-.PHONY:				all clean fclean re
+.PHONY:				all clean fclean re FORCE

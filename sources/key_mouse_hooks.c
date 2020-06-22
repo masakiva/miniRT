@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   key_mouse_hooks.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/06/22 17:39:03 by mvidal-a          #+#    #+#             */
+/*   Updated: 2020/06/22 17:39:05 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "mlx_handling.h"
 
 t_image	*get_next_image(t_list *images_iter, t_image *cur_image, int8_t order)
@@ -57,5 +69,11 @@ int		key_hooks(int keycode, t_global *data)
 		switch_camera(data, PREVIOUS);
 	else
 		printf("keycode = %d\n", keycode);
+	return (SUCCESS);
+}
+
+int		red_cross_hook(t_global *data)
+{
+	quit_program(data);
 	return (SUCCESS);
 }

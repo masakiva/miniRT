@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 16:48:30 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/17 16:51:06 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/22 17:38:38 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@
 #  define KEYCODE_LEFT_ARROW 123
 # endif
 
+# define X_DESTROY_NOTIFY 17
+
 unsigned	convert_color(void *mlx_ptr, int color);
 int			key_hooks(int keycode, t_global *data);
 t_image		*new_image(t_global *data);
@@ -45,6 +47,7 @@ void		check_resolution(t_global *data);
 void		switch_camera(t_global *data, int8_t order);
 void		quit_program(t_global *data);
 int			key_hooks(int keycode, t_global *data);
+int			red_cross_hook(t_global *data);
 void		render_with_mlx(t_global *data);
 
 #endif

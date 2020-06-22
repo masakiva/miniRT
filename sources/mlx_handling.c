@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:00:45 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/17 16:57:03 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/22 17:39:07 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,5 +96,6 @@ void	render_with_mlx(t_global *data)
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr,
 			((t_image *)data->images->content)->ptr, 0, 0);
 	mlx_key_hook(data->win_ptr, &key_hooks, data);
+	mlx_hook(data->win_ptr, X_DESTROY_NOTIFY, 0, red_cross_hook, data);
 	mlx_loop(data->mlx_ptr);
 }

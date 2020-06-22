@@ -1,9 +1,13 @@
 # binary stuff
-*.a
 *.o
 objects
 a.out*
 miniRT
+# libraries
+*.a
+*.dylib
+*.swiftdoc
+*.swiftmodule
 
 # exported bmp
 *.bmp
