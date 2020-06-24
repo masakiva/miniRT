@@ -51,6 +51,9 @@ const char	*p_plane(const char *line, t_global *data)
 	if (line == NULL)
 		return (NULL);
 	line = parse_unit_vector(line, &(cur_plane->normal));
+	if (line == NULL)
+		return (NULL);
+	// verifier s'il est normalise
 	line = parse_color(line, color_ptr);
 	return (line);
 }
@@ -67,14 +70,14 @@ const char	*p_square(const char *line, t_global *data)
 	color_ptr = wrap_object((void *)cur_square, &(data->objects), SQUARE);
 	if (color_ptr == NULL)
 		return (NULL);
-	line = parse_coord(line, &(cur_square->position));
+	line = parse_coord(line, &(cur_square->centre));
 	if (line == NULL)
 		return (NULL);
 	line = parse_unit_vector(line, &(cur_square->normal));
 	if (line == NULL)
 		return (NULL);
-	line = parse_float(line, &(cur_square->height));
-	if (line == NULL || cur_square->height < 0.0)
+	line = parse_float(line, &(cur_square->side_len));
+	if (line == NULL || cur_square->side_len < 0.0)
 		return (NULL);
 	line = parse_color(line, color_ptr);
 	return (line);

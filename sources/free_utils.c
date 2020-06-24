@@ -19,7 +19,7 @@ void	free_list_elem(void *content)
 
 void	free_object(void *content)
 {
-	free(((t_obj *)content)->obj);
+	free(((t_obj_wrapper *)content)->obj);
 	free_list_elem(content);
 }
 

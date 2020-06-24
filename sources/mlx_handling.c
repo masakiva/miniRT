@@ -32,12 +32,12 @@ void	check_resolution(t_global *data)
 		data->res[HEIGHT] = (size_t)screen_height;
 }
 
-t_image	*new_image(t_global *data)
+t_mlx_image	*new_image(t_global *data)
 {
-	t_image	*new_image;
+	t_mlx_image	*new_image;
 
 	errno = 0;
-	new_image = (t_image *)malloc(sizeof(t_image));
+	new_image = (t_mlx_image *)malloc(sizeof(t_mlx_image));
 	if (new_image == NULL)
 		return (NULL);
 	errno = 0;
@@ -60,7 +60,7 @@ t_image	*new_image(t_global *data)
 t_bool	draw_images(t_global *data)
 {
 	t_list	*cameras_iter;
-	t_image	*cur_image;
+	t_mlx_image	*cur_image;
 
 	cameras_iter = data->cameras;
 	while (cameras_iter != NULL)
@@ -94,8 +94,10 @@ void	render_with_mlx(t_global *data)
 		error_and_exit(MLX_NEW_WINDOW_ERROR);
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr,
-			((t_image *)data->images->content)->ptr, 0, 0);
+			((t_mlx_image *)data->images->content)->ptr, 0, 0);
 	mlx_key_hook(data->win_ptr, &key_hooks, data);
+	mlx_expose_hook(data->win_ptr, &refresh_window, data);
 	mlx_hook(data->win_ptr, X_DESTROY_NOTIFY, 0, red_cross_hook, data);
+	mlx_hook(data->win_ptr, X_CLIENT_MESSAGE, 0, red_cross_hook, data);// intercept the WM_DELETE_WINDOW message
 	mlx_loop(data->mlx_ptr);
 }

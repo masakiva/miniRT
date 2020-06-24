@@ -22,8 +22,9 @@
 # include "minirt.h"
 
 # define MLX_WINDOW_TITLE "miniRT"
-# define NEXT		1
-# define PREVIOUS	-1
+# define NEXT_IMAGE		1
+# define PREVIOUS_IMAGE	-1
+# define SAME_IMAGE		0
 
 # ifdef PLATFORM_LINUX
 #  define KEYCODE_ESCAPE 65307
@@ -38,15 +39,17 @@
 # endif
 
 # define X_DESTROY_NOTIFY 17
+# define X_CLIENT_MESSAGE 33
 
 unsigned	convert_color(void *mlx_ptr, int color);
 int			key_hooks(int keycode, t_global *data);
-t_image		*new_image(t_global *data);
+t_mlx_image	*new_image(t_global *data);
 t_bool		draw_images(t_global *data);
 void		check_resolution(t_global *data);
 void		switch_camera(t_global *data, int8_t order);
 void		quit_program(t_global *data);
 int			key_hooks(int keycode, t_global *data);
+int			refresh_window(t_global *data);
 int			red_cross_hook(t_global *data);
 void		render_with_mlx(t_global *data);
 

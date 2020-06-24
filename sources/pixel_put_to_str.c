@@ -27,7 +27,7 @@ void		uint_to_str_little_endian(unsigned nb, char *str)
 	str[3] = (char)(nb >> 24);
 }
 
-static void	pixel_put_mlx_big_endian(t_image *image, char *pixel_pos, unsigned color)
+static void	pixel_put_mlx_big_endian(t_mlx_image *image, char *pixel_pos, unsigned color)
 {
 	if (image->bits_per_pixel >= 32)
 	{
@@ -51,7 +51,7 @@ static void	pixel_put_mlx_big_endian(t_image *image, char *pixel_pos, unsigned c
 		*pixel_pos = (char)color;
 }
 
-void		pixel_put_mlx_image(t_image *image, size_t x, size_t y, unsigned color)
+void		pixel_put_mlx_image(t_mlx_image *image, size_t x, size_t y, unsigned color)
 {
 	char		*pixel_pos;
 

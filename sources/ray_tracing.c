@@ -15,18 +15,18 @@
 int		process_pixel(t_ray ray, t_global *data)
 {
 	t_rgb			color;
-//	t_point			position;
+	t_point			position;
 	t_intersection	intxn;
 
 	//ray.direction = unit_vec(ray.direction, length_vec(ray.direction));
 	intxn = closest_intersection(ray, data->objects, RAY_T_MIN, RAY_T_MAX);
-	if (intxn.t == RAY_T_MAX)
+	if (intxn.t == RAY_T_MAX) // -> intxn.obj_wrapper
 		color = (t_rgb){0.0, 0.0, 0.0};
 	else
 	{
-		color = ((t_obj *)intxn.obj->content)->color;
-//		position = add_vec(ray.origin, mult_vec_f(ray.direction, intxn.t));
-//		color = mult_vec_vec(color, lighting(position, intxn.obj, data));
+		color = intxn.obj_wrapper->color;
+		position = add_vec(ray.origin, mult_vec_f(ray.direction, intxn.t));
+		color = mult_vec_vec(color, lighting(position, intxn.obj_wrapper, data));
 	}
 	//color = apply_gamma_correction(color);
 	return (rgb_to_int(color));
@@ -64,7 +64,7 @@ void	next_row_y(t_camera *cur_camera, t_view_properties *props)
 		props->x_factor * cur_camera->half_width + props->half_pixel_width);
 }
 
-void	fill_mlx_image(t_global *data, t_image *cur_image, t_camera *cur_camera)
+void	fill_mlx_image(t_global *data, t_mlx_image *cur_image, t_camera *cur_camera)
 {
 	size_t				x;
 	size_t				y;

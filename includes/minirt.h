@@ -41,10 +41,6 @@ enum	e_object
 
 typedef int8_t	t_bool;
 
-/*
- * structs for ray tracing algorithm: vector, ray, intersection, color
-*/
-
 typedef struct	s_vector
 {
 	double		x;
@@ -54,18 +50,6 @@ typedef struct	s_vector
 
 typedef t_vector	t_point;
 typedef t_vector	t_rgb;
-
-typedef struct	s_ray
-{
-	t_point		origin;
-	t_vector	direction;
-}				t_ray;
-
-typedef struct	s_intersection
-{
-	t_list		*obj; // -> t_obj
-	double		t;
-}				t_intersection;
 
 /*
  * scene utils: camera, misc properties, lights
@@ -80,7 +64,7 @@ typedef struct	s_camera
 	double		half_width;
 }				t_camera;
 
-typedef struct	s_view_properties
+typedef struct	s_view_properties // ici?
 {
 	double		half_height;
 	double		half_pixel_width;
@@ -102,13 +86,13 @@ typedef struct	s_light
 ** scene objects: wrapper struct, then sphere, plane, square, etc.
 */
 
-typedef struct	s_obj
+typedef struct	s_obj_wrapper
 {
 	void		*obj;
 	t_rgb		color;
 	uint8_t		type;
 	uint8_t		_pad[7];
-}				t_obj; //--> t_obj_wrapper
+}				t_obj_wrapper;
 
 typedef struct	s_sphere
 {
@@ -124,9 +108,9 @@ typedef struct	s_plane
 
 typedef struct	s_square
 {
-	t_point		position;
+	t_point		centre;
 	t_vector	normal;
-	double		height;
+	double		side_len;
 }				t_square;
 
 typedef struct	s_cylinder
@@ -148,7 +132,7 @@ typedef struct	s_triangle
 ** minilibx image data
 */
 
-typedef struct	s_image
+typedef struct	s_mlx_image
 {
 	void	*ptr;
 	char	*addr;
@@ -156,7 +140,7 @@ typedef struct	s_image
 	int		line_len;
 	int		endian;
 	uint8_t	_pad[4];
-}				t_image;
+}				t_mlx_image;
 
 /*
 ** global struct for all the data
@@ -174,9 +158,6 @@ typedef struct	s_global
 	t_list		*objects;
 	char		*bmpfile_data;
 }				t_global;
-
-typedef double		(*t_equations)(t_ray *, void *);
-typedef t_vector	(*t_normal)(t_point, void *);
 
 void	free_data(t_global *data);
 t_bool	add_to_list(void *cur_object, t_list **lst);

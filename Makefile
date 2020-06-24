@@ -97,7 +97,7 @@ endif
 
 all:				$(NAME)
 
-$(NAME):			FORCE $(LIBFTDIR)libft.a $(MLXDIR)$(MLXLIB) $(OBJS)
+$(NAME):			$(LIBFTDIR)libft.a $(MLXDIR)$(MLXLIB) $(OBJS)
 					$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
 ifeq ($(UNAME_S),Darwin)
 					install_name_tool -change libmlx.dylib minilibx_mms_20200219/libmlx.dylib miniRT
@@ -129,6 +129,5 @@ fclean:				clean
 re:					fclean all
 
 # FORCE: (nothing in the rule; add to .PHONY too)
-FORCE:
 
-.PHONY:				all clean fclean re FORCE
+.PHONY:				all clean fclean re

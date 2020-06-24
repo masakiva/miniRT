@@ -39,6 +39,28 @@ t_vector	normal_sphere(t_point position_on_the_surface, void *obj)
 
 t_vector	normal_plane(t_point position, void *obj)
 {
+	t_plane		*pl;
+
 	(void)position;
-	return (((t_plane *)obj)->normal);
+	pl = (t_plane *)obj;
+	return (pl->normal);
+}
+
+t_vector	normal_square(t_point position, void *obj)
+{
+	t_square	*sq;
+
+	(void)position;
+	sq = (t_square *)obj;
+	return (sq->normal);
+}
+
+t_vector	normal_triangle(t_point position, void *obj)
+{
+	t_triangle	*tr;
+
+	(void)position;
+	tr = (t_triangle *)obj;
+	return (cross_vec(sub_vec(tr->vertex2, tr->vertex1),
+					sub_vec(tr->vertex3, tr->vertex1)));
 }

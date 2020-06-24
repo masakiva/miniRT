@@ -57,7 +57,8 @@ static void	calc_camera_properties(t_camera *cur_camera, int fov)
 	double		right_vec_length;
 
 	dir_vec_length = length_vec(cur_camera->direction);
-	if (dir_vec_length != 1.0 && dir_vec_length != 0.0) // deuxieme possible??
+	//// error if dir_vec_length = 0.0
+	if (dir_vec_length != 1.0)
 	{
 		cur_camera->direction = unit_vec(cur_camera->direction, dir_vec_length);
 		ft_putstr_fd("Warning\nThe camera's direction has been normalized, "\

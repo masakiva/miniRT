@@ -48,10 +48,10 @@ const char	*skip_float(const char *str)
 
 t_rgb	*wrap_object(void *cur_obj, t_list **lst, uint8_t type)
 {
-	t_obj		*obj_wrapper;
+	t_obj_wrapper	*obj_wrapper;
 
 	errno = 0;
-	obj_wrapper = (t_obj *)malloc(sizeof(t_obj));
+	obj_wrapper = (t_obj_wrapper *)malloc(sizeof(t_obj_wrapper));
 	if (obj_wrapper == NULL)
 	{
 		free(cur_obj);

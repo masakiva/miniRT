@@ -27,26 +27,45 @@
 # define LITTLE_ENDIAN_ 0
 # define BIG_ENDIAN_ 1
 
+typedef struct	s_ray
+{
+	t_point		origin;
+	t_vector	direction;
+}				t_ray;
+
+typedef struct	s_intersection
+{
+	t_obj_wrapper	*obj_wrapper;
+	double			t;
+}				t_intersection;
+
+typedef double		(*t_equations)(t_ray *, void *);
+typedef t_vector	(*t_normal)(t_point, void *);
+
 void		pixel_put_bmp_little_endian(char *pixel_pos, int color);
 void		uint_to_str_little_endian(unsigned nb, char *str);
-void		pixel_put_mlx_image(t_image *image, size_t x, size_t y, unsigned color);
+void		pixel_put_mlx_image(t_mlx_image *image, size_t x, size_t y, unsigned color);
 
 double		intersect_sphere(t_ray *ray, void *obj);
 double		intersect_plane(t_ray *ray, void *obj);
+double		intersect_square(t_ray *ray, void *obj);
+double		intersect_triangle(t_ray *ray, void *obj);
 
 t_vector	normal_sphere(t_point position, void *obj);
 t_vector	normal_plane(t_point position, void *obj);
+t_vector	normal_square(t_point position, void *obj);
+t_vector	normal_triangle(t_point position, void *obj);
 
 t_intersection	closest_intersection(t_ray ray, t_list *obj, double t_min, double t_max);
 t_bool	intersection_or_not(t_ray ray, t_list *obj, double t_min, double t_max);
 
 t_bool	shadows(t_point cur_pos, t_vector light_dir, t_list *objects);
-t_rgb	lighting(t_point cur_pos, t_list *elem, t_global *data);
+t_rgb	lighting(t_point cur_pos, t_obj_wrapper *obj_wrapper, t_global *data);
 
 void	get_view_properties(t_global *data, t_view_properties *props, t_camera *cur_camera);
 int		process_pixel(t_ray ray, t_global *data);
 void	next_pixel_x(t_camera *cur_camera, t_view_properties *props);
 void	next_row_y(t_camera *cur_camera, t_view_properties *props);
-void	fill_mlx_image(t_global *data, t_image *cur_image, t_camera *cur_camera);
+void	fill_mlx_image(t_global *data, t_mlx_image *cur_image, t_camera *cur_camera);
 
 #endif
