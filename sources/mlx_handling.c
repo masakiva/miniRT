@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:00:45 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/22 17:39:07 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 11:36:41 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ void	render_with_mlx(t_global *data)
 			((t_mlx_image *)data->images->content)->ptr, 0, 0);
 	mlx_key_hook(data->win_ptr, &key_hooks, data);
 	mlx_expose_hook(data->win_ptr, &refresh_window, data);
-	mlx_hook(data->win_ptr, X_DESTROY_NOTIFY, 0, red_cross_hook, data);
-	mlx_hook(data->win_ptr, X_CLIENT_MESSAGE, 0, red_cross_hook, data);// intercept the WM_DELETE_WINDOW message
+	mlx_hook(data->win_ptr, X_EVENT_RED_CROSS, 0, red_cross_hook, data);// linux: intercept the WM_DELETE_WINDOW message
 	mlx_loop(data->mlx_ptr);
 }

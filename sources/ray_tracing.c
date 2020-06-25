@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 16:54:56 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/22 17:40:27 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 11:31:55 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int		process_pixel(t_ray ray, t_global *data)
 
 	//ray.direction = unit_vec(ray.direction, length_vec(ray.direction));
 	intxn = closest_intersection(ray, data->objects, RAY_T_MIN, RAY_T_MAX);
-	if (intxn.t == RAY_T_MAX) // -> intxn.obj_wrapper
+	if (intxn.t == RAY_T_MAX) // -> intxn.obj_wrapper == NULL
 		color = (t_rgb){0.0, 0.0, 0.0};
 	else
 	{

@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 16:48:30 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/22 17:38:38 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 11:36:26 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,15 @@
 #  define KEYCODE_ESCAPE 65307
 #  define KEYCODE_RIGHT_ARROW 65363
 #  define KEYCODE_LEFT_ARROW 65361
+#  define X_EVENT_RED_CROSS 33
 # endif
 
 # ifdef PLATFORM_MACOS
 #  define KEYCODE_ESCAPE 53
 #  define KEYCODE_RIGHT_ARROW 124
 #  define KEYCODE_LEFT_ARROW 123
+#  define X_EVENT_RED_CROSS 17
 # endif
-
-# define X_DESTROY_NOTIFY 17
-# define X_CLIENT_MESSAGE 33
 
 unsigned	convert_color(void *mlx_ptr, int color);
 int			key_hooks(int keycode, t_global *data);
