@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:41:50 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/22 17:41:51 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 11:50:34 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ const char	*skip_float(const char *str)
 	return (str);
 }
 
-t_rgb	*wrap_object(void *cur_obj, t_list **lst, uint8_t type)
+t_rgb		*wrap_object(void *cur_obj, t_list **lst, uint8_t type)
 {
 	t_obj_wrapper	*obj_wrapper;
 

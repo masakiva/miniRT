@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:39:03 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/22 17:39:05 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 11:54:03 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_mlx_image	*get_next_image(t_list *images_iter, t_mlx_image *cur_image, int8_t 
 	return (cur_image);
 }
 
-void	switch_camera(t_global *data, int8_t order)
+void		switch_camera(t_global *data, int8_t order)
 {
 	static t_mlx_image	*cur_image = NULL;
 	t_mlx_image			*next_image;
@@ -47,7 +47,7 @@ void	switch_camera(t_global *data, int8_t order)
 	}
 }
 
-void	quit_program(t_global *data)
+void		quit_program(t_global *data)
 {
 	t_list			*images_iter;
 
@@ -62,7 +62,7 @@ void	quit_program(t_global *data)
 	exit(EXIT_SUCCESS);
 }
 
-int		key_hooks(int keycode, t_global *data)
+int			key_hooks(int keycode, t_global *data)
 {
 	if (keycode == KEYCODE_ESCAPE)
 		quit_program(data);
@@ -75,13 +75,13 @@ int		key_hooks(int keycode, t_global *data)
 	return (SUCCESS);
 }
 
-int		refresh_window(t_global *data)
+int			refresh_window(t_global *data)
 {
 	switch_camera(data, SAME_IMAGE);
 	return (SUCCESS);
 }
 
-int		red_cross_hook(t_global *data)
+int			red_cross_hook(t_global *data)
 {
 	quit_program(data);
 	return (SUCCESS);

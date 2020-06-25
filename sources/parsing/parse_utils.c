@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:41:45 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/22 17:41:46 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 11:44:59 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,3 @@ const char	*parse_color(const char *line, t_rgb *color)
 	color->z = (double)tmp / 255;
 	return (line);
 }
-

@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:00:45 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 11:36:41 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 11:55:15 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ t_mlx_image	*new_image(t_global *data)
 
 t_bool	draw_images(t_global *data)
 {
-	t_list	*cameras_iter;
+	t_list		*cameras_iter;
 	t_mlx_image	*cur_image;
 
 	cameras_iter = data->cameras;

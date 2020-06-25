@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:01:09 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/22 17:38:58 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 12:06:21 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	putstr_stderr(const char *str)
 const char	*error_code_to_str(t_error_code err_code)
 {
 	static const char *const err_str[NB_ERRORS] = {E0, E1, E2, E3, E4, E5, E6,
-		E7, E8, E9, E10, E11, E12, E13, E14, E15};
+		E7, E8, E9, E10, E11, E12, E13, E14, E15};// voir const in next_minirt
+
 	return (err_str[err_code]);
 }
 

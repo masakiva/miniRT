@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 13:33:04 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/22 17:41:39 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 11:44:43 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 **		1 otherwise (positive or null number)
 */
 
-int8_t		atoi_sign(const char *str, int *nb)
+int8_t	atoi_sign(const char *str, int *nb)
 {
 	int8_t	sign_or_error;
 

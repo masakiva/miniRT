@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 16:40:33 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/22 17:41:43 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 11:49:03 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,8 @@ const char	*p_camera(const char *line, t_global *data)
 const char	*p_light(const char *line, t_global *data)
 {
 	t_light		*cur_light;
-	double			intensity;
-	t_rgb			color;
+	double		intensity;
+	t_rgb		color;
 
 	errno = 0;
 	cur_light = (t_light *)malloc(sizeof(t_light));

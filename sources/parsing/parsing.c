@@ -6,42 +6,42 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 13:21:10 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/22 17:41:47 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 11:48:32 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-void	parse_line(const char *line, t_global *data, size_t line_nb)
+void		parse_line(const char *line, t_global *data, size_t line_nb)
 {
 	static char		*type_identifier[NB_ELEM] = {RES, AMB, CAM, LIG, SPH, PLA,
 		SQU, CYL, TRI};
 	static t_parse	parse_elem[NB_ELEM] = {p_resolution, p_ambient_lighting,
 		p_camera, p_light, p_sphere, p_plane, p_square, p_cylinder, p_triangle};
-	uint8_t			cur_elem_iter;
+	uint8_t			elem_iter;
 	uint8_t			identifier_size;
 
 	line = skip_spaces_tabs(line);
 	if (*line == '\0' || *line == '#')
 		return ;
-	cur_elem_iter = 0;
-	while (cur_elem_iter < NB_ELEM)
+	elem_iter = 0;
+	while (elem_iter < NB_ELEM)
 	{
-		identifier_size = (uint8_t)ft_strlen(type_identifier[cur_elem_iter]);
-		if (ft_memcmp(line, type_identifier[cur_elem_iter], identifier_size) == 0)
+		identifier_size = (uint8_t)ft_strlen(type_identifier[elem_iter]);
+		if (ft_memcmp(line, type_identifier[elem_iter], identifier_size) == 0)
 		{
-			line = parse_elem[cur_elem_iter](line + identifier_size, data);
+			line = parse_elem[elem_iter](line + identifier_size, data);
 			break ;
 		}
-		cur_elem_iter++;
+		elem_iter++;
 	}
 	if (line != NULL)
 		line = skip_spaces_tabs(line);
 	if (line == NULL || *line != '\0')
-		parsing_error_exit(line_nb, cur_elem_iter, data);
+		parsing_error_exit(line_nb, elem_iter, data);
 }
 
-void	cycle_through_lines_and_parse(t_global *data, int fd)
+void		cycle_through_lines_and_parse(t_global *data, int fd)
 {
 	char		*line;
 	int8_t		ret;

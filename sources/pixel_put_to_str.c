@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:40:18 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/22 17:40:19 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 11:51:39 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ void		uint_to_str_little_endian(unsigned nb, char *str)
 	str[3] = (char)(nb >> 24);
 }
 
-static void	pixel_put_mlx_big_endian(t_mlx_image *image, char *pixel_pos, unsigned color)
+static void	pixel_put_mlx_big_endian(t_mlx_image *image, char *pixel_pos,
+		unsigned color)
 {
 	if (image->bits_per_pixel >= 32)
 	{
@@ -51,7 +52,8 @@ static void	pixel_put_mlx_big_endian(t_mlx_image *image, char *pixel_pos, unsign
 		*pixel_pos = (char)color;
 }
 
-void		pixel_put_mlx_image(t_mlx_image *image, size_t x, size_t y, unsigned color)
+void		pixel_put_mlx_image(t_mlx_image *image, size_t x, size_t y,
+		unsigned color)
 {
 	char		*pixel_pos;
 

@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 18:24:12 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/22 17:38:35 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 11:58:52 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@
 
 # define NB_OBJ	5
 
+# include <stdlib.h>
+# include "libft.h"// a inclure sorezore
+#include <stdio.h>/////////////
+
 enum	e_object
 {
 	SPHERE,
@@ -34,10 +38,6 @@ enum	e_object
 	CYLINDER,
 	TRIANGLE
 };
-
-# include <stdlib.h>
-# include "libft.h"// a inclure sorezore
-#include <stdio.h>/////////////
 
 typedef int8_t	t_bool;
 
@@ -52,7 +52,7 @@ typedef t_vector	t_point;
 typedef t_vector	t_rgb;
 
 /*
- * scene utils: camera, misc properties, lights
+** scene utils: camera, misc properties, lights
 */
 
 typedef struct	s_camera
@@ -91,7 +91,7 @@ typedef struct	s_obj_wrapper
 	void		*obj;
 	t_rgb		color;
 	uint8_t		type;
-	uint8_t		_pad[7];
+	uint8_t		pad_[7];
 }				t_obj_wrapper;
 
 typedef struct	s_sphere
@@ -139,7 +139,7 @@ typedef struct	s_mlx_image
 	int		bits_per_pixel;
 	int		line_len;
 	int		endian;
-	uint8_t	_pad[4];
+	uint8_t	pad_[4];
 }				t_mlx_image;
 
 /*
