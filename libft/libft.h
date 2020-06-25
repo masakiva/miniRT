@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:29:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/01/08 20:31:28 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 13:45:54 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <stdint.h>
 # include <sys/types.h>
 
-#define ERROR	-1
+# define ERROR	-1
 
 typedef struct	s_list
 {
@@ -84,8 +84,8 @@ ssize_t			ft_index(char *haystack, char needle);
 t_byte			read_bit(t_byte b, t_byte index);
 t_byte			turn_bit_on(t_byte b, t_byte index);
 t_byte			turn_bit_off(t_byte b, t_byte index);
-void   			print_8_bits(t_byte b);
+void			print_8_bits(t_byte b);
 void			print_32_bits(uint32_t b);
-int         	get_next_line(int fd, char **line);
+int				get_next_line(int fd, char **line);
 
 #endif
