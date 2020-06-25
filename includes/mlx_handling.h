@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 16:48:30 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 11:36:26 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 14:23:50 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ t_mlx_image	*new_image(t_global *data);
 t_bool		draw_images(t_global *data);
 void		check_resolution(t_global *data);
 void		switch_camera(t_global *data, int8_t order);
-void		quit_program(t_global *data);
+void		quit_program(t_global *data) __attribute__ ((noreturn));
 int			key_hooks(int keycode, t_global *data);
 int			refresh_window(t_global *data);
 int			red_cross_hook(t_global *data);

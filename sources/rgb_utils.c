@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:40:37 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 11:50:40 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 14:22:45 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	majorize_color_channels(t_rgb *color)
 int		rgb_to_int(t_rgb color)
 {
 	majorize_color_channels(&color);
-	return ((int)round(color.x * 255) << 16
-			| (int)round(color.y * 255) << 8
-			| (int)round(color.z * 255));
+	return ((int)lround(color.x * 255) << 16
+			| (int)lround(color.y * 255) << 8
+			| (int)lround(color.z * 255));
 }

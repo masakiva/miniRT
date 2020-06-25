@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:40:54 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 11:32:53 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 14:02:42 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ t_rgb	lighting(t_point cur_pos, t_obj_wrapper *obj_wrapper, t_global *data)
 
 	if (data->lights != NULL)
 		normal = calc_normal[obj_wrapper->type](cur_pos, obj_wrapper->obj);
+	else
+		normal = (t_vector){0.0, 0.0, 0.0};
 	color = (t_rgb){0.0, 0.0, 0.0};
 	lights_iter = data->lights;
 	while (lights_iter != NULL)
@@ -45,7 +47,8 @@ t_rgb	lighting(t_point cur_pos, t_obj_wrapper *obj_wrapper, t_global *data)
 		cur_light = (t_light *)lights_iter->content;
 		light_dir = sub_vec(cur_light->position, cur_pos);
 		n_dot_l = dot_vec(normal, light_dir);
-		if (n_dot_l != 0 && shadows(cur_pos, light_dir, data->objects) == FALSE)
+		if ((n_dot_l >= RAY_T_MIN || n_dot_l <= -1 * RAY_T_MIN) &&
+			shadows(cur_pos, light_dir, data->objects) == FALSE)
 		{
 			light_dir_length = length_vec(light_dir);
 			n_dot_l /= length_vec(normal) * light_dir_length;

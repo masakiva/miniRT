@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:01:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 12:22:05 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 14:13:59 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,8 @@ typedef	enum	e_error_code
 	"Possible identifiers: R A c l sp pl sq cy tr\n"
 
 void	write_error(ssize_t bytes_written, size_t file_size);
-void	parsing_error_exit(size_t line_nb, uint8_t type_index, t_global *data);
-void	error_and_exit(t_error_code err_code);
+void	parsing_error_exit(size_t line_nb, uint8_t type_index, t_global *data)
+	__attribute__ ((noreturn));
+void	error_and_exit(t_error_code err_code) __attribute__ ((noreturn));
 
 #endif

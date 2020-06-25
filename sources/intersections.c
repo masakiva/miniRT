@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:39:46 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 11:32:56 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 13:55:37 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_bool			intersection_or_not(t_ray ray, t_list *obj_iter, double t_min,
 	{
 		cur_obj = (t_obj_wrapper *)obj_iter->content;
 		cur_t = find_t[cur_obj->type](&ray, cur_obj->obj);
-		if (cur_t >= t_min && cur_t < t_max) // ou >= 1? ; et s'il y a deux memes t
+		if (cur_t >= t_min && cur_t < t_max) // et s'il y a deux memes t
 			return (TRUE);
 		obj_iter = obj_iter->next;
 	}
@@ -47,7 +47,7 @@ t_intersection	closest_intersection(t_ray ray, t_list *obj_iter, double t_min,
 	{
 		cur_obj = (t_obj_wrapper *)obj_iter->content;
 		cur_t = find_t[cur_obj->type](&ray, cur_obj->obj);
-		if (cur_t >= t_min && cur_t < closest_t) // ou >= 1? ; et s'il y a deux memes t
+		if (cur_t >= t_min && cur_t < closest_t) // et s'il y a deux memes t
 		{
 			closest_t = cur_t;
 			closest_obj = cur_obj;

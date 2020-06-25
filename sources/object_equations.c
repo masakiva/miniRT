@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 16:56:12 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/22 17:39:09 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/06/25 14:04:53 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ double	intersect_plane(t_ray *ray, void *obj)
 	pl = (t_plane *)obj;
 	d_dot_n = dot_vec(ray->direction, pl->normal);
 	t = RAY_T_MAX;
-	if (d_dot_n != 0)
+	if (d_dot_n != 0) // -Wfloat-equal
 		t = dot_vec(pl->normal, sub_vec(pl->position, ray->origin)) / d_dot_n;
 	return (t);
 }
@@ -87,12 +87,12 @@ double	intersect_square(t_ray *ray, void *obj)
 	t_triangle tr1 = {vertex1, vertex2, vertex3};
 	t_triangle tr2 = {vertex2, vertex3, vertex4};
 	t = intersect_triangle(ray, &tr1);
-	if (t != RAY_T_MAX)
+	if (t != RAY_T_MAX) // -Wfloat-equal
 		return (t);
 	else
 	{
 		t = intersect_triangle(ray, &tr2);
-		if (t != RAY_T_MAX)
+		if (t != RAY_T_MAX) // -Wfloat-equal
 			return (t);
 	}
 	return (RAY_T_MAX);
@@ -115,7 +115,7 @@ double	intersect_triangle(t_ray *ray, void *obj)
 	edge3 = sub_vec(tr->vertex1, tr->vertex3);
 	normal = cross_vec(edge1, neg_vec(edge3));
 	d_dot_n = dot_vec(ray->direction, normal);
-	if (d_dot_n != 0)
+	if (d_dot_n != 0) // -Wfloat-equal
 	{
 		t = dot_vec(normal, sub_vec(tr->vertex1, ray->origin)) / d_dot_n;
 		position = add_vec(ray->origin, mult_vec_f(ray->direction, t));
