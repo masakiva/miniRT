@@ -34,7 +34,7 @@ void	fill_bmp_data(t_global *data, char *data_addr, size_t line_padding)
 	size_t				i;
 
 	cur_camera = (t_camera *)data->cameras->content;
-	get_view_properties(data, &props, cur_camera);
+	calc_view_properties(data, cur_camera, &props);
 	i = BMP_METADATA_SIZE;
 	y = 0;
 	while (y < data->res[HEIGHT])
@@ -44,11 +44,11 @@ void	fill_bmp_data(t_global *data, char *data_addr, size_t line_padding)
 		while (x < data->res[WIDTH])
 		{
 			set_bmp_pixel_color(cur_camera, &props, data, data_addr + i);
-			next_pixel_x(cur_camera, &props);
+			next_pixel_x(&props);
 			i += 3;
 			x++;
 		}
-		next_row_y(cur_camera, &props);
+		next_row_y(&props);
 		y++;
 	}
 }

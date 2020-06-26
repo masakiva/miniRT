@@ -50,35 +50,9 @@ const char	*p_ambient_lighting(const char *line, t_global *data)
 	return (line);
 }
 
-static void	calc_camera_properties(t_camera *cur_camera, int fov)
-{
-	double		dir_vec_length;
-	t_vector	upguide;
-	double		right_vec_length;
-
-	dir_vec_length = length_vec(cur_camera->direction);
-	//// error if dir_vec_length = 0.0
-	if (dir_vec_length != 1.0)
-	{
-		cur_camera->direction = unit_vec(cur_camera->direction, dir_vec_length);
-		ft_putstr_fd("Warning\nThe camera's direction has been normalized, "\
-				"as it wasn't.\n", STDERR_FILENO);
-	}
-	upguide = (t_vector){0.0, 1.0, 0.0};
-	cur_camera->right_vec = cross_vec(upguide, cur_camera->direction);
-	right_vec_length = length_vec(cur_camera->right_vec);
-	if (right_vec_length == 0.0) // meme pb qu'au dessus
-		;// error ; si pas error, peut transferer cette fonction dans l'algo
-			// (-> get_view_properties?) et ainsi retirer math.h et vectors.h
-	cur_camera->right_vec = unit_vec(cur_camera->right_vec, right_vec_length);
-	cur_camera->up_vec = cross_vec(cur_camera->direction, cur_camera->right_vec);
-	cur_camera->half_width = tan((M_PI * fov / 180.0) / 2.0);
-}
-
 const char	*p_camera(const char *line, t_global *data)
 {
 	t_camera	*cur_camera;
-	int			fov;
 
 	errno = 0;
 	cur_camera = (t_camera *)malloc(sizeof(t_camera));
@@ -90,12 +64,12 @@ const char	*p_camera(const char *line, t_global *data)
 	if (line == NULL)
 		return (NULL);
 	line = parse_unit_vector(line, &(cur_camera->direction));
-	if (line == NULL)
+	if (line == NULL || (cur_camera->direction.x == 0.0 &&
+				cur_camera->direction.z == 0.0))
 		return (NULL);
-	line = parse_int(line, &fov);
-	if (line == NULL || fov < 0 || fov > 180)
+	line = parse_int(line, &(cur_camera->fov));
+	if (line == NULL || cur_camera->fov < 0 || cur_camera->fov > 180)
 		return (NULL);
-	calc_camera_properties(cur_camera, fov);
 	return (line);
 }
 

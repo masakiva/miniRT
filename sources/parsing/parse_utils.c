@@ -44,13 +44,24 @@ const char	*parse_coord(const char *line, t_point *p)
 
 const char	*parse_unit_vector(const char *line, t_vector *v)
 {
+	double	vector_length;
+
 	line = parse_coord(line, v);
 	if (line == NULL)
 		return (NULL);
-	if (v->x > 1 || v->x < -1 ||
-		v->y > 1 || v->y < -1 ||
-		v->z > 1 || v->z < -1)
+	if (v->x == 0.0 && v->y == 0.0 && v->z == 0.0)
 		return (NULL);
+	if (v->x > 1.0 || v->x < -1.0 ||
+		v->y > 1.0 || v->y < -1.0 ||
+		v->z > 1.0 || v->z < -1.0)
+		return (NULL);
+	vector_length = length_vec(*v);
+	if (vector_length != 1.0)
+	{
+		*v = unit_vec(*v, vector_length);
+		ft_putstr_fd("Warning\nOne orientation vector has been normalised, "\
+				"as it wasn't.\n", STDERR_FILENO);
+	}
 	return (line);
 }
 

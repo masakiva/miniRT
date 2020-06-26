@@ -58,6 +58,31 @@ const char	*p_plane(const char *line, t_global *data)
 	return (line);
 }
 
+const char	*p_triangle(const char *line, t_global *data)
+{
+	t_triangle	*cur_triangle;
+	t_rgb		*color_ptr;
+
+	errno = 0;
+	cur_triangle = (t_triangle *)malloc(sizeof(t_triangle));
+	if (cur_triangle == NULL)
+		return (NULL);
+	color_ptr = wrap_object((void *)cur_triangle, &(data->objects), TRIANGLE);
+	if (color_ptr == NULL)
+		return (NULL);
+	line = parse_coord(line, &(cur_triangle->vertex1));
+	if (line == NULL)
+		return (NULL);
+	line = parse_coord(line, &(cur_triangle->vertex2));
+	if (line == NULL)
+		return (NULL);
+	line = parse_coord(line, &(cur_triangle->vertex3));
+	if (line == NULL)
+		return (NULL);
+	line = parse_color(line, color_ptr);
+	return (line);
+}
+
 const char	*p_square(const char *line, t_global *data)
 {
 	t_square	*cur_square;
@@ -74,7 +99,8 @@ const char	*p_square(const char *line, t_global *data)
 	if (line == NULL)
 		return (NULL);
 	line = parse_unit_vector(line, &(cur_square->normal));
-	if (line == NULL)
+	if (line == NULL || (cur_square->normal.x == 0.0 &&
+				cur_square->normal.z == 0.0))
 		return (NULL);
 	line = parse_float(line, &(cur_square->side_len));
 	if (line == NULL || cur_square->side_len < 0.0)
@@ -106,31 +132,6 @@ const char	*p_cylinder(const char *line, t_global *data)
 		return (NULL);
 	line = parse_float(line, &(cur_cylinder->height));
 	if (line == NULL || cur_cylinder->height < 0.0)
-		return (NULL);
-	line = parse_color(line, color_ptr);
-	return (line);
-}
-
-const char	*p_triangle(const char *line, t_global *data)
-{
-	t_triangle	*cur_triangle;
-	t_rgb		*color_ptr;
-
-	errno = 0;
-	cur_triangle = (t_triangle *)malloc(sizeof(t_triangle));
-	if (cur_triangle == NULL)
-		return (NULL);
-	color_ptr = wrap_object((void *)cur_triangle, &(data->objects), TRIANGLE);
-	if (color_ptr == NULL)
-		return (NULL);
-	line = parse_coord(line, &(cur_triangle->vertex1));
-	if (line == NULL)
-		return (NULL);
-	line = parse_coord(line, &(cur_triangle->vertex2));
-	if (line == NULL)
-		return (NULL);
-	line = parse_coord(line, &(cur_triangle->vertex3));
-	if (line == NULL)
 		return (NULL);
 	line = parse_color(line, color_ptr);
 	return (line);

@@ -18,8 +18,12 @@
 # include "vectors.h"
 # include "minirt.h"
 
+# define UPGUIDE	(t_vector){0.0, 1.0, 0.0}
 # define RAY_T_MIN	0.0001
 # define RAY_T_MAX	1.0e30
+
+# define INSIDE		0
+# define OUTSIDE	1
 
 # define ALBEDO 0.18
 # define GAMMA 2.2
@@ -39,6 +43,7 @@ typedef struct	s_intersection
 	double			t;
 }				t_intersection;
 
+typedef void		(*t_properties)(t_camera *, void *);
 typedef double		(*t_equations)(t_ray *, void *);
 typedef t_vector	(*t_normal)(t_point, void *);
 
@@ -62,10 +67,11 @@ t_bool	intersection_or_not(t_ray ray, t_list *obj, double t_min, double t_max);
 t_bool	shadows(t_point cur_pos, t_vector light_dir, t_list *objects);
 t_rgb	lighting(t_point cur_pos, t_obj_wrapper *obj_wrapper, t_global *data);
 
-void	get_view_properties(t_global *data, t_view_properties *props, t_camera *cur_camera);
+void	calc_view_properties(t_global *data, t_camera *cur_camera, t_view_properties *props);
+void	calc_scene_properties(t_global *data);
 int		process_pixel(t_ray ray, t_global *data);
-void	next_pixel_x(t_camera *cur_camera, t_view_properties *props);
-void	next_row_y(t_camera *cur_camera, t_view_properties *props);
+void	next_pixel_x(t_view_properties *props);
+void	next_row_y(t_view_properties *props);
 void	fill_mlx_image(t_global *data, t_mlx_image *cur_image, t_camera *cur_camera);
 
 #endif

@@ -16,7 +16,7 @@ t_bool			intersection_or_not(t_ray ray, t_list *obj_iter, double t_min,
 		double t_max)
 {
 	static t_equations	find_t[NB_OBJ] = {intersect_sphere, intersect_plane,
-		intersect_square, NULL, intersect_triangle};
+		intersect_triangle, intersect_square, NULL};
 	double				cur_t;
 	t_obj_wrapper		*cur_obj;
 
@@ -35,7 +35,7 @@ t_intersection	closest_intersection(t_ray ray, t_list *obj_iter, double t_min,
 		double t_max)
 {
 	static t_equations	find_t[NB_OBJ] = {intersect_sphere, intersect_plane,
-		intersect_square, NULL, intersect_triangle};
+		intersect_triangle, intersect_square, NULL};
 	double				cur_t;
 	t_obj_wrapper		*cur_obj;
 	t_obj_wrapper		*closest_obj;

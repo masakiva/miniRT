@@ -76,6 +76,7 @@ typedef	enum	e_error_code
 	"· x,y,z coordinates of the view point: 0.0,0.0,20.6\n"\
 	"· 3d normalized orientation vector.\n"\
 	"\tIn range [-1,1] for each x,y,z axis: 0.0,0.0,1.0\n"\
+	"\tCannot be null (0.0, 0.0, 0.0) nor vertical (0.0, ?.?, 0.0)\n"\
 	"· FOV : Horizontal field of view in degrees in range [0,180]\n"\
 	"e.g. c -50.0,0,20 0,0,1 70\n"
 # define E_LIG  "Light parameters not valid.\n"\
@@ -95,13 +96,22 @@ typedef	enum	e_error_code
 	"· x,y,z coordinates: 0.0,0.0,-10.0\n"\
 	"· 3d normalized orientation vector.\n"\
 	"\tIn range [-1,1] for each x,y,z axis: 0.0,0.0,1.0\n"\
+	"\tCannot be null (0.0,0.0,0.0)\n"\
 	"· R,G,B colors in range [0-255]: 0, 0, 255\n"\
 	"e.g. pl 0.0,0.0,-10.0 0.0,1.0,0.0 0,0,225\n"
+# define E_TRI "Triangle parameters not valid.\n"\
+	"The following must be specified in order:\n"\
+	"· x,y,z coordinates of the first point: 10.0,20.0,10.0\n"\
+	"· x,y,z coordinates of the second point: 10.0,10.0,20.0\n"\
+	"· x,y,z coordinates of the third point: 20.0,10.0,10.0\n"\
+	"· R,G,B colors in range [0,255]: 0, 255, 255\n"\
+	"e.g. tr 10.0,20.0,10.0 10.0,10.0,20.0 20.0,10.0,10.0 0,0,255\n"
 # define E_SQU "Square parameters not valid.\n"\
 	"The following must be specified in order:\n"\
 	"· x,y,z coordinates of the square center: 0.0,0.0,20.6\n"\
 	"· 3d normalized orientation vector.\n"\
 	"\tIn range [-1,1] for each x,y,z axis: 1.0,0.0,0.0\n"\
+	"\tCannot be null (0.0, 0.0, 0.0) nor vertical (0.0, ?.?, 0.0)\n"\
 	"· side size: 12.6\n"\
 	"· R,G,B colors in range [0-255]: 255, 0, 255\n"\
 	"e.g. sq 0.0,0.0,20.6 1.0,0.0,0.0 12.6 255,0,255\n"
@@ -110,17 +120,11 @@ typedef	enum	e_error_code
 	"· x,y,z coordinates: 50.0,0.0,20.6\n"\
 	"· 3d normalized orientation vector.\n"\
 	"\tIn range [-1,1] for each x,y,z axis: 0.0,0.0,1.0\n"\
+	"\tCannot be null (0.0,0.0,0.0)\n"\
 	"· the cylinder diameter: 14.2\n"\
 	"· the cylinder height: 21.42\n"\
 	"· R,G,B colors in range [0,255]: 10, 0, 255\n"\
 	"e.g. cy 50.0,0.0,20.6 0.0,0.0,1.0 14.2 21.42 10,0,255\n"
-# define E_TRI "Triangle parameters not valid.\n"\
-	"The following must be specified in order:\n"\
-	"· x,y,z coordinates of the first point: 10.0,20.0,10.0\n"\
-	"· x,y,z coordinates of the second point: 10.0,10.0,20.0\n"\
-	"· x,y,z coordinates of the third point: 20.0,10.0,10.0\n"\
-	"· R,G,B colors in range [0,255]: 0, 255, 255\n"\
-	"e.g. tr 10.0,20.0,10.0 10.0,10.0,20.0 20.0,10.0,10.0 0,0,255\n"
 # define E_ID "Line does not begin with a proper element type identifier.\n"\
 	"Possible identifiers: R A c l sp pl sq cy tr\n"
 

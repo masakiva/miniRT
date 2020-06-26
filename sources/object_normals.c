@@ -14,53 +14,45 @@
 
 t_vector	normal_sphere(t_point position_on_the_surface, void *obj)
 {
-	t_sphere	*sp;
+	t_sphere	*sphere;
 	t_vector	normal;
 
-	sp = (t_sphere *)obj;
-	normal = sub_vec(position_on_the_surface, sp->centre);
-	normal = unit_vec(normal, length_vec(normal));
+	sphere = (t_sphere *)obj;
+	normal = sub_vec(position_on_the_surface, sphere->centre);
+	if (sphere->surface_side == INSIDE)
+		normal = mult_vec_f(normal, -1.0); // neg_vec
+	//normal = unit_vec(normal, length_vec(normal));
 	//  There are two design decisions to make for normals. The first is
 	//  whether these normals are unit length. That is convenient for shading
 	//  so I will say yes, but I won’t enforce that in the code. This could
 	//  allow subtle bugs, so be aware this is personal preference as are most
 	//  design decisions like that.
-	//
-	//  second : We can set things up so that normals always point “outward”
-	//  from the surface, or always point against the incident ray. This
-	//  decision is determined by whether you want to determine the side of the
-	//  surface at the time of geometry intersection or at the time of
-	//  coloring. In this book we have more material types than we have
-	//  geometry types, so we'll go for less work and put the determination at
-	//  geometry time. This is simply a matter of preference, and you'll see
-	//  both implementations in the literature.
 	return (normal);
 }
 
 t_vector	normal_plane(t_point position, void *obj)
 {
-	t_plane		*pl;
+	t_plane		*plane;
 
 	(void)position;
-	pl = (t_plane *)obj;
-	return (pl->normal);
-}
-
-t_vector	normal_square(t_point position, void *obj)
-{
-	t_square	*sq;
-
-	(void)position;
-	sq = (t_square *)obj;
-	return (sq->normal);
+	plane = (t_plane *)obj;
+	return (plane->normal);
 }
 
 t_vector	normal_triangle(t_point position, void *obj)
 {
-	t_triangle	*tr;
+	t_triangle	*triangle;
 
 	(void)position;
-	tr = (t_triangle *)obj;
-	return (cross_vec(sub_vec(tr->vertex2, tr->vertex1),
-					sub_vec(tr->vertex3, tr->vertex1)));
+	triangle = (t_triangle *)obj;
+	return (triangle->triangle_plane.normal);
+}
+
+t_vector	normal_square(t_point position, void *obj)
+{
+	t_square	*square;
+
+	(void)position;
+	square = (t_square *)obj;
+	return (square->normal);
 }

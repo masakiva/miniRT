@@ -34,9 +34,9 @@ enum	e_object
 {
 	SPHERE,
 	PLANE,
+	TRIANGLE,
 	SQUARE,
-	CYLINDER,
-	TRIANGLE
+	CYLINDER
 };
 
 typedef int8_t	t_bool;
@@ -59,13 +59,15 @@ typedef struct	s_camera
 {
 	t_point		origin;
 	t_vector	direction;
-	t_vector	right_vec;
-	t_vector	up_vec;
-	double		half_width;
+	int			fov;
+	uint8_t		pad_[4];
 }				t_camera;
 
 typedef struct	s_view_properties // ici?
 {
+	t_vector	right_vec;
+	t_vector	up_vec;
+	double		half_width;
 	double		half_height;
 	double		half_pixel_width;
 	double		x_factor;
@@ -98,6 +100,10 @@ typedef struct	s_sphere
 {
 	t_point		centre;
 	double		radius;
+	t_vector	centre_rayorigin;
+	double		c;
+	t_bool		surface_side;
+	uint8_t		pad_[7];
 }				t_sphere;
 
 typedef struct	s_plane
@@ -106,11 +112,29 @@ typedef struct	s_plane
 	t_vector	normal;
 }				t_plane;
 
+typedef struct	s_triangle
+{
+	t_point		vertex1;
+	t_point		vertex2;
+	t_point		vertex3;
+	t_vector	edge1;
+	t_vector	edge2;
+	t_vector	edge3;
+	t_vector	normal;
+	t_plane		triangle_plane;
+}				t_triangle;
+
 typedef struct	s_square
 {
 	t_point		centre;
 	t_vector	normal;
 	double		side_len;
+	t_point		vertex1;
+	t_point		vertex2;
+	t_point		vertex3;
+	t_point		vertex4;
+	t_triangle	triangle1;
+	t_triangle	triangle2;
 }				t_square;
 
 typedef struct	s_cylinder
@@ -120,13 +144,6 @@ typedef struct	s_cylinder
 	double		diameter;
 	double		height;
 }				t_cylinder;
-
-typedef struct	s_triangle
-{
-	t_point		vertex1;
-	t_point		vertex2;
-	t_point		vertex3;
-}				t_triangle;
 
 /*
 ** minilibx image data

@@ -56,7 +56,7 @@ void	write_error(ssize_t bytes_written, size_t file_size)
 void	parsing_error_exit(size_t line_nb, uint8_t type_index, t_global *data)
 {
 	static const char	*const err_msg[NB_ELEM + 1] = {E_RES, E_AMB, E_CAM,
-		E_LIG, E_SPH, E_PLA, E_SQU, E_CYL, E_TRI, E_ID};
+		E_LIG, E_SPH, E_PLA, E_TRI, E_SQU, E_CYL, E_ID};
 
 	free_data(data);
 	if (errno != 0)

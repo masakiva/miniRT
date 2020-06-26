@@ -13,6 +13,7 @@
 #include "minirt.h"
 #include "parsing.h"
 #include "mlx_handling.h"
+#include "bmp_export.h"
 #include "errors.h"
 
 static void	check_rtfile_name(const char *file_name)
@@ -38,6 +39,7 @@ int			main(int argc, char **argv)
 	{
 		check_rtfile_name(argv[1]);
 		data = parse_rtfile(argv[1]);
+		calc_scene_properties(data);
 		render_with_mlx(data);
 	}
 	else if (argc == 3)
@@ -45,6 +47,7 @@ int			main(int argc, char **argv)
 		check_rtfile_name(argv[1]);
 		check_save_option(argv[2]);
 		data = parse_rtfile(argv[1]);
+		calc_scene_properties(data);
 		export_in_bmp(data, argv[1]);
 	}
 	return (EXIT_SUCCESS);

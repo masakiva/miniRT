@@ -30,9 +30,9 @@
 # define LIG	"l"
 # define SPH	"sp"
 # define PLA	"pl"
+# define TRI	"tr"
 # define SQU	"sq"
 # define CYL	"cy"
-# define TRI	"tr"
 # define NB_ELEM	9
 
 typedef const char	*(*t_parse)(const char *, t_global *);
