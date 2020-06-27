@@ -125,7 +125,7 @@ typedef	enum	e_error_code
 	"· the cylinder height: 21.42\n"\
 	"· R,G,B colors in range [0,255]: 10, 0, 255\n"\
 	"e.g. cy 50.0,0.0,20.6 0.0,0.0,1.0 14.2 21.42 10,0,255\n"
-# define E_ID "Line does not begin with a proper element type identifier.\n"\
+# define E_TYPEID "Line does not begin with a proper element type identifier.\n"\
 	"Possible identifiers: R A c l sp pl sq cy tr\n"
 
 void	write_error(ssize_t bytes_written, size_t file_size);

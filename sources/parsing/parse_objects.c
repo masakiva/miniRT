@@ -53,7 +53,6 @@ const char	*p_plane(const char *line, t_global *data)
 	line = parse_unit_vector(line, &(cur_plane->normal));
 	if (line == NULL)
 		return (NULL);
-	// verifier s'il est normalise
 	line = parse_color(line, color_ptr);
 	return (line);
 }
@@ -121,15 +120,16 @@ const char	*p_cylinder(const char *line, t_global *data)
 	color_ptr = wrap_object((void *)cur_cylinder, &(data->objects), CYLINDER);
 	if (color_ptr == NULL)
 		return (NULL);
-	line = parse_coord(line, &(cur_cylinder->position));
+	line = parse_coord(line, &(cur_cylinder->axis_middle));
 	if (line == NULL)
 		return (NULL);
-	line = parse_unit_vector(line, &(cur_cylinder->normal));
+	line = parse_unit_vector(line, &(cur_cylinder->axis_direction));
 	if (line == NULL)
 		return (NULL);
-	line = parse_float(line, &(cur_cylinder->diameter));
-	if (line == NULL || cur_cylinder->diameter < 0.0)
+	line = parse_float(line, &(cur_cylinder->radius));
+	if (line == NULL || cur_cylinder->radius < 0.0)
 		return (NULL);
+	cur_cylinder->radius /= 2.0;
 	line = parse_float(line, &(cur_cylinder->height));
 	if (line == NULL || cur_cylinder->height < 0.0)
 		return (NULL);

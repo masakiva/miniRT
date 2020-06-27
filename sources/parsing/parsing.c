@@ -14,10 +14,10 @@
 
 void		parse_line(const char *line, t_global *data, size_t line_nb)
 {
-	static char		*type_identifier[NB_ELEM] = {RES, AMB, CAM, LIG, SPH, PLA,
-		TRI, SQU, CYL};
+	static char		*type_identifier[NB_ELEM] = {RES, AMB, SPH, PLA, TRI, SQU,
+		CYL, CAM, LIG};
 	static t_parse	parse_elem[NB_ELEM] = {p_resolution, p_ambient_lighting,
-		p_camera, p_light, p_sphere, p_plane, p_triangle, p_square, p_cylinder};
+		p_sphere, p_plane, p_triangle, p_square, p_cylinder, p_camera, p_light};
 	uint8_t			elem_iter;
 	uint8_t			identifier_size;
 

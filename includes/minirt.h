@@ -139,9 +139,9 @@ typedef struct	s_square
 
 typedef struct	s_cylinder
 {
-	t_point		position;
-	t_vector	normal;
-	double		diameter;
+	t_point		axis_middle;
+	t_vector	axis_direction;
+	double		radius;
 	double		height;
 }				t_cylinder;
 

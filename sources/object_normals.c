@@ -20,7 +20,7 @@ t_vector	normal_sphere(t_point position_on_the_surface, void *obj)
 	sphere = (t_sphere *)obj;
 	normal = sub_vec(position_on_the_surface, sphere->centre);
 	if (sphere->surface_side == INSIDE)
-		normal = mult_vec_f(normal, -1.0); // neg_vec
+		normal = neg_vec(normal);
 	//normal = unit_vec(normal, length_vec(normal));
 	//  There are two design decisions to make for normals. The first is
 	//  whether these normals are unit length. That is convenient for shading
@@ -55,4 +55,15 @@ t_vector	normal_square(t_point position, void *obj)
 	(void)position;
 	square = (t_square *)obj;
 	return (square->normal);
+}
+
+t_vector	normal_cylinder(t_point position_on_the_surface, void *obj)
+{
+	t_cylinder	*cylinder;
+	t_vector	normal;
+
+	(void)position_on_the_surface;
+	cylinder = (t_cylinder *)obj;
+	normal = (t_vector){0.0, 0.0, 0.0};
+	return (normal);
 }

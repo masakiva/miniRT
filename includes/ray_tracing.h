@@ -55,11 +55,13 @@ double		intersect_sphere(t_ray *ray, void *obj);
 double		intersect_plane(t_ray *ray, void *obj);
 double		intersect_square(t_ray *ray, void *obj);
 double		intersect_triangle(t_ray *ray, void *obj);
+double		intersect_cylinder(t_ray *ray, void *obj);
 
 t_vector	normal_sphere(t_point position, void *obj);
 t_vector	normal_plane(t_point position, void *obj);
 t_vector	normal_square(t_point position, void *obj);
 t_vector	normal_triangle(t_point position, void *obj);
+t_vector	normal_cylinder(t_point position_on_the_surface, void *obj);
 
 t_intersection	closest_intersection(t_ray ray, t_list *obj, double t_min, double t_max);
 t_bool	intersection_or_not(t_ray ray, t_list *obj, double t_min, double t_max);

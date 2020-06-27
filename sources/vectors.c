@@ -67,14 +67,9 @@ t_vector	div_vec(t_vector v1, double f)
 	return (v2);
 }
 
-t_vector	neg_vec(t_vector v1)// to keep?
+t_vector	neg_vec(t_vector v)
 {
-	t_vector v2;
-
-	v2.x = v1.x * -1.0;
-	v2.y = v1.y * -1.0;
-	v2.z = v1.z * -1.0;
-	return (v2);
+	return (mult_vec_f(v, -1.0));
 }
 
 double		dot_vec(t_vector v1, t_vector v2)
@@ -94,9 +89,14 @@ t_vector	cross_vec(t_vector v1, t_vector v2)
 	return (v3);
 }
 
+double		length_squared_vec(t_vector v)
+{
+	return (dot_vec(v, v));
+}
+
 double		length_vec(t_vector v)
 {
-	return (sqrt(dot_vec(v, v)));
+	return (sqrt(length_squared_vec(v)));
 }
 
 t_vector	unit_vec(t_vector v, double v_length)

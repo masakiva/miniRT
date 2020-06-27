@@ -36,7 +36,7 @@ void	plane_props(t_camera *cur_camera, void *obj)
 
 	plane = (t_plane *)obj;
 	if (dot_vec(sub_vec(plane->position, cur_camera->origin), plane->normal) > 0.0)
-		plane->normal = mult_vec_f(plane->normal, -1); // neg_vec
+		plane->normal = neg_vec(plane->normal);
 }
 
 void	triangle_props(t_camera *cur_camera, void *obj)// new name?
@@ -45,7 +45,7 @@ void	triangle_props(t_camera *cur_camera, void *obj)// new name?
 
 	triangle = (t_triangle *)obj;
 	if (dot_vec(sub_vec(triangle->vertex1, cur_camera->origin), triangle->normal) > 0.0)
-		triangle->triangle_plane.normal = mult_vec_f(triangle->normal, -1);// neg_vec
+		triangle->triangle_plane.normal = neg_vec(triangle->normal);
 }
 
 void	square_props(t_camera *cur_camera, void *obj)
@@ -54,7 +54,7 @@ void	square_props(t_camera *cur_camera, void *obj)
 
 	square = (t_square *)obj;
 	if (dot_vec(sub_vec(square->vertex1, cur_camera->origin), square->normal) > 0.0)
-		square->normal = mult_vec_f(square->normal, -1); // neg_vec
+		square->normal = neg_vec(square->normal);
 }
 
 
@@ -67,7 +67,7 @@ void	triangle_scene_props(void *obj)// new name?
 	triangle->edge2 = sub_vec(triangle->vertex3, triangle->vertex2);
 	triangle->edge3 = sub_vec(triangle->vertex1, triangle->vertex3);
 	triangle->normal = cross_vec(triangle->edge1,
-			mult_vec_f(triangle->edge3, -1.0)); // ou neg_vec
+			neg_vec(triangle->edge3));
 	triangle->triangle_plane.position = triangle->vertex1;
 	triangle->triangle_plane.normal = triangle->normal;
 }
@@ -113,7 +113,8 @@ void	calc_view_properties(t_global *data, t_camera *cur_camera, t_view_propertie
 	while (obj_iter != NULL)
 	{
 		cur_obj = (t_obj_wrapper *)obj_iter->content;
-		obj_properties[cur_obj->type](cur_camera, cur_obj->obj);
+		if (cur_obj->type != CYLINDER)////////
+			obj_properties[cur_obj->type](cur_camera, cur_obj->obj);
 		obj_iter = obj_iter->next;
 	}
 }

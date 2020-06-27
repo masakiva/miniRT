@@ -27,7 +27,7 @@ t_bool	shadows(t_point cur_pos, t_vector light_dir, t_list *objects)
 t_rgb	lighting(t_point cur_pos, t_obj_wrapper *obj_wrapper, t_global *data)
 {
 	static t_normal	calc_normal[NB_OBJ] = {normal_sphere, normal_plane,
-		normal_triangle, normal_square, NULL};
+		normal_triangle, normal_square, normal_cylinder};
 	t_vector		normal;
 	t_light			*cur_light;
 	t_list			*lights_iter;

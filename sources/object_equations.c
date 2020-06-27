@@ -22,14 +22,13 @@ double	intersect_sphere(t_ray *ray, void *obj)
 
 	sphere = (t_sphere *)obj;
 	sphere->centre_rayorigin = sub_vec(ray->origin, sphere->centre);
-	sphere->c = dot_vec(sphere->centre_rayorigin, sphere->centre_rayorigin) -
+	sphere->c = length_squared_vec(sphere->centre_rayorigin) -
 		sq(sphere->radius);
-	a = dot_vec(ray->direction, ray->direction);
+	a = length_squared_vec(ray->direction);
 	half_b = dot_vec(ray->direction, sphere->centre_rayorigin);
 	discriminant = sq(half_b) - a * sphere->c;
-	if (discriminant < 0.0)
-		t = RAY_T_MAX;
-	else
+	t = RAY_T_MAX;
+	if (discriminant >= 0.0)
 	{
 		if (sphere->surface_side == OUTSIDE)
 			t = (-1.0 * half_b - sqrt(discriminant)) / a;// div par zero si ray->dir = 0
@@ -92,4 +91,29 @@ double	intersect_square(t_ray *ray, void *obj)
 			return (t);
 	}
 	return (RAY_T_MAX);
+}
+
+double	intersect_cylinder(t_ray *ray, void *obj)
+{
+	t_cylinder	*cylinder;
+	double		t;
+	t_vector	ad_cross_d;
+	t_vector	ad_cross_oam;
+	double		a;
+	double		b;
+	double		c;
+	double		discriminant;
+
+	cylinder = (t_cylinder *)obj;
+	ad_cross_d = cross_vec(cylinder->axis_direction, ray->direction);
+	ad_cross_oam = cross_vec(cylinder->axis_direction,
+			sub_vec(cylinder->axis_middle, ray->origin));
+	a = length_squared_vec(ad_cross_d);
+	b = -2.0 * dot_vec(ad_cross_d, ad_cross_oam);
+	c = length_squared_vec(ad_cross_oam) - sq(cylinder->radius);
+	discriminant = sq(b) - 4.0 * a * c;
+	t = RAY_T_MAX;
+	if (discriminant >= 0.0)
+		t = (-1.0 * b - sqrt(discriminant)) / (2 * a);
+	return (t);
 }
