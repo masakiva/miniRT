@@ -3,7 +3,9 @@
 void	camera_properties(t_global *data, t_camera *cur_camera, t_view_properties *props)
 {
 	props->right_vec = cross_vec(UPGUIDE, cur_camera->direction);
+	props->right_vec = unit_vec(props->right_vec, length_vec(props->right_vec));
 	props->up_vec = cross_vec(cur_camera->direction, props->right_vec);
+	props->up_vec = unit_vec(props->up_vec, length_vec(props->up_vec));
 	props->half_width = tan((M_PI * (double)cur_camera->fov / 180.0) / 2.0);
 	props->half_height = props->half_width *
 		((double)data->res[HEIGHT] / (double)data->res[WIDTH]);
@@ -53,8 +55,16 @@ void	square_props(t_camera *cur_camera, void *obj)
 	t_square	*square;
 
 	square = (t_square *)obj;
-	if (dot_vec(sub_vec(square->vertex1, cur_camera->origin), square->normal) > 0.0)
+	if (dot_vec(sub_vec(square->centre, cur_camera->origin), square->normal) > 0.0)
 		square->normal = neg_vec(square->normal);
+}
+
+void	cylinder_props(t_camera *cur_camera, void *obj)
+{
+	t_cylinder	*cylinder;
+
+	cylinder = (t_cylinder *)obj;
+	cylinder->camera_origin = cur_camera->origin;
 }
 
 
@@ -66,10 +76,34 @@ void	triangle_scene_props(void *obj)// new name?
 	triangle->edge1 = sub_vec(triangle->vertex2, triangle->vertex1);
 	triangle->edge2 = sub_vec(triangle->vertex3, triangle->vertex2);
 	triangle->edge3 = sub_vec(triangle->vertex1, triangle->vertex3);
-	triangle->normal = cross_vec(triangle->edge1,
-			neg_vec(triangle->edge3));
+	triangle->normal = cross_vec(triangle->edge1, neg_vec(triangle->edge3));
+	triangle->normal = unit_vec(triangle->normal, length_vec(triangle->normal));// utile?
 	triangle->triangle_plane.position = triangle->vertex1;
 	triangle->triangle_plane.normal = triangle->normal;
+}
+
+void	get_square_triangles_vertices(t_vector half_horizontal_side,
+		t_vector half_vertical_side, t_square *square)
+{
+	t_point		vertex1;
+	t_point		vertex2;
+	t_point		vertex3;
+	t_point		vertex4;
+
+	vertex1 = sub_vec(sub_vec(square->centre, half_horizontal_side),
+			half_vertical_side);
+	vertex2 = sub_vec(add_vec(square->centre, half_horizontal_side),
+			half_vertical_side);
+	vertex3 = add_vec(sub_vec(square->centre, half_horizontal_side),
+			half_vertical_side);
+	vertex4 = add_vec(add_vec(square->centre, half_horizontal_side),
+			half_vertical_side);
+	square->triangle1.vertex1 = vertex1;
+	square->triangle1.vertex2 = vertex2;
+	square->triangle1.vertex3 = vertex3;
+	square->triangle2.vertex1 = vertex2;
+	square->triangle2.vertex2 = vertex3;
+	square->triangle2.vertex3 = vertex4;
 }
 
 void	square_scene_props(void *obj)
@@ -85,26 +119,16 @@ void	square_scene_props(void *obj)
 	half_vertical_side = cross_vec(half_horizontal_side, square->normal);
 	half_vertical_side = mult_vec_f(unit_vec(half_vertical_side,
 				length_vec(half_vertical_side)), square->side_len / 2.0);
-	square->vertex1 = sub_vec(sub_vec(square->centre, half_horizontal_side),
-			half_vertical_side);
-	square->vertex2 = sub_vec(add_vec(square->centre, half_horizontal_side),
-			half_vertical_side);
-	square->vertex3 = add_vec(sub_vec(square->centre, half_horizontal_side),
-			half_vertical_side);
-	square->vertex4 = add_vec(add_vec(square->centre, half_horizontal_side),
-			half_vertical_side);
-	square->triangle1.vertex1 = square->vertex1;
-	square->triangle1.vertex2 = square->vertex2;
-	square->triangle1.vertex3 = square->vertex3;
-	square->triangle2.vertex1 = square->vertex2;
-	square->triangle2.vertex2 = square->vertex3;
-	square->triangle2.vertex3 = square->vertex4;
+	get_square_triangles_vertices(half_horizontal_side, half_vertical_side,
+			square);
+	triangle_scene_props(&(square->triangle1));
+	triangle_scene_props(&(square->triangle2));
 }
 
 void	calc_view_properties(t_global *data, t_camera *cur_camera, t_view_properties *props)
 {
 	static t_properties	obj_properties[NB_OBJ] = {sphere_props, plane_props,
-		triangle_props, square_props, NULL};
+		triangle_props, square_props, cylinder_props};
 	t_list				*obj_iter;
 	t_obj_wrapper		*cur_obj;
 
@@ -113,8 +137,7 @@ void	calc_view_properties(t_global *data, t_camera *cur_camera, t_view_propertie
 	while (obj_iter != NULL)
 	{
 		cur_obj = (t_obj_wrapper *)obj_iter->content;
-		if (cur_obj->type != CYLINDER)////////
-			obj_properties[cur_obj->type](cur_camera, cur_obj->obj);
+		obj_properties[cur_obj->type](cur_camera, cur_obj->obj);
 		obj_iter = obj_iter->next;
 	}
 }
@@ -131,11 +154,7 @@ void	calc_scene_properties(t_global *data)
 		if (cur_obj->type == TRIANGLE)
 			triangle_scene_props(cur_obj->obj);
 		else if (cur_obj->type == SQUARE)
-		{
 			square_scene_props(cur_obj->obj);
-			triangle_scene_props(&(((t_square *)cur_obj->obj)->triangle1));
-			triangle_scene_props(&(((t_square *)cur_obj->obj)->triangle2));
-		}
 		obj_iter = obj_iter->next;
 	}
 }

@@ -24,7 +24,7 @@ t_bool			intersection_or_not(t_ray ray, t_list *obj_iter, double t_min,
 	{
 		cur_obj = (t_obj_wrapper *)obj_iter->content;
 		cur_t = find_t[cur_obj->type](&ray, cur_obj->obj);
-		if (cur_t >= t_min && cur_t < t_max) // et s'il y a deux memes t
+		if (cur_t >= t_min && cur_t <= t_max)
 			return (TRUE);
 		obj_iter = obj_iter->next;
 	}

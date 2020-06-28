@@ -71,6 +71,7 @@ typedef	enum	e_error_code
 	"· ambient lighting ratio in range [0.0,1.0]: 0.2\n"\
 	"· R,G,B colors in range [0-255]: 255, 255, 255\n"\
 	"e.g. A 0.2 255,255,255\n"
+// lookat option for camera
 # define E_CAM "Camera parameters not valid.\n"\
 	"The following must be specified in order:\n"\
 	"· x,y,z coordinates of the view point: 0.0,0.0,20.6\n"\

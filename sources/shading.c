@@ -49,7 +49,7 @@ t_rgb	lighting(t_point cur_pos, t_obj_wrapper *obj_wrapper, t_global *data)
 				shadows(cur_pos, light_dir, data->objects) == FALSE)
 		{
 			light_dir_length = length_vec(light_dir);
-			n_dot_l /= length_vec(normal) * light_dir_length;
+			n_dot_l /= light_dir_length;//premier inutile si unitaire
 			color = add_vec(color, mult_vec_f(cur_light->color,
 						n_dot_l)); // / (4 * M_PI * sq(light_dir_length))));
 		}

@@ -129,10 +129,6 @@ typedef struct	s_square
 	t_point		centre;
 	t_vector	normal;
 	double		side_len;
-	t_point		vertex1;
-	t_point		vertex2;
-	t_point		vertex3;
-	t_point		vertex4;
 	t_triangle	triangle1;
 	t_triangle	triangle2;
 }				t_square;
@@ -143,6 +139,9 @@ typedef struct	s_cylinder
 	t_vector	axis_direction;
 	double		radius;
 	double		height;
+	t_point		camera_origin;////////////
+	t_bool		surface_side;
+	uint8_t		pad_[7];
 }				t_cylinder;
 
 /*

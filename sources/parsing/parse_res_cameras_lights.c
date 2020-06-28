@@ -50,6 +50,34 @@ const char	*p_ambient_lighting(const char *line, t_global *data)
 	return (line);
 }
 
+const char	*parse_camera_direction(const char *line, t_camera *cur_camera)
+{
+	double	dir_length;
+
+	line = skip_spaces_tabs(line);
+	if (ft_memcmp(line, "at", 2) == 0)
+	{
+		line = skip_spaces_tabs(line + 2);
+		line = parse_coord(line, &(cur_camera->direction));
+		cur_camera->direction = sub_vec(cur_camera->direction,
+				cur_camera->origin);
+		dir_length = length_vec(cur_camera->direction);
+		if (line == NULL || dir_length <= 0.0 || (cur_camera->direction.x == 0.0 &&
+					cur_camera->direction.z == 0.0))
+			return (NULL);
+		else
+			cur_camera->direction = unit_vec(cur_camera->direction, dir_length);
+	}
+	else
+	{
+		line = parse_unit_vector(line, &(cur_camera->direction));
+		if (line == NULL || (cur_camera->direction.x == 0.0 &&
+					cur_camera->direction.z == 0.0))
+			return (NULL);
+	}
+	return (line);
+}
+
 const char	*p_camera(const char *line, t_global *data)
 {
 	t_camera	*cur_camera;
@@ -63,9 +91,8 @@ const char	*p_camera(const char *line, t_global *data)
 	line = parse_coord(line, &(cur_camera->origin));
 	if (line == NULL)
 		return (NULL);
-	line = parse_unit_vector(line, &(cur_camera->direction));
-	if (line == NULL || (cur_camera->direction.x == 0.0 &&
-				cur_camera->direction.z == 0.0))
+	line = parse_camera_direction(line, cur_camera);
+	if (line == NULL)
 		return (NULL);
 	line = parse_int(line, &(cur_camera->fov));
 	if (line == NULL || cur_camera->fov < 0 || cur_camera->fov > 180)

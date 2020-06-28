@@ -21,9 +21,9 @@ double	intersect_sphere(t_ray *ray, void *obj)
 	double		t;
 
 	sphere = (t_sphere *)obj;
-	sphere->centre_rayorigin = sub_vec(ray->origin, sphere->centre);
+	sphere->centre_rayorigin = sub_vec(ray->origin, sphere->centre);//////
 	sphere->c = length_squared_vec(sphere->centre_rayorigin) -
-		sq(sphere->radius);
+		sq(sphere->radius);//////
 	a = length_squared_vec(ray->direction);
 	half_b = dot_vec(ray->direction, sphere->centre_rayorigin);
 	discriminant = sq(half_b) - a * sphere->c;
@@ -65,7 +65,7 @@ double	intersect_triangle(t_ray *ray, void *obj)
 	{
 		position = add_vec(ray->origin, mult_vec_f(ray->direction, t));
 		if (dot_vec(triangle->normal, cross_vec(triangle->edge1,
-						sub_vec(position, triangle->vertex1))) > 0.0 &&
+						sub_vec(position, triangle->vertex1))) > 0.0 &&// ou >=? voir square pb
 				dot_vec(triangle->normal, cross_vec(triangle->edge2,
 						sub_vec(position, triangle->vertex2))) > 0.0 &&
 				dot_vec(triangle->normal, cross_vec(triangle->edge3,
@@ -97,23 +97,49 @@ double	intersect_cylinder(t_ray *ray, void *obj)
 {
 	t_cylinder	*cylinder;
 	double		t;
+	t_vector	rayorigin_middle;//////
 	t_vector	ad_cross_d;
-	t_vector	ad_cross_oam;
+	t_vector	ad_cross_oam;//////
 	double		a;
-	double		b;
-	double		c;
+	double		half_b;
+	double		c;//////
 	double		discriminant;
+	t_point		position;
+	double		distance_on_the_axis;
 
 	cylinder = (t_cylinder *)obj;
+	rayorigin_middle = sub_vec(cylinder->axis_middle, ray->origin);//////
 	ad_cross_d = cross_vec(cylinder->axis_direction, ray->direction);
-	ad_cross_oam = cross_vec(cylinder->axis_direction,
-			sub_vec(cylinder->axis_middle, ray->origin));
+	ad_cross_oam = cross_vec(cylinder->axis_direction, rayorigin_middle);//////
 	a = length_squared_vec(ad_cross_d);
-	b = -2.0 * dot_vec(ad_cross_d, ad_cross_oam);
-	c = length_squared_vec(ad_cross_oam) - sq(cylinder->radius);
-	discriminant = sq(b) - 4.0 * a * c;
-	t = RAY_T_MAX;
+	half_b = -1.0 * dot_vec(ad_cross_d, ad_cross_oam);
+	c = length_squared_vec(ad_cross_oam) - sq(cylinder->radius);//////
+	discriminant = sq(half_b) - a * c;
 	if (discriminant >= 0.0)
-		t = (-1.0 * b - sqrt(discriminant)) / (2 * a);
-	return (t);
+	{
+		t = (-1.0 * half_b - sqrt(discriminant)) / a;
+		if (t >= RAY_T_MIN)
+		{
+			position = add_vec(ray->origin, mult_vec_f(ray->direction, t));
+			distance_on_the_axis = dot_vec(cylinder->axis_direction,
+					sub_vec(position, rayorigin_middle));
+			if (distance_on_the_axis <= cylinder->height / 2.0 &&
+					distance_on_the_axis >= cylinder->height / -2.0)
+			{
+				cylinder->surface_side = OUTSIDE;
+				return (t);
+			}
+		}
+		t = (-1.0 * half_b + sqrt(discriminant)) / a;
+		position = add_vec(ray->origin, mult_vec_f(ray->direction, t));
+		distance_on_the_axis = dot_vec(cylinder->axis_direction,
+				sub_vec(position, rayorigin_middle));
+		if (distance_on_the_axis <= cylinder->height / 2.0 &&
+				distance_on_the_axis >= cylinder->height / -2.0)
+		{
+			cylinder->surface_side = INSIDE;
+			return (t);
+		}
+	}
+	return (RAY_T_MAX);
 }
