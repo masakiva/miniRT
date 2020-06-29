@@ -11,12 +11,13 @@
 /* ************************************************************************** */
 
 #include "ray_tracing.h"
+double	intersect_cylinder_shadow(t_ray *ray, void *obj);
 
 t_bool			intersection_or_not(t_ray ray, t_list *obj_iter, double t_min,
 		double t_max)
 {
 	static t_equations	find_t[NB_OBJ] = {intersect_sphere, intersect_plane,
-		intersect_triangle, intersect_square, intersect_cylinder};
+		intersect_triangle, intersect_square, intersect_cylinder_shadow};
 	double				cur_t;
 	t_obj_wrapper		*cur_obj;
 

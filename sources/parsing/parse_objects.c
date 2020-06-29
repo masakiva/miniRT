@@ -14,43 +14,43 @@
 
 const char	*p_sphere(const char *line, t_global *data)
 {
-	t_sphere	*cur_sphere;
+	t_sphere	*sphere;
 	t_rgb		*color_ptr;
 
 	errno = 0;
-	cur_sphere = (t_sphere *)malloc(sizeof(t_sphere));
-	if (cur_sphere == NULL)
+	sphere = (t_sphere *)malloc(sizeof(t_sphere));
+	if (sphere == NULL)
 		return (NULL);
-	color_ptr = wrap_object((void *)cur_sphere, &(data->objects), SPHERE);
+	color_ptr = wrap_object((void *)sphere, &(data->objects), SPHERE);
 	if (color_ptr == NULL)
 		return (NULL);
-	line = parse_coord(line, &(cur_sphere->centre));
+	line = parse_coord(line, &(sphere->centre));
 	if (line == NULL)
 		return (NULL);
-	line = parse_float(line, &(cur_sphere->radius));
-	if (line == NULL || cur_sphere->radius < 0.0)
+	line = parse_float(line, &(sphere->radius));
+	if (line == NULL || sphere->radius < 0.0)
 		return (NULL);
-	cur_sphere->radius /= 2.0;
+	sphere->radius /= 2.0;
 	line = parse_color(line, color_ptr);
 	return (line);
 }
 
 const char	*p_plane(const char *line, t_global *data)
 {
-	t_plane		*cur_plane;
+	t_plane		*plane;
 	t_rgb		*color_ptr;
 
 	errno = 0;
-	cur_plane = (t_plane *)malloc(sizeof(t_plane));
-	if (cur_plane == NULL)
+	plane = (t_plane *)malloc(sizeof(t_plane));
+	if (plane == NULL)
 		return (NULL);
-	color_ptr = wrap_object((void *)cur_plane, &(data->objects), PLANE);
+	color_ptr = wrap_object((void *)plane, &(data->objects), PLANE);
 	if (color_ptr == NULL)
 		return (NULL);
-	line = parse_coord(line, &(cur_plane->position));
+	line = parse_coord(line, &(plane->position));
 	if (line == NULL)
 		return (NULL);
-	line = parse_unit_vector(line, &(cur_plane->normal));
+	line = parse_unit_vector(line, &(plane->normal));
 	if (line == NULL)
 		return (NULL);
 	line = parse_color(line, color_ptr);
@@ -59,23 +59,23 @@ const char	*p_plane(const char *line, t_global *data)
 
 const char	*p_triangle(const char *line, t_global *data)
 {
-	t_triangle	*cur_triangle;
+	t_triangle	*triangle;
 	t_rgb		*color_ptr;
 
 	errno = 0;
-	cur_triangle = (t_triangle *)malloc(sizeof(t_triangle));
-	if (cur_triangle == NULL)
+	triangle = (t_triangle *)malloc(sizeof(t_triangle));
+	if (triangle == NULL)
 		return (NULL);
-	color_ptr = wrap_object((void *)cur_triangle, &(data->objects), TRIANGLE);
+	color_ptr = wrap_object((void *)triangle, &(data->objects), TRIANGLE);
 	if (color_ptr == NULL)
 		return (NULL);
-	line = parse_coord(line, &(cur_triangle->vertex1));
+	line = parse_coord(line, &(triangle->vertex1));
 	if (line == NULL)
 		return (NULL);
-	line = parse_coord(line, &(cur_triangle->vertex2));
+	line = parse_coord(line, &(triangle->vertex2));
 	if (line == NULL)
 		return (NULL);
-	line = parse_coord(line, &(cur_triangle->vertex3));
+	line = parse_coord(line, &(triangle->vertex3));
 	if (line == NULL)
 		return (NULL);
 	line = parse_color(line, color_ptr);
@@ -84,25 +84,25 @@ const char	*p_triangle(const char *line, t_global *data)
 
 const char	*p_square(const char *line, t_global *data)
 {
-	t_square	*cur_square;
+	t_square	*square;
 	t_rgb		*color_ptr;
 
 	errno = 0;
-	cur_square = (t_square *)malloc(sizeof(t_square));
-	if (cur_square == NULL)
+	square = (t_square *)malloc(sizeof(t_square));
+	if (square == NULL)
 		return (NULL);
-	color_ptr = wrap_object((void *)cur_square, &(data->objects), SQUARE);
+	color_ptr = wrap_object((void *)square, &(data->objects), SQUARE);
 	if (color_ptr == NULL)
 		return (NULL);
-	line = parse_coord(line, &(cur_square->centre));
+	line = parse_coord(line, &(square->centre));
 	if (line == NULL)
 		return (NULL);
-	line = parse_unit_vector(line, &(cur_square->normal));
-	if (line == NULL || (cur_square->normal.x == 0.0 &&
-				cur_square->normal.z == 0.0))
+	line = parse_unit_vector(line, &(square->normal));
+	if (line == NULL || (square->normal.x == 0.0 &&
+				square->normal.z == 0.0))
 		return (NULL);
-	line = parse_float(line, &(cur_square->side_len));
-	if (line == NULL || cur_square->side_len < 0.0)
+	line = parse_float(line, &(square->side_len));
+	if (line == NULL || square->side_len < 0.0)
 		return (NULL);
 	line = parse_color(line, color_ptr);
 	return (line);
@@ -110,28 +110,28 @@ const char	*p_square(const char *line, t_global *data)
 
 const char	*p_cylinder(const char *line, t_global *data)
 {
-	t_cylinder	*cur_cylinder;
+	t_cylinder	*cylinder;
 	t_rgb		*color_ptr;
 
 	errno = 0;
-	cur_cylinder = (t_cylinder *)malloc(sizeof(t_cylinder));
-	if (cur_cylinder == NULL)
+	cylinder = (t_cylinder *)malloc(sizeof(t_cylinder));
+	if (cylinder == NULL)
 		return (NULL);
-	color_ptr = wrap_object((void *)cur_cylinder, &(data->objects), CYLINDER);
+	color_ptr = wrap_object((void *)cylinder, &(data->objects), CYLINDER);
 	if (color_ptr == NULL)
 		return (NULL);
-	line = parse_coord(line, &(cur_cylinder->axis_middle));
+	line = parse_coord(line, &(cylinder->axis_middle));
 	if (line == NULL)
 		return (NULL);
-	line = parse_unit_vector(line, &(cur_cylinder->axis_direction));
+	line = parse_unit_vector(line, &(cylinder->axis_direction));
 	if (line == NULL)
 		return (NULL);
-	line = parse_float(line, &(cur_cylinder->radius));
-	if (line == NULL || cur_cylinder->radius < 0.0)
+	line = parse_float(line, &(cylinder->radius));
+	if (line == NULL || cylinder->radius < 0.0)
 		return (NULL);
-	cur_cylinder->radius /= 2.0;
-	line = parse_float(line, &(cur_cylinder->height));
-	if (line == NULL || cur_cylinder->height < 0.0)
+	cylinder->radius /= 2.0;
+	line = parse_float(line, &(cylinder->height));
+	if (line == NULL || cylinder->height < 0.0)
 		return (NULL);
 	line = parse_color(line, color_ptr);
 	return (line);

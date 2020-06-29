@@ -15,10 +15,12 @@
 t_bool	shadows(t_point cur_pos, t_vector light_dir, t_list *objects)
 {
 	t_ray	light_ray;
+	double	light_dir_length;
 
 	light_ray.origin = cur_pos;
-	light_ray.direction = light_dir;
-	if (intersection_or_not(light_ray, objects, RAY_T_MIN, 1.0 - /*ou +?*/ RAY_T_MIN) == TRUE)
+	light_dir_length = length_vec(light_dir);
+	light_ray.direction = unit_vec(light_dir, light_dir_length);
+	if (intersection_or_not(light_ray, objects, RAY_T_MIN, light_dir_length - /*ou +?*/ RAY_T_MIN) == TRUE)
 		return (TRUE);
 	else
 		return (FALSE);
@@ -45,8 +47,7 @@ t_rgb	lighting(t_point cur_pos, t_obj_wrapper *obj_wrapper, t_global *data)
 		cur_light = (t_light *)lights_iter->content;
 		light_dir = sub_vec(cur_light->position, cur_pos);
 		n_dot_l = dot_vec(normal, light_dir);
-		if (n_dot_l >= RAY_T_MIN &&
-				shadows(cur_pos, light_dir, data->objects) == FALSE)
+		if (n_dot_l >= RAY_T_MIN && shadows(cur_pos, light_dir, data->objects) == FALSE)
 		{
 			light_dir_length = length_vec(light_dir);
 			n_dot_l /= light_dir_length;//premier inutile si unitaire

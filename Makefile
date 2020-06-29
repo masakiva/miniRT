@@ -30,6 +30,7 @@ SRCS		+= bmp_export.c
 SRCS		+= bmp_ray_tracing.c
 
 SRCS		+= errors.c
+SRCS		+= parsing_error_msg.c
 SRCS		+= list_utils.c
 SRCS		+= free_utils.c
 

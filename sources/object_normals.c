@@ -67,8 +67,9 @@ t_vector	normal_cylinder(t_point position_on_the_surface, void *obj)
 	cylinder = (t_cylinder *)obj;
 	rayorigin_middle = sub_vec(cylinder->axis_middle, cylinder->camera_origin);
 	distance_on_the_axis = dot_vec(cylinder->axis_direction,
-			sub_vec(position_on_the_surface, rayorigin_middle));
-	normal = sub_vec(sub_vec(position_on_the_surface,
+			sub_vec(sub_vec(position_on_the_surface, cylinder->camera_origin),
+				rayorigin_middle));
+	normal = sub_vec(sub_vec(sub_vec(position_on_the_surface, cylinder->camera_origin),
 				mult_vec_f(cylinder->axis_direction, distance_on_the_axis)),
 				rayorigin_middle);
 	if (cylinder->surface_side == INSIDE)

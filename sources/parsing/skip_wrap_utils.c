@@ -46,7 +46,7 @@ const char	*skip_float(const char *str)
 	return (str);
 }
 
-t_rgb		*wrap_object(void *cur_obj, t_list **lst, uint8_t type)
+t_rgb		*wrap_object(void *obj, t_list **lst, uint8_t type)
 {
 	t_obj_wrapper	*obj_wrapper;
 
@@ -54,15 +54,15 @@ t_rgb		*wrap_object(void *cur_obj, t_list **lst, uint8_t type)
 	obj_wrapper = (t_obj_wrapper *)malloc(sizeof(t_obj_wrapper));
 	if (obj_wrapper == NULL)
 	{
-		free(cur_obj);
+		free(obj);
 		return (NULL);
 	}
 	if (add_to_list(obj_wrapper, lst) == FAILURE)
 	{
-		free(cur_obj);
+		free(obj);
 		return (NULL);
 	}
 	obj_wrapper->type = type;
-	obj_wrapper->obj = cur_obj;
+	obj_wrapper->obj = obj;
 	return (&(obj_wrapper->color));
 }
