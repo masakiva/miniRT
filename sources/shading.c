@@ -12,52 +12,60 @@
 
 #include "ray_tracing.h"
 
-t_bool	shadows(t_point cur_pos, t_vector light_dir, t_list *objects)
+t_bool			shadow_obstacle(t_ray ray, t_list *obj_iter)
 {
-	t_ray	light_ray;
-	double	light_dir_length;
+	static t_equations	find_t[NB_OBJ] = {intersect_sphere_lightray,
+		intersect_plane, intersect_triangle, intersect_square,
+		intersect_cylinder_lightray};
+	double				cur_t;
+	t_obj_wrapper		*cur_obj;
 
-	light_ray.origin = cur_pos;
-	light_dir_length = length_vec(light_dir);
-	light_ray.direction = unit_vec(light_dir, light_dir_length);
-	if (intersection_or_not(light_ray, objects, RAY_T_MIN, light_dir_length - /*ou +?*/ RAY_T_MIN) == TRUE)
-		return (TRUE);
-	else
-		return (FALSE);
+	while (obj_iter != NULL)
+	{
+		cur_obj = (t_obj_wrapper *)obj_iter->content;
+		cur_t = find_t[cur_obj->type](&ray, cur_obj->obj, 0.0);
+		if (cur_t >= EPSILON && cur_t <= 1 - EPSILON) // ou +?
+			return (TRUE);
+		obj_iter = obj_iter->next;
+	}
+	return (FALSE);
 }
 
-t_rgb	lighting(t_point cur_pos, t_obj_wrapper *obj_wrapper, t_global *data)
+t_vector	calc_normal(t_obj_wrapper *obj_wrapper, t_point cur_pos)
 {
 	static t_normal	calc_normal[NB_OBJ] = {normal_sphere, normal_plane,
 		normal_triangle, normal_square, normal_cylinder};
 	t_vector		normal;
+
+	normal = calc_normal[obj_wrapper->type](cur_pos, obj_wrapper->obj);
+	return (normal);
+}
+
+t_rgb	lighting(t_point cur_pos, t_obj_wrapper *obj_wrapper, t_global *data,
+		t_rgb light_color)
+{
+	t_vector		normal;
 	t_light			*cur_light;
 	t_list			*lights_iter;
 	t_vector		light_dir;
-	double			light_dir_length;
 	double			n_dot_l;
-	t_rgb			color;
 
 	if (data->lights != NULL)
-		normal = calc_normal[obj_wrapper->type](cur_pos, obj_wrapper->obj);
-	color = (t_rgb){0.0, 0.0, 0.0};
+		normal = calc_normal(obj_wrapper, cur_pos);
 	lights_iter = data->lights;
 	while (lights_iter != NULL)
 	{
 		cur_light = (t_light *)lights_iter->content;
 		light_dir = sub_vec(cur_light->position, cur_pos);
-		n_dot_l = dot_vec(normal, light_dir);
-		if (n_dot_l >= RAY_T_MIN && shadows(cur_pos, light_dir, data->objects) == FALSE)
-		{
-			light_dir_length = length_vec(light_dir);
-			n_dot_l /= light_dir_length;//premier inutile si unitaire
-			color = add_vec(color, mult_vec_f(cur_light->color,
-						n_dot_l)); // / (4 * M_PI * sq(light_dir_length))));
-		}
+		n_dot_l = dot_vec(normal, unit_vec(light_dir, length_vec(light_dir)));
+		if (n_dot_l >= EPSILON && shadow_obstacle((t_ray){cur_pos, light_dir},
+					data->objects) == FALSE)
+			light_color = add_vec(light_color,
+					mult_vec_f(cur_light->color, n_dot_l)); // / (4 * M_PI * sq(light_dir_length))));
 		lights_iter = lights_iter->next;
 	}
-	color = add_vec(color, data->ambient_light_color);
-	//color = mult_vec_f(color, ALBEDO / M_PI);
-	return (color);
+	light_color = add_vec(light_color, data->ambient_light_color);
+	//light_color = mult_vec_f(light_color, ALBEDO / M_PI);
+	return (light_color);
 }
 

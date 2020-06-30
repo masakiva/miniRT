@@ -20,6 +20,7 @@ SRCS		+= intersections.c
 SRCS		+= shading.c
 SRCS		+= scene_properties.c
 SRCS		+= object_equations.c
+SRCS		+= object_equations2.c
 SRCS		+= object_normals.c
 SRCS		+= pixel_put_to_str.c
 SRCS		+= rgb_utils.c

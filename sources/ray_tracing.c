@@ -14,25 +14,26 @@
 
 int		process_pixel(t_ray ray, t_global *data)
 {
-	t_rgb			color;
+	t_rgb			obj_color;
+	t_rgb			light_color;
 	t_point			position;
 	t_intersection	intersection;
 
-	//ray.direction = unit_vec(ray.direction, length_vec(ray.direction));
-	intersection = closest_intersection(ray, data->objects, RAY_T_MIN,
-			RAY_T_MAX);
-	if (intersection.obj_wrapper == NULL) // -> intersection.obj_wrapper == NULL
-		color = (t_rgb){0.0, 0.0, 0.0};
+	intersection = closest_intersection(ray, data->objects);
+	if (intersection.obj_wrapper == NULL)
+		obj_color = (t_rgb){0.0, 0.0, 0.0};
 	else
 	{
-		color = intersection.obj_wrapper->color;
+		obj_color = intersection.obj_wrapper->color;
 		position = add_vec(ray.origin, mult_vec_f(ray.direction,
 					intersection.t));
-		color = mult_vec_vec(color, lighting(position, intersection.obj_wrapper,
-					data));
+		light_color = (t_rgb){0.0, 0.0, 0.0};
+		light_color = lighting(position, intersection.obj_wrapper, data,
+				light_color);
+		obj_color = mult_vec_vec(obj_color, light_color);
 	}
 	//color = apply_gamma_correction(color);
-	return (rgb_to_int(color));
+	return (rgb_to_int(obj_color));
 }
 
 void	next_pixel_x(t_view_properties *props)

@@ -26,7 +26,7 @@ void	sphere_props(t_camera *cur_camera, void *obj)
 
 	sphere = (t_sphere *)obj;
 	sphere->centre_rayorigin = sub_vec(cur_camera->origin, sphere->centre);
-	if (length_vec(sphere->centre_rayorigin) > sphere->radius) // et == ?
+	if (length_vec(sphere->centre_rayorigin) >= sphere->radius)
 		sphere->surface_side = OUTSIDE;
 	else
 		sphere->surface_side = INSIDE;
@@ -35,27 +35,34 @@ void	sphere_props(t_camera *cur_camera, void *obj)
 void	plane_props(t_camera *cur_camera, void *obj)
 {
 	t_plane		*plane;
+	t_vector	rayorigin_planeposition;
 
 	plane = (t_plane *)obj;
-	if (dot_vec(sub_vec(plane->position, cur_camera->origin), plane->normal) > 0.0)
+	rayorigin_planeposition = sub_vec(plane->position, cur_camera->origin);
+	plane->n_dot_op = dot_vec(plane->normal, rayorigin_planeposition);
+	if (dot_vec(rayorigin_planeposition, plane->normal) > 0.0)
 		plane->normal = neg_vec(plane->normal);
 }
 
 void	triangle_props(t_camera *cur_camera, void *obj)// new name?
 {
 	t_triangle	*triangle;
+	t_vector	rayorigin_triangleposition;
 
 	triangle = (t_triangle *)obj;
-	if (dot_vec(sub_vec(triangle->vertex1, cur_camera->origin), triangle->normal) > 0.0)
-		triangle->triangle_plane.normal = neg_vec(triangle->normal);
+	rayorigin_triangleposition = sub_vec(triangle->vertex1, cur_camera->origin);
+	if (dot_vec(rayorigin_triangleposition, triangle->normal) > 0.0)
+		triangle->triangle_plane.normal = neg_vec(triangle->normal);// pb
 }
 
 void	square_props(t_camera *cur_camera, void *obj)
 {
 	t_square	*square;
+	t_vector	rayorigin_squareposition;
 
 	square = (t_square *)obj;
-	if (dot_vec(sub_vec(square->centre, cur_camera->origin), square->normal) > 0.0)
+	rayorigin_squareposition = sub_vec(square->centre, cur_camera->origin);
+	if (dot_vec(rayorigin_squareposition, square->normal) > 0.0)
 		square->normal = neg_vec(square->normal);
 }
 
@@ -64,9 +71,13 @@ void	cylinder_props(t_camera *cur_camera, void *obj)
 	t_cylinder	*cylinder;
 
 	cylinder = (t_cylinder *)obj;
-	cylinder->camera_origin = cur_camera->origin;
+	cylinder->rayorigin_middle = sub_vec(cylinder->axis_middle,
+			cur_camera->origin);
+	cylinder->ad_cross_oam = cross_vec(cylinder->axis_direction,
+			cylinder->rayorigin_middle);
+	cylinder->c = length_squared_vec(cylinder->ad_cross_oam) -
+		sq(cylinder->radius);
 }
-
 
 void	triangle_scene_props(void *obj)// new name?
 {

@@ -110,6 +110,7 @@ typedef struct	s_plane
 {
 	t_point		position;
 	t_vector	normal;
+	double		n_dot_op;
 }				t_plane;
 
 typedef struct	s_triangle
@@ -139,7 +140,11 @@ typedef struct	s_cylinder
 	t_vector	axis_direction;
 	double		radius;
 	double		height;
-	t_point		camera_origin;////////////
+	t_vector	rayorigin_middle;
+	t_vector	ad_cross_oam;
+	double		c;
+	t_vector	axismiddle_intersectionpoint;
+	double		distance_on_the_axis;
 	t_bool		surface_side;
 	uint8_t		pad_[7];
 }				t_cylinder;

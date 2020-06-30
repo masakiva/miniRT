@@ -18,9 +18,10 @@
 # include "vectors.h"
 # include "minirt.h"
 
-# define UPGUIDE	(t_vector){0.0, 1.0, 0.0}
-# define RAY_T_MIN	0.0001
-# define RAY_T_MAX	1.0e30
+# define UPGUIDE		(t_vector){0.0, 1.0, 0.0}
+# define EPSILON		0.0001
+# define EPSILON_NEG	-0.0001 // a garder?
+# define T_MAX			1.0e30
 
 # define INSIDE		0
 # define OUTSIDE	1
@@ -44,18 +45,22 @@ typedef struct	s_intersection
 }				t_intersection;
 
 typedef void		(*t_properties)(t_camera *, void *);
-typedef double		(*t_equations)(t_ray *, void *);
+typedef double		(*t_equations)(t_ray *, void *, double);
 typedef t_vector	(*t_normal)(t_point, void *);
 
 void		pixel_put_bmp_little_endian(char *pixel_pos, int color);
 void		uint_to_str_little_endian(unsigned nb, char *str);
 void		pixel_put_mlx_image(t_mlx_image *image, size_t x, size_t y, unsigned color);
 
-double		intersect_sphere(t_ray *ray, void *obj);
-double		intersect_plane(t_ray *ray, void *obj);
-double		intersect_square(t_ray *ray, void *obj);
-double		intersect_triangle(t_ray *ray, void *obj);
-double		intersect_cylinder(t_ray *ray, void *obj);
+double		intersect_sphere(t_ray *ray, void *obj, double t);
+double		intersect_plane(t_ray *ray, void *obj, double t);
+double		intersect_square(t_ray *ray, void *obj, double t);
+double		intersect_triangle(t_ray *ray, void *obj, double t);
+double		intersect_cylinder(t_ray *ray, void *obj, double t);
+
+double		intersect_sphere_lightray(t_ray *ray, void *obj, double t);
+double		truncate_cylinder(double t, t_ray *ray, t_cylinder *cylinder);
+double		intersect_cylinder_lightray(t_ray *ray, void *obj, double t);
 
 t_vector	normal_sphere(t_point position, void *obj);
 t_vector	normal_plane(t_point position, void *obj);
@@ -63,11 +68,8 @@ t_vector	normal_square(t_point position, void *obj);
 t_vector	normal_triangle(t_point position, void *obj);
 t_vector	normal_cylinder(t_point position_on_the_surface, void *obj);
 
-t_intersection	closest_intersection(t_ray ray, t_list *obj, double t_min, double t_max);
-t_bool	intersection_or_not(t_ray ray, t_list *obj, double t_min, double t_max);
-
-t_bool	shadows(t_point cur_pos, t_vector light_dir, t_list *objects);
-t_rgb	lighting(t_point cur_pos, t_obj_wrapper *obj_wrapper, t_global *data);
+t_intersection	closest_intersection(t_ray ray, t_list *obj);
+t_rgb	lighting(t_point cur_pos, t_obj_wrapper *obj_wrapper, t_global *data, t_rgb light_color);
 
 void	calc_view_properties(t_global *data, t_camera *cur_camera, t_view_properties *props);
 void	calc_scene_properties(t_global *data);
