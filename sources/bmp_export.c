@@ -121,7 +121,6 @@ void	export_in_bmp(t_global *data, const char *rtfile_name)
 		error_and_exit(RESOLUTION_MISSING_ERROR);
 	}
 	fd = create_bmpfile(rtfile_name, data);
-	//free_data(data);close(fd);return;////////////
 	data->bmpfile_data = get_bmpfile_data(fd, data, &file_size);
 	errno = 0;
 	bytes_written = write(fd, data->bmpfile_data, file_size);

@@ -15,8 +15,8 @@
 t_bool			shadow_obstacle(t_ray ray, t_list *obj_iter)
 {
 	static t_equations	find_t[NB_OBJ] = {intersect_sphere_lightray,
-		intersect_plane, intersect_triangle, intersect_square,
-		intersect_cylinder_lightray};
+		intersect_plane_lightray, intersect_triangle_lightray,
+		intersect_square_lightray, intersect_cylinder_lightray};
 	double				cur_t;
 	t_obj_wrapper		*cur_obj;
 
@@ -24,7 +24,7 @@ t_bool			shadow_obstacle(t_ray ray, t_list *obj_iter)
 	{
 		cur_obj = (t_obj_wrapper *)obj_iter->content;
 		cur_t = find_t[cur_obj->type](&ray, cur_obj->obj, 0.0);
-		if (cur_t >= EPSILON && cur_t <= 1 - EPSILON) // ou +?
+		if (cur_t >= EPSILON && cur_t <= 1 - EPSILON)
 			return (TRUE);
 		obj_iter = obj_iter->next;
 	}

@@ -32,7 +32,6 @@ double	intersect_sphere(t_ray *ray, void *obj, double t)
 		return (t);
 	}
 	return (FALSE);
-	// two solutions -> https://stackoverflow.com/c/42network/a/1137/7740
 }
 
 double	intersect_plane(t_ray *ray, void *obj, double t)
@@ -42,7 +41,7 @@ double	intersect_plane(t_ray *ray, void *obj, double t)
 
 	plane = (t_plane *)obj;
 	d_dot_n = dot_vec(ray->direction, plane->normal);
-	if (d_dot_n >= EPSILON || d_dot_n <= EPSILON_NEG)// deuxieme utile?
+	if (d_dot_n >= EPSILON || d_dot_n <= EPSILON_NEG)
 	{
 		t = plane->n_dot_op / d_dot_n;
 		return (t);
@@ -53,20 +52,13 @@ double	intersect_plane(t_ray *ray, void *obj, double t)
 double	intersect_triangle(t_ray *ray, void *obj, double t)
 {
 	t_triangle	*triangle;
-	t_point		position;
 
 	triangle = (t_triangle *)obj;
-	t = intersect_plane(ray, &(triangle->triangle_plane), t);
+	t = intersect_plane(ray, &(triangle->plane), t);
 	if (t >= EPSILON)
 	{
-		position = add_vec(ray->origin, mult_vec_f(ray->direction, t));
-		if (dot_vec(triangle->normal, cross_vec(triangle->edge1,
-						sub_vec(position, triangle->vertex1))) > 0.0 &&// ou >=? voir square pb
-				dot_vec(triangle->normal, cross_vec(triangle->edge2,
-						sub_vec(position, triangle->vertex2))) > 0.0 &&
-				dot_vec(triangle->normal, cross_vec(triangle->edge3,
-						sub_vec(position, triangle->vertex3))) > 0.0)
-			return (t);
+		t = extract_triangle_from_plane(t, ray, triangle);
+		return (t);
 	}
 	return (FALSE);
 }

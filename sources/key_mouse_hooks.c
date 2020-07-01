@@ -70,8 +70,6 @@ int			key_hooks(int keycode, t_global *data)
 		switch_camera(data, NEXT_IMAGE);
 	else if (keycode == KEYCODE_LEFT_ARROW)
 		switch_camera(data, PREVIOUS_IMAGE);
-	else
-		printf("keycode = %d\n", keycode);
 	return (SUCCESS);
 }
 

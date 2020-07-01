@@ -27,7 +27,7 @@
 # define NB_OBJ	5
 
 # include <stdlib.h>
-# include "libft.h"// a inclure sorezore
+# include "libft.h"
 #include <stdio.h>/////////////
 
 enum	e_object
@@ -122,7 +122,7 @@ typedef struct	s_triangle
 	t_vector	edge2;
 	t_vector	edge3;
 	t_vector	normal;
-	t_plane		triangle_plane;
+	t_plane		plane;
 }				t_triangle;
 
 typedef struct	s_square

@@ -52,6 +52,15 @@ void		pixel_put_bmp_little_endian(char *pixel_pos, int color);
 void		uint_to_str_little_endian(unsigned nb, char *str);
 void		pixel_put_mlx_image(t_mlx_image *image, size_t x, size_t y, unsigned color);
 
+void		calc_view_properties(t_global *data, t_camera *cur_camera,
+		t_view_properties *props);
+
+void		sphere_view_properties(t_camera *cur_camera, void *obj);
+void		plane_view_properties(t_camera *cur_camera, void *obj);
+void		triangle_view_properties(t_camera *cur_camera, void *obj);
+void		square_view_properties(t_camera *cur_camera, void *obj);
+void		cylinder_view_properties(t_camera *cur_camera, void *obj);
+
 double		intersect_sphere(t_ray *ray, void *obj, double t);
 double		intersect_plane(t_ray *ray, void *obj, double t);
 double		intersect_square(t_ray *ray, void *obj, double t);
@@ -59,8 +68,17 @@ double		intersect_triangle(t_ray *ray, void *obj, double t);
 double		intersect_cylinder(t_ray *ray, void *obj, double t);
 
 double		intersect_sphere_lightray(t_ray *ray, void *obj, double t);
-double		truncate_cylinder(double t, t_ray *ray, t_cylinder *cylinder);
+double		intersect_plane_lightray(t_ray *ray, void *obj, double t);
+double		intersect_triangle_lightray(t_ray *ray, void *obj, double t);
+double		intersect_square_lightray(t_ray *ray, void *obj, double t);
 double		intersect_cylinder_lightray(t_ray *ray, void *obj, double t);
+
+double		extract_triangle_from_plane(double t, t_ray *ray, t_triangle *triangle);
+double		truncate_cylinder(double t, t_ray *ray, t_cylinder *cylinder);
+double		truncate_cylinder_lightray(double t, t_ray *ray, t_vector rayorigin_middle,
+		t_cylinder *cylinder);
+double		calc_raycylinder_discriminant(t_ray *ray, double *a, double *half_b,
+		t_cylinder *cylinder);
 
 t_vector	normal_sphere(t_point position, void *obj);
 t_vector	normal_plane(t_point position, void *obj);

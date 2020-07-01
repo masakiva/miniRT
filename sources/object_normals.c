@@ -40,7 +40,7 @@ t_vector	normal_triangle(t_point position, void *obj)
 
 	(void)position;
 	triangle = (t_triangle *)obj;
-	return (triangle->triangle_plane.normal);
+	return (triangle->plane.normal);
 }
 
 t_vector	normal_square(t_point position, void *obj)
@@ -49,7 +49,7 @@ t_vector	normal_square(t_point position, void *obj)
 
 	(void)position;
 	square = (t_square *)obj;
-	return (square->normal);
+	return (square->triangle1.plane.normal);
 }
 
 t_vector	normal_cylinder(t_point position, void *obj)
@@ -66,6 +66,6 @@ t_vector	normal_cylinder(t_point position, void *obj)
 			position_on_the_axis);
 	if (cylinder->surface_side == INSIDE)
 		normal = neg_vec(normal);
-	normal = unit_vec(normal, length_vec(normal));// utile?
+	normal = unit_vec(normal, length_vec(normal));
 	return (normal);
 }
