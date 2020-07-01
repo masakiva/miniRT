@@ -57,6 +57,7 @@ void	print_elem_err_msg3(uint8_t type_index)
 		putstr_stderr(E_TRI5);
 		putstr_stderr(E_TRI6);
 		putstr_stderr(E_TRI7);
+		putstr_stderr(E_TRI8);
 	}
 	else if (type_index == 5)
 	{

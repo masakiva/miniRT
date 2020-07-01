@@ -9,7 +9,7 @@ void	triangle_scene_properties(void *obj)
 	triangle->edge2 = sub_vec(triangle->vertex3, triangle->vertex2);
 	triangle->edge3 = sub_vec(triangle->vertex1, triangle->vertex3);
 	triangle->normal = cross_vec(triangle->edge1, neg_vec(triangle->edge3));
-	triangle->normal = unit_vec(triangle->normal, length_vec(triangle->normal));// div 0
+	triangle->normal = unit_vec(triangle->normal, length_vec(triangle->normal));
 	triangle->plane.position = triangle->vertex1;
 	triangle->plane.normal = triangle->normal;
 }

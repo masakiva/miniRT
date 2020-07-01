@@ -78,6 +78,9 @@ const char	*p_triangle(const char *line, t_global *data)
 	line = parse_coord(line, &(triangle->vertex3));
 	if (line == NULL)
 		return (NULL);
+	if (length_vec(cross_vec(sub_vec(triangle->vertex2, triangle->vertex1),
+			sub_vec(triangle->vertex3, triangle->vertex1))) == 0.0)
+		return (NULL);
 	line = parse_color(line, color_ptr);
 	return (line);
 }
