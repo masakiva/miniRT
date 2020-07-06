@@ -6,13 +6,13 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 16:07:24 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/22 17:38:46 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/06 21:30:00 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bmp_export.h"
 
-char	*get_bmpfile_name(char *basename)
+static char	*get_bmpfile_name(char *basename)
 {
 	static int	index = 0;
 	char		*index_str;
@@ -40,7 +40,7 @@ char	*get_bmpfile_name(char *basename)
 	return (bmpfile_name);
 }
 
-int		create_bmpfile(const char *rtfile_name, t_global *data)
+static int	create_bmpfile(char *rtfile_name, t_global *data)
 {
 	int		fd;
 	char	*basename;
@@ -69,7 +69,7 @@ int		create_bmpfile(const char *rtfile_name, t_global *data)
 	return (fd);
 }
 
-void	fill_bmp_header(char *file_data, size_t file_size, t_global *data)
+static void	fill_bmp_header(char *file_data, size_t file_size, t_global *data)
 {
 	file_data[0x0] = 'B';
 	file_data[0x1] = 'M';
@@ -82,7 +82,7 @@ void	fill_bmp_header(char *file_data, size_t file_size, t_global *data)
 	file_data[0x1C] = BMP_BITS_PER_PIXEL;
 }
 
-char	*get_bmpfile_data(int fd, t_global *data, size_t *file_size)
+static char	*get_bmpfile_data(int fd, t_global *data, size_t *file_size)
 {
 	size_t	line_padding;
 	char	*file_data;
@@ -109,7 +109,7 @@ char	*get_bmpfile_data(int fd, t_global *data, size_t *file_size)
 	return (file_data);
 }
 
-void	export_in_bmp(t_global *data, const char *rtfile_name)
+void		export_in_bmp(t_global *data, char *rtfile_name)
 {
 	int		fd;
 	size_t	file_size;

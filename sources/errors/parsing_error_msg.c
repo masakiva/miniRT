@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_error_msg.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/07/06 21:18:09 by mvidal-a          #+#    #+#             */
+/*   Updated: 2020/07/06 21:18:09 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "errors.h"
 
 void	print_elem_err_msg5(uint8_t type_index)
@@ -43,6 +55,7 @@ void	print_elem_err_msg4(uint8_t type_index)
 		putstr_stderr(E_CAM6);
 		putstr_stderr(E_CAM7);
 		putstr_stderr(E_CAM8);
+		putstr_stderr(E_CAM9);
 	}
 }
 
@@ -70,6 +83,7 @@ void	print_elem_err_msg3(uint8_t type_index)
 		putstr_stderr(E_SQU7);
 		putstr_stderr(E_SQU8);
 		putstr_stderr(E_SQU9);
+		putstr_stderr(E_SQU10);
 	}
 }
 

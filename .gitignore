@@ -9,6 +9,9 @@ miniRT
 *.swiftdoc
 *.swiftmodule
 
+# scenes to render
+scenes
+
 # exported bmp
 *.bmp
 

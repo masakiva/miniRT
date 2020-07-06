@@ -6,13 +6,13 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:40:54 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 14:02:42 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/06 21:35:43 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ray_tracing.h"
 
-t_bool			shadow_obstacle(t_ray ray, t_list *obj_iter)
+static t_bool	shadow_obstacle(t_ray ray, t_list *obj_iter)
 {
 	static t_equations	find_t[NB_OBJ] = {intersect_sphere_lightray,
 		intersect_plane_lightray, intersect_triangle_lightray,
@@ -31,7 +31,7 @@ t_bool			shadow_obstacle(t_ray ray, t_list *obj_iter)
 	return (FALSE);
 }
 
-t_vector	calc_normal(t_obj_wrapper *obj_wrapper, t_point cur_pos)
+static t_vector	calc_normal(t_obj_wrapper *obj_wrapper, t_point cur_pos)
 {
 	static t_normal	calc_normal[NB_OBJ] = {normal_sphere, normal_plane,
 		normal_triangle, normal_square, normal_cylinder};
@@ -41,8 +41,8 @@ t_vector	calc_normal(t_obj_wrapper *obj_wrapper, t_point cur_pos)
 	return (normal);
 }
 
-t_rgb	lighting(t_point cur_pos, t_obj_wrapper *obj_wrapper, t_global *data,
-		t_rgb light_color)
+t_rgb			lighting(t_point cur_pos, t_obj_wrapper *obj_wrapper,
+		t_global *data, t_rgb light_color)
 {
 	t_vector		normal;
 	t_light			*cur_light;
@@ -61,11 +61,9 @@ t_rgb	lighting(t_point cur_pos, t_obj_wrapper *obj_wrapper, t_global *data,
 		if (n_dot_l >= EPSILON && shadow_obstacle((t_ray){cur_pos, light_dir},
 					data->objects) == FALSE)
 			light_color = add_vec(light_color,
-					mult_vec_f(cur_light->color, n_dot_l)); // / (4 * M_PI * sq(light_dir_length))));
+					mult_vec_f(cur_light->color, n_dot_l));
 		lights_iter = lights_iter->next;
 	}
 	light_color = add_vec(light_color, data->ambient_light_color);
-	//light_color = mult_vec_f(light_color, ALBEDO / M_PI);
 	return (light_color);
 }
-

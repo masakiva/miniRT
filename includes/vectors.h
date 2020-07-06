@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 16:52:05 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 12:03:36 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/06 21:18:37 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,5 @@ t_vector	cross_vec(t_vector v1, t_vector v2);
 double		length_squared_vec(t_vector v);
 double		length_vec(t_vector v);
 t_vector	unit_vec(t_vector v, double v_length);
-void print_vec(t_vector v);
 
 #endif

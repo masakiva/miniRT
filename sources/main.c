@@ -6,13 +6,13 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:39:59 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 11:33:58 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/06 21:23:48 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 #include "parsing.h"
-#include "mlx_handling.h"
+#include "mlx_display.h"
 #include "bmp_export.h"
 #include "errors.h"
 

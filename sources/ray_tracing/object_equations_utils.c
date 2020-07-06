@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   object_equations_utils.c                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/07/06 21:22:05 by mvidal-a          #+#    #+#             */
+/*   Updated: 2020/07/06 21:22:06 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ray_tracing.h"
 
 double	extract_triangle_from_plane(double t, t_ray *ray, t_triangle *triangle)
@@ -30,8 +42,8 @@ double	truncate_cylinder(double t, t_ray *ray, t_cylinder *cylinder)
 	return (FALSE);
 }
 
-double	truncate_cylinder_lightray(double t, t_ray *ray, t_vector rayorigin_middle,
-		t_cylinder *cylinder)
+double	truncate_cylinder_lightray(double t, t_ray *ray,
+		t_vector rayorigin_middle, t_cylinder *cylinder)
 {
 	t_vector	axismiddle_intersectionpoint;
 	double		distance_on_the_axis;

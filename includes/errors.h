@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:01:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 14:13:59 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/06 21:45:16 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,36 @@
 # define ERRORS_H
 
 # include <unistd.h>
+# include <stdio.h>
 # include <errno.h>
 
 # include "minirt.h"
+# include "data_management.h"
 
 typedef	enum	e_error_code
 {
-	ARGC_ERROR, //0
-	RTFILE_NAME_ERROR, //1
-	SAVE_OPTION_ERROR, //2
-	NO_CAMERA_ERROR, //3
-	RESOLUTION_MISSING_ERROR, //4
-	OPEN_RTFILE_ERROR, //5
-	CLOSE_RTFILE_ERROR, //6
-	MALLOC_ERROR, //7
-	GNL_ERROR, //8
-	OPEN_BMPFILE_ERROR, //9
-	WRITE_BMPFILE_ERROR, //10
-	CLOSE_BMPFILE_ERROR, //11
-	MLX_INIT_ERROR, //12
-	MLX_SCREEN_SIZE_ERROR, //13
-	MLX_NEW_WINDOW_ERROR, //14
-	MLX_NEW_IMAGE_ERROR, //15
+	ARGC_ERROR,
+	RTFILE_NAME_ERROR,
+	SAVE_OPTION_ERROR,
+	NO_CAMERA_ERROR,
+	RESOLUTION_MISSING_ERROR,
+	OPEN_RTFILE_ERROR,
+	CLOSE_RTFILE_ERROR,
+	MALLOC_ERROR,
+	GNL_ERROR,
+	OPEN_BMPFILE_ERROR,
+	WRITE_BMPFILE_ERROR,
+	CLOSE_BMPFILE_ERROR,
+	MLX_INIT_ERROR,
+	MLX_SCREEN_SIZE_ERROR,
+	MLX_NEW_WINDOW_ERROR,
+	MLX_NEW_IMAGE_ERROR,
 	NB_ERRORS
 }				t_error_code;
+
+/*
+** messages corresponding to error codes in the previous enum
+*/
 
 # define E0_1 "A scene description file with the .rt extension must be \n"
 # define E0_2 "given as argument, with an optional --save option to save \n"
@@ -57,6 +63,11 @@ typedef	enum	e_error_code
 # define E13 "MinilibX problem retrieving the actual display size"
 # define E14 "MinilibX problem creating a new window"
 # define E15 "MinilibX problem creating a new image"
+
+/*
+** messages for parsing errors (multiple lines for one message, because of the
+** norme restrictions)
+*/
 
 # define E_RES1 "Resolution parameters not valid, "
 # define E_RES2 "or declared twice in the file.\n"
@@ -97,10 +108,11 @@ typedef	enum	e_error_code
 # define E_SQU3 "· x,y,z coordinates of the square center: 0.0,0.0,20.6\n"
 # define E_SQU4 "· 3d normalized orientation vector\n"
 # define E_SQU5 "\tIn range [-1,1] for each x,y,z axis: 1.0,0.0,0.0\n"
-# define E_SQU6 "\tCannot be null (0.0, 0.0, 0.0) nor vertical (0.0, ?.?, 0.0)\n"
-# define E_SQU7 "· side size: 12.6\n"
-# define E_SQU8 "· R,G,B colors in range [0-255]: 255, 0, 255\n"
-# define E_SQU9 "e.g. sq 0.0,0.0,20.6 1.0,0.0,0.0 12.6 255,0,255\n"
+# define E_SQU6 "\tCannot be null (0.0, 0.0, 0.0) nor pointing vertically "
+# define E_SQU7 "(0.0, ?.?, 0.0)\n"
+# define E_SQU8 "· side size: 12.6\n"
+# define E_SQU9 "· R,G,B colors in range [0-255]: 255, 0, 255\n"
+# define E_SQU10 "e.g. sq 0.0,0.0,20.6 1.0,0.0,0.0 12.6 255,0,255\n"
 # define E_CYL1 "Cylinder parameters not valid.\n"
 # define E_CYL2 "The following must be specified in order:\n"
 # define E_CYL3 "· x,y,z coordinates: 50.0,0.0,20.6\n"
@@ -111,15 +123,15 @@ typedef	enum	e_error_code
 # define E_CYL8 "· the cylinder height: 21.42\n"
 # define E_CYL9 "· R,G,B colors in range [0,255]: 10, 0, 255\n"
 # define E_CYL10 "e.g. cy 50.0,0.0,20.6 0.0,0.0,1.0 14.2 21.42 10,0,255\n"
-// lookat option for camera
 # define E_CAM1 "Camera parameters not valid.\n"
 # define E_CAM2 "The following must be specified in order:\n"
 # define E_CAM3 "· x,y,z coordinates of the view point: 0.0,0.0,20.6\n"
 # define E_CAM4 "· 3d normalized orientation vector\n"
 # define E_CAM5 "\tIn range [-1,1] for each x,y,z axis: 0.0,0.0,1.0\n"
-# define E_CAM6 "\tCannot be null (0.0, 0.0, 0.0) nor vertical (0.0, ?.?, 0.0)\n"
-# define E_CAM7 "· FOV : Horizontal field of view in degrees in range [0,180]\n"
-# define E_CAM8 "e.g. c -50.0,0,20 0,0,1 70\n"
+# define E_CAM6 "\tCannot be null (0.0, 0.0, 0.0) nor pointing vertically "
+# define E_CAM7 "(0.0, ?.?, 0.0)\n"
+# define E_CAM8 "· FOV : Horizontal field of view in degrees in range [0,180]\n"
+# define E_CAM9 "e.g. c -50.0,0,20 0,0,1 70\n"
 # define E_LIG1  "Light parameters not valid.\n"
 # define E_LIG2 "The following must be specified in order:\n"
 # define E_LIG3 "· x,y,z coordinates of the light point: 0.0,0.0,20.6\n"
@@ -136,8 +148,7 @@ void	print_elem_err_msg3(uint8_t type_index);
 void	print_elem_err_msg4(uint8_t type_index);
 void	print_elem_err_msg5(uint8_t type_index);
 void	write_error(ssize_t bytes_written, size_t file_size);
-void	parsing_error_exit(size_t line_nb, uint8_t type_index, t_global *data)
-	__attribute__ ((noreturn));
-void	error_and_exit(t_error_code err_code) __attribute__ ((noreturn));
+void	parsing_error_exit(size_t line_nb, uint8_t type_index, t_global *data);
+void	error_and_exit(t_error_code err_code);
 
 #endif

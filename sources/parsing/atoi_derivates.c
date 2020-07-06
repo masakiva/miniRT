@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 13:33:04 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 11:44:43 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/06 21:19:03 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 **		1 otherwise (positive or null number)
 */
 
-int8_t	atoi_sign(const char *str, int *nb)
+int8_t			atoi_sign(const char *str, int *nb)
 {
 	int8_t	sign_or_error;
 
@@ -44,7 +44,7 @@ int8_t	atoi_sign(const char *str, int *nb)
 	return (sign_or_error);
 }
 
-double	atof_decimal_part(const char *str)
+static double	atof_decimal_part(const char *str)
 {
 	double	factor;
 	double	decimal_part;
@@ -69,7 +69,7 @@ double	atof_decimal_part(const char *str)
 ** atof_double returns nonzero on success and 0 on error
 */
 
-int8_t	atof_double(const char *str, double *nb_f)
+int8_t			atof_double(const char *str, double *nb_f)
 {
 	int		nb_i;
 	int8_t	sign_or_error;

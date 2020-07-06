@@ -6,13 +6,13 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:01:09 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 14:14:06 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/06 22:44:00 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "errors.h"
 
-void	putstr_stderr(const char *str)
+void		putstr_stderr(const char *str)
 {
 	if (ft_putstr_fd(str, STDERR_FILENO) == ERROR)
 	{
@@ -21,19 +21,11 @@ void	putstr_stderr(const char *str)
 	}
 }
 
-const char	*error_code_to_str(t_error_code err_code)
+void		error_and_exit(t_error_code err_code)
 {
-	static const char *const err_str[NB_ERRORS] = {NULL, E1, E2, E3, E4, E5, E6,
-		E7, E8, E9, E10, E11, E12, E13, E14, E15};// voir const in next_minirt
+	static const char *err_msg[NB_ERRORS] = {NULL, E1, E2, E3, E4, E5, E6, E7,
+		E8, E9, E10, E11, E12, E13, E14, E15};
 
-	return (err_str[err_code]);
-}
-
-void	error_and_exit(t_error_code err_code)
-{
-	const char	*err_msg;
-
-	err_msg = error_code_to_str(err_code);
 	putstr_stderr("Error\n");
 	if (err_code == 0)
 	{
@@ -42,15 +34,15 @@ void	error_and_exit(t_error_code err_code)
 		putstr_stderr(E0_3);
 	}
 	else if (err_code <= RESOLUTION_MISSING_ERROR)
-		putstr_stderr(err_msg);
+		putstr_stderr(err_msg[err_code]);
 	else
-		perror(err_msg);
+		perror(err_msg[err_code]);
 	exit(EXIT_FAILURE);
 }
 
-void	write_error(ssize_t bytes_written, size_t file_size)
+void		write_error(ssize_t bytes_written, size_t file_size)
 {
-	ft_putstr_fd("Warning\nA problem occurred while writing in the .bmp file.\n"\
+	ft_putstr_fd("Warning\nA problem occurred while writing the .bmp file.\n"\
 			"Only a number of ", STDERR_FILENO);
 	ft_putnbr_fd((int)bytes_written, STDERR_FILENO);
 	ft_putstr_fd(" bytes could be written in the file. Normally it should "\
@@ -59,7 +51,7 @@ void	write_error(ssize_t bytes_written, size_t file_size)
 	ft_putstr_fd(" bytes.\n", STDERR_FILENO);
 }
 
-void	print_elem_err_msg(uint8_t type_index)
+static void	print_elem_err_msg(uint8_t type_index)
 {
 	if (type_index == 0 || type_index == 1)
 		print_elem_err_msg1(type_index);
@@ -73,7 +65,7 @@ void	print_elem_err_msg(uint8_t type_index)
 		print_elem_err_msg5(type_index);
 }
 
-void	parsing_error_exit(size_t line_nb, uint8_t type_index, t_global *data)
+void		parsing_error_exit(size_t line_nb, uint8_t type_index, t_global *data)
 {
 	free_data(data);
 	if (errno != 0)

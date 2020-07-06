@@ -6,13 +6,13 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 16:40:33 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 11:49:03 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/06 21:19:11 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-const char	*p_resolution(const char *line, t_global *data)
+const char			*p_resolution(const char *line, t_global *data)
 {
 	int8_t	i;
 	int		tmp;
@@ -31,7 +31,7 @@ const char	*p_resolution(const char *line, t_global *data)
 	return (line);
 }
 
-const char	*p_ambient_lighting(const char *line, t_global *data)
+const char			*p_ambient_lighting(const char *line, t_global *data)
 {
 	static t_bool	passed_once = 0;
 	double			intensity;
@@ -50,7 +50,7 @@ const char	*p_ambient_lighting(const char *line, t_global *data)
 	return (line);
 }
 
-const char	*parse_camera_direction(const char *line, t_camera *camera)
+static const char	*parse_camera_direction(const char *line, t_camera *camera)
 {
 	double	dir_length;
 
@@ -77,7 +77,7 @@ const char	*parse_camera_direction(const char *line, t_camera *camera)
 	return (line);
 }
 
-const char	*p_camera(const char *line, t_global *data)
+const char			*p_camera(const char *line, t_global *data)
 {
 	t_camera	*camera;
 
@@ -99,7 +99,7 @@ const char	*p_camera(const char *line, t_global *data)
 	return (line);
 }
 
-const char	*p_light(const char *line, t_global *data)
+const char			*p_light(const char *line, t_global *data)
 {
 	t_light		*light;
 	double		intensity;

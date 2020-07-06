@@ -6,17 +6,16 @@
 #    By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/23 13:17:34 by mvidal-a          #+#    #+#              #
-#    Updated: 2020/06/25 14:24:20 by mvidal-a         ###   ########.fr        #
+#    Updated: 2020/07/06 22:44:21 by mvidal-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= miniRT
 
 SRCS		+= main.c
-SRCS		+= vectors.c
 
 SRCS		+= ray_tracing.c
-SRCS		+= intersections.c
+SRCS		+= ray_tracing_utils.c
 SRCS		+= shading.c
 SRCS		+= scene_properties.c
 SRCS		+= view_properties.c
@@ -25,18 +24,12 @@ SRCS		+= object_equations.c
 SRCS		+= object_equations_lightray.c
 SRCS		+= object_equations_utils.c
 SRCS		+= object_normals.c
-SRCS		+= pixel_put_to_str.c
-SRCS		+= rgb_utils.c
 
-SRCS		+= mlx_handling.c
+SRCS		+= mlx_display.c
 SRCS		+= key_mouse_hooks.c
-SRCS		+= bmp_export.c
-SRCS		+= bmp_ray_tracing.c
+SRCS		+= hook_functions.c
 
-SRCS		+= errors.c
-SRCS		+= parsing_error_msg.c
-SRCS		+= list_utils.c
-SRCS		+= free_utils.c
+SRCS		+= bmp_export.c
 
 SRCS		+= parsing.c
 SRCS		+= parse_res_cameras_lights.c
@@ -45,19 +38,41 @@ SRCS		+= atoi_derivates.c
 SRCS		+= parse_utils.c
 SRCS		+= skip_wrap_utils.c
 
+SRCS		+= pixel_put_to_str.c
+SRCS		+= rgb_utils.c
+SRCS		+= list_utils.c
+SRCS		+= free_utils.c
+
+SRCS		+= vectors.c
+SRCS		+= vectors2.c
+SRCS		+= vectors3.c
+
+SRCS		+= errors.c
+SRCS		+= parsing_error_msg.c
+
+SRCDIR		+= sources/
+SRCDIR		+= sources/ray_tracing/
+SRCDIR		+= sources/mlx_display/
+SRCDIR		+= sources/bmp_export/
+SRCDIR		+= sources/parsing/
+SRCDIR		+= sources/data_management/
+SRCDIR		+= sources/vectors/
+SRCDIR		+= sources/errors/
+
 HDRS		+= minirt.h
-HDRS		+= vectors.h
-HDRS		+= parsing.h
 HDRS		+= ray_tracing.h
-HDRS		+= mlx_handling.h
+HDRS		+= mlx_display.h
 HDRS		+= bmp_export.h
+HDRS		+= parsing.h
+HDRS		+= data_management.h
+HDRS		+= vectors.h
 HDRS		+= errors.h
 
 INCDIR		= includes/
-SRCDIR		= sources/
-SRCDIR		+= sources/parsing/
-OBJDIR		= objects/
+
 LIBFTDIR	= libft/
+
+OBJDIR		= objects/
 
 OBJS		= $(addprefix $(OBJDIR), $(SRCS:.c=.o))
 
@@ -69,10 +84,6 @@ CC			= clang
 CFLAGS		+= -Wall
 CFLAGS		+= -Wextra
 CFLAGS		+= -Werror
-#CFLAGS		+= -Weverything
-CFLAGS		+= -fsanitize=address,undefined
-CFLAGS		+= -Wpadded
-#CFLAGS		+= -g3
 
 CPPFLAGS	+= -I $(INCDIR)
 CPPFLAGS	+= -I $(LIBFTDIR)
@@ -80,8 +91,6 @@ CPPFLAGS	+= -I $(MLXDIR)
 
 LDFLAGS		+= -L $(LIBFTDIR)
 LDFLAGS		+= -L $(MLXDIR)
-#remove this flag
-LDFLAGS		+= -fsanitize=address,undefined
 
 LDLIBS		+= -lft
 LDLIBS		+= -lmlx

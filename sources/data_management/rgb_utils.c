@@ -6,25 +6,13 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:40:37 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 14:22:45 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/06 21:18:49 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ray_tracing.h"
-#include <math.h>
+#include "data_management.h"
 
-t_rgb	apply_gamma_correction(t_rgb color)
-{
-	color.x = pow(color.x, GAMMA);
-	color.y = pow(color.y, GAMMA);
-	color.z = pow(color.z, GAMMA);
-	//color.x = sqrt(color.x);
-	//color.y = sqrt(color.y);
-	//color.z = sqrt(color.z);
-	return (color);
-}
-
-void	majorize_color_channels(t_rgb *color)
+static void	majorize_color_channels(t_rgb *color)
 {
 	if (color->x > 1.0)
 		color->x = 1.0;
@@ -34,7 +22,7 @@ void	majorize_color_channels(t_rgb *color)
 		color->z = 1.0;
 }
 
-int		rgb_to_int(t_rgb color)
+int			rgb_to_int(t_rgb color)
 {
 	majorize_color_channels(&color);
 	return ((int)lround(color.x * 255.0) << 16

@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   scene_properties.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/07/06 21:21:58 by mvidal-a          #+#    #+#             */
+/*   Updated: 2020/07/06 21:21:59 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ray_tracing.h"
 
-void	triangle_scene_properties(void *obj)
+static void	triangle_scene_properties(void *obj)
 {
 	t_triangle		*triangle;
 
@@ -14,7 +26,7 @@ void	triangle_scene_properties(void *obj)
 	triangle->plane.normal = triangle->normal;
 }
 
-void	get_square_triangles_vertices(t_vector half_horizontal_side,
+static void	get_square_triangles_vertices(t_vector half_horizontal_side,
 		t_vector half_vertical_side, t_square *square)
 {
 	t_point		vertex1;
@@ -38,14 +50,14 @@ void	get_square_triangles_vertices(t_vector half_horizontal_side,
 	square->triangle2.vertex3 = vertex4;
 }
 
-void	square_scene_properties(void *obj)
+static void	square_scene_properties(void *obj)
 {
 	t_square	*square;
 	t_vector	half_horizontal_side;
 	t_vector	half_vertical_side;
 
 	square = (t_square *)obj;
-	half_horizontal_side = cross_vec(square->normal, UPGUIDE);
+	half_horizontal_side = cross_vec(square->normal, g_upguide);
 	half_horizontal_side = mult_vec_f(unit_vec(half_horizontal_side,
 				length_vec(half_horizontal_side)), square->side_len / 2.0);
 	half_vertical_side = cross_vec(half_horizontal_side, square->normal);
@@ -57,7 +69,7 @@ void	square_scene_properties(void *obj)
 	triangle_scene_properties(&(square->triangle2));
 }
 
-void	calc_scene_properties(t_global *data)
+void		calc_scene_properties(t_global *data)
 {
 	t_list				*obj_iter;
 	t_obj_wrapper		*cur_obj;

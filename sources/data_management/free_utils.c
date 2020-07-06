@@ -6,24 +6,24 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:39:40 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/22 17:39:41 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/06 21:18:56 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "data_management.h"
 
-void	free_list_elem(void *content)
+static void	free_list_elem(void *content)
 {
 	free(content);
 }
 
-void	free_object(void *content)
+static void	free_object(void *content)
 {
 	free(((t_obj_wrapper *)content)->obj);
 	free_list_elem(content);
 }
 
-void	free_data(t_global *data)
+void		free_data(t_global *data)
 {
 	ft_lstclear(&(data->images), &free_list_elem);
 	free(data->mlx_ptr);

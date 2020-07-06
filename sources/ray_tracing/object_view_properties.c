@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   object_view_properties.c                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/07/06 21:21:48 by mvidal-a          #+#    #+#             */
+/*   Updated: 2020/07/06 21:21:49 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ray_tracing.h"
 
 void	sphere_view_properties(t_camera *cur_camera, void *obj)
@@ -55,4 +67,3 @@ void	cylinder_view_properties(t_camera *cur_camera, void *obj)
 	cylinder->c = length_squared_vec(cylinder->ad_cross_oam) -
 		sq(cylinder->radius);
 }
-

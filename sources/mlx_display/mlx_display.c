@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mlx_handling.c                                     :+:      :+:    :+:   */
+/*   mlx_display.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:00:45 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 11:55:15 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/06 21:20:41 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mlx_handling.h"
+#include "mlx_display.h"
 
-unsigned	convert_color(void *mlx_ptr, int color)
+unsigned			convert_color(void *mlx_ptr, int color)
 {
 	return ((unsigned)mlx_get_color_value(mlx_ptr, color));
 }
 
-void	check_resolution(t_global *data)
+static void			check_resolution(t_global *data)
 {
 	int		screen_width;
 	int		screen_height;
@@ -32,7 +32,7 @@ void	check_resolution(t_global *data)
 		data->res[HEIGHT] = (size_t)screen_height;
 }
 
-t_mlx_image	*new_image(t_global *data)
+static t_mlx_image	*new_image(t_global *data)
 {
 	t_mlx_image	*new_image;
 
@@ -57,7 +57,7 @@ t_mlx_image	*new_image(t_global *data)
 	return (new_image);
 }
 
-t_bool	draw_images(t_global *data)
+static t_bool		draw_images(t_global *data)
 {
 	t_list		*cameras_iter;
 	t_mlx_image	*cur_image;
@@ -74,7 +74,7 @@ t_bool	draw_images(t_global *data)
 	return (SUCCESS);
 }
 
-void	render_with_mlx(t_global *data)
+void				render_with_mlx(t_global *data)
 {
 	errno = 0;
 	data->mlx_ptr = mlx_init();
@@ -97,6 +97,6 @@ void	render_with_mlx(t_global *data)
 			((t_mlx_image *)data->images->content)->ptr, 0, 0);
 	mlx_key_hook(data->win_ptr, &key_hooks, data);
 	mlx_expose_hook(data->win_ptr, &refresh_window, data);
-	mlx_hook(data->win_ptr, X_EVENT_RED_CROSS, 0, red_cross_hook, data);// linux: intercept the WM_DELETE_WINDOW message
+	mlx_hook(data->win_ptr, X_EVENT_RED_CROSS, 0, red_cross_hook, data);
 	mlx_loop(data->mlx_ptr);
 }

@@ -6,11 +6,11 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:40:18 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 11:51:39 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/06 21:18:58 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ray_tracing.h"
+#include "data_management.h"
 
 void		pixel_put_bmp_little_endian(char *pixel_pos, int color)
 {

@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   view_properties.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/07/06 21:21:52 by mvidal-a          #+#    #+#             */
+/*   Updated: 2020/07/06 21:21:54 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ray_tracing.h"
 
-void	camera_properties(t_global *data, t_camera *cur_camera,
+static void	camera_properties(t_global *data, t_camera *cur_camera,
 		t_view_properties *props)
 {
-	props->right_vec = cross_vec(UPGUIDE, cur_camera->direction);
+	props->right_vec = cross_vec(g_upguide, cur_camera->direction);
 	props->right_vec = unit_vec(props->right_vec, length_vec(props->right_vec));
 	props->up_vec = cross_vec(cur_camera->direction, props->right_vec);
 	props->up_vec = unit_vec(props->up_vec, length_vec(props->up_vec));
@@ -21,7 +33,7 @@ void	camera_properties(t_global *data, t_camera *cur_camera,
 			props->y_factor * props->half_height - props->half_pixel_width);
 }
 
-void	calc_view_properties(t_global *data, t_camera *cur_camera,
+void		calc_view_properties(t_global *data, t_camera *cur_camera,
 		t_view_properties *props)
 {
 	static t_properties	obj_properties[NB_OBJ] = {sphere_view_properties,
