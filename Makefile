@@ -6,13 +6,15 @@
 #    By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/23 13:17:34 by mvidal-a          #+#    #+#              #
-#    Updated: 2020/07/06 22:44:21 by mvidal-a         ###   ########.fr        #
+#    Updated: 2020/07/08 00:18:25 by mvidal-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= miniRT
 
 SRCS		+= main.c
+#SRCS		+= obj_extract_triangles.c
+#SRCS		+= obj_extract_triangles_parsing.c
 
 SRCS		+= ray_tracing.c
 SRCS		+= ray_tracing_utils.c
@@ -84,6 +86,9 @@ CC			= clang
 CFLAGS		+= -Wall
 CFLAGS		+= -Wextra
 CFLAGS		+= -Werror
+CFLAGS		+= -fsanitize=address,undefined
+CFLAGS		+= -Wpadded
+#CFLAGS		+= -g3
 
 CPPFLAGS	+= -I $(INCDIR)
 CPPFLAGS	+= -I $(LIBFTDIR)
@@ -91,6 +96,7 @@ CPPFLAGS	+= -I $(MLXDIR)
 
 LDFLAGS		+= -L $(LIBFTDIR)
 LDFLAGS		+= -L $(MLXDIR)
+LDFLAGS	+= -fsanitize=address,undefined
 
 LDLIBS		+= -lft
 LDLIBS		+= -lmlx

@@ -6,7 +6,7 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/06 21:22:23 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/07/06 21:35:47 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/08 00:51:34 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,9 @@ void					fill_bmp_data(t_global *data, char *data_addr,
 		while (x < data->res[WIDTH])
 		{
 			set_bmp_pixel_color(cur_camera, &props, data, data_addr + i);
+			ft_putnbr_fd((y * data->res[WIDTH] + x + 1) * 100 /
+					(data->res[WIDTH] * data->res[HEIGHT]), STDOUT_FILENO);//
+			ft_putstr_fd("%\r", STDOUT_FILENO);
 			next_pixel_x(&props);
 			i += 3;
 			x++;
@@ -124,6 +127,9 @@ void					fill_mlx_image(t_global *data, t_mlx_image *cur_image,
 			color = process_pixel(ray, data);
 			pixel_put_mlx_image(cur_image, x, y,
 					convert_color(data->mlx_ptr, color));
+			ft_putnbr_fd((y * data->res[WIDTH] + x + 1) * 100 /
+					(data->res[WIDTH] * data->res[HEIGHT]), STDOUT_FILENO);//
+			ft_putstr_fd("%\r", STDOUT_FILENO);
 			next_pixel_x(&props);
 			x++;
 		}

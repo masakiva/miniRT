@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/22 17:40:54 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/07/06 21:35:43 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/08 00:08:47 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,28 @@
 
 static t_bool	shadow_obstacle(t_ray ray, t_list *obj_iter)
 {
-	static t_equations	find_t[NB_OBJ] = {intersect_sphere_lightray,
+	static t_equations		find_t[NB_OBJ] = {intersect_sphere_lightray,
 		intersect_plane_lightray, intersect_triangle_lightray,
 		intersect_square_lightray, intersect_cylinder_lightray};
-	double				cur_t;
-	t_obj_wrapper		*cur_obj;
+	double					cur_t;
+	t_obj_wrapper			*cur_obj;
+	static t_obj_wrapper	*last_obj = NULL;
 
+	if (last_obj != NULL)
+	{
+		cur_t = find_t[last_obj->type](&ray, last_obj->obj, 0.0);
+		if (cur_t >= EPSILON && cur_t <= 1 - EPSILON)
+			return (TRUE);
+	}
 	while (obj_iter != NULL)
 	{
 		cur_obj = (t_obj_wrapper *)obj_iter->content;
 		cur_t = find_t[cur_obj->type](&ray, cur_obj->obj, 0.0);
 		if (cur_t >= EPSILON && cur_t <= 1 - EPSILON)
+		{
+			last_obj = cur_obj;
 			return (TRUE);
+		}
 		obj_iter = obj_iter->next;
 	}
 	return (FALSE);
