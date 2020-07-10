@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:01:09 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/07/06 22:44:00 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/10 23:36:49 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ static void	print_elem_err_msg(uint8_t type_index)
 		print_elem_err_msg5(type_index);
 }
 
-void		parsing_error_exit(size_t line_nb, uint8_t type_index, t_global *data)
+void		parsing_error_exit(size_t line_nb, uint8_t type_index,
+		t_global *data)
 {
 	free_data(data);
 	if (errno != 0)
