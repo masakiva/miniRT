@@ -6,7 +6,7 @@
 #    By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/23 13:17:34 by mvidal-a          #+#    #+#              #
-#    Updated: 2020/07/11 00:32:11 by mvidal-a         ###   ########.fr        #
+#    Updated: 2020/07/15 12:01:58 by mvidal-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -119,7 +119,7 @@ all:				$(NAME)
 $(NAME):			$(LIBFTDIR)libft.a $(MLXDIR)$(MLXLIB) $(OBJS)
 					$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
 ifeq ($(UNAME_S),Darwin)
-					install_name_tool -change libmlx.dylib minilibx_mms_20200219/libmlx.dylib miniRT
+					install_name_tool -change libmlx.dylib `pwd`/minilibx_mms_20200219/libmlx.dylib miniRT
 endif
 
 $(OBJDIR)%.o:		%.c
