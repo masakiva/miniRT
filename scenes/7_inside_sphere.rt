@@ -1,3 +1,6 @@
+# each of the five objects, in blue, in one big sphere
+# two light sources
+
 A	0.5										255,255,255
 l	0.8,0,1		0.4							255,255,255
 l	0,-0.5,2	0.1							255,255,255
