@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 16:07:24 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/07/06 21:30:00 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/20 20:02:21 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,10 +115,11 @@ void		export_in_bmp(t_global *data, char *rtfile_name)
 	size_t	file_size;
 	ssize_t	bytes_written;
 
-	if (data->res[WIDTH] == 0)
+	if (data->res[WIDTH] == 0 || data->res[WIDTH] * data->res[HEIGHT] >
+			NB_PIXELS_MAX)
 	{
 		free_data(data);
-		error_and_exit(RESOLUTION_MISSING_ERROR);
+		error_and_exit(RESOLUTION_ERROR);
 	}
 	fd = create_bmpfile(rtfile_name, data);
 	data->bmpfile_data = get_bmpfile_data(fd, data, &file_size);

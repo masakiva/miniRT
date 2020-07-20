@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:01:09 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/07/10 23:36:49 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/20 20:03:32 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void		error_and_exit(t_error_code err_code)
 		putstr_stderr(E0_2);
 		putstr_stderr(E0_3);
 	}
-	else if (err_code <= RESOLUTION_MISSING_ERROR)
+	else if (err_code <= RESOLUTION_ERROR)
 		putstr_stderr(err_msg[err_code]);
 	else
 		perror(err_msg[err_code]);

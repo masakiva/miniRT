@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:01:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/07/06 21:45:16 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/07/20 20:02:26 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef	enum	e_error_code
 	RTFILE_NAME_ERROR,
 	SAVE_OPTION_ERROR,
 	NO_CAMERA_ERROR,
-	RESOLUTION_MISSING_ERROR,
+	RESOLUTION_ERROR,
 	OPEN_RTFILE_ERROR,
 	CLOSE_RTFILE_ERROR,
 	MALLOC_ERROR,
@@ -51,7 +51,7 @@ typedef	enum	e_error_code
 # define E1 "The name of the file given as argument must end with '.rt'.\n"
 # define E2 "Only a --save option is allowed as second argument.\n"
 # define E3 "There must be at least one camera in the scene.\n"
-# define E4 "Image resolution must be defined to export a bmp file.\n"
+# define E4 "Image resolution not defined, or too large for bmp export.\n"
 # define E5 "Cannot open .rt file specified in argument"
 # define E6 "Cannot close file descriptor previously opened for .rt file"
 # define E7 "Cannot allocate required memory"
