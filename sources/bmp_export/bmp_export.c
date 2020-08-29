@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 16:07:24 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/07/20 20:02:21 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/08/29 10:53:51 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ static char	*get_bmpfile_name(char *basename)
 	return (bmpfile_name);
 }
 
-static int	create_bmpfile(char *rtfile_name, t_global *data)
+static int	create_bmpfile(char *basename, t_global *data)
 {
 	int		fd;
-	char	*basename;
 	char	*bmpfile_name;
 
-	basename = ft_strrchr(rtfile_name, '/') + 1;
+	if (ft_strrchr(basename, '/') != NULL)
+		basename = ft_strrchr(basename, '/') + 1;
 	basename[ft_strlen(basename) - 3] = '\0';
 	fd = ERROR;
 	while (fd == ERROR)
