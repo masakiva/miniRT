@@ -1,0 +1,5 @@
+execute with a .obj file in argument
+the file must contain triangles only
+it can be exported from blender
+triangulate object in blender -> Ctrl-T in Edit Mode
+triangles in miniRT .rt file syntax are written in a result.rt file
