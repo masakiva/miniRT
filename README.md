@@ -2,11 +2,18 @@
 
 `miniRT` is a simple 3D renderer that can display basic scenes with objects and lights. The project is part of the curriculum for the 42 coding school.
 
-<picture>
- <source media="(prefers-color-scheme: dark)" srcset="YOUR-DARKMODE-IMAGE">
- <source media="(prefers-color-scheme: light)" srcset="YOUR-LIGHTMODE-IMAGE">
- <img alt="YOUR-ALT-TEXT" src="YOUR-DEFAULT-IMAGE">
-</picture>
+<div style="display: flex; justify-content: space-between;">
+ <img style="width: 30%;" src="https://nextcloud.42l.fr/s/GiKXpbJPHcjRD57/download/Screen%20Shot%202023-04-23%20at%2016.19.45.png">
+ <img style="width: 30%;" src="https://nextcloud.42l.fr/s/wCkDGwFeHPSTXFo/download/Screen%20Shot%202023-04-23%20at%2016.42.55.png">
+ <img style="width: 30%;" src="https://nextcloud.42l.fr/s/2kN5wz4Kn73tgTm/download/Screen%20Shot%202023-04-23%20at%2016.43.26.png">
+</div>
+<div style="display: flex; justify-content: space-between;">
+ <img style="width: 30%;" src="https://nextcloud.42l.fr/s/FSEyDipKxs9r2ES/download/Screen%20Shot%202023-04-23%20at%2016.43.49.png">
+ <img style="width: 30%;" src="https://nextcloud.42l.fr/s/HnHg8JQEdHwS7Hp/download/Screen%20Shot%202023-04-23%20at%2016.44.02.png">
+ <img style="width: 30%;" src="https://nextcloud.42l.fr/s/oSBytDtrKHteLHk/download/Screen%20Shot%202023-04-23%20at%2016.59.38.png">
+</div>
+
+*copyright for the deer 3D model: snippysnappets https://free3d.com/3d-model/low-poly-deer-72513.html*  
 
 This repository contains the source code for `miniRT`, as well as a few sample scenes to get started with. The code is written in C and uses the [MinilibX](https://github.com/42Paris/minilibx-linux) library to handle graphics.
 
@@ -71,6 +78,9 @@ Here is the list of possible entries:
   - R,G,B colors in range [0,255]
 
 You can add multiple cameras and switch them by using the right and left arrows of your keyboard.
+
+### Save image in bmp format
+You can save the rendered image in bmp format instead of opening it in a window, by specifying "--save" as a second argument of the execution.
 
 ### How it works
 
