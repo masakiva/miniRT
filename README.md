@@ -15,7 +15,7 @@
 
 *copyright for the deer 3D model: snippysnappets https://free3d.com/3d-model/low-poly-deer-72513.html*  
 
-This repository contains the source code for `miniRT`, as well as a few sample scenes to get started with. The code is written in C and uses the [MinilibX](https://github.com/42Paris/minilibx-linux) library to handle graphics.
+This repository contains the source code for my version of `miniRT`, as well as a few sample scenes to get started with. The code is written in C and uses the [MinilibX](https://github.com/42Paris/minilibx-linux) library to handle graphics.
 
 ### Supported platforms
 
