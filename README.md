@@ -42,7 +42,7 @@ Here is the list of possible entries:
 
 - Camera: `C -50.0,0,20 0,0,1 70`. Parameters:
   - x,y,z coordinates of the view point
-  - 3d normalized orientation vector OR target point of the view by preceding the coordinates by `at` (without space), both in range [-1,1] for each x,y,z axis
+  - 3d normalized orientation vector OR target point of the view (by preceding the coordinates by `at`, without space), both in range [-1,1] for each x,y,z axis
   - horizontal field of view (FOV) in degrees in range [0,180]
 
 - Light: `L -40.0,50.0,0.0 0.6 10,0,255`. Parameters:
