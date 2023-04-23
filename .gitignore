@@ -8,6 +8,7 @@ miniRT
 *.dylib
 *.swiftdoc
 *.swiftmodule
+*.swiftsourceinfo
 
 # exported bmp
 *.bmp
